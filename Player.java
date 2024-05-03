@@ -56,5 +56,13 @@ public class Player {
     public int getCredits(){
         return credits;
     }
+
+    public Role getActiveRole(){
+        return activeRole;
+    }
+
+    public int getPracticeChips(){
+        return practiceChips;
+    }
 }
 
