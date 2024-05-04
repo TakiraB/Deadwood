@@ -64,5 +64,26 @@ public class Player {
     public int getPracticeChips(){
         return practiceChips;
     }
+    
+    public void setPlayerName(String name){
+        this.name = name;
+    }
+
+    public void setPlayerRank(int rank){
+        this.rank = rank;
+    }
+
+    public void setFunds(int dollars, int credits){
+        this.dollars = dollars;
+        this.credits = credits;
+    }
+
+    public void setActiveRole(Role role) {
+        this.activeRole = role;
+    }
+
+    public void setPracticeChips(int practiceChips){
+        this.practiceChips = practiceChips;
+    }
 }
 
