@@ -13,8 +13,9 @@ public class SceneCard {
         this.description = description;
     }
 
+    // get the information for the SceneCard
     public SceneCard getSceneCard() {
-        
+
     }
 
     // Getters and setters 

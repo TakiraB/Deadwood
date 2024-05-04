@@ -10,6 +10,7 @@ public class CastingOffice extends Room {
         this.rankPrices = rankPrices;
     }
 
+    // updates rank of player
     public boolean updateRank(Player player) {
         return true;
     }

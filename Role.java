@@ -13,14 +13,17 @@ public class Role {
         this.rank = rank;
     }
 
+    // check if the tole is active, like if it is being rehearsed or acted on
     public boolean checkActiveRole(Player player){
         return true;
     }
 
+    // update role with information
     public void updateRole(Role role) {
 
     }
 
+    // make sure player has the correct rank for the role
     public boolean validateRank(Player player) {
         return true;
     }

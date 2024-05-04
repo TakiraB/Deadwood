@@ -15,22 +15,27 @@ public class GameState {
         this.board = board;
     }
 
+    // does everything for the game to start
     public void startGame() {
 
     }
 
+    // does everything for when the game is supposed to end
     public boolean endGame() {
         return true;
     }
 
+    // starts the turn of the next active player
     public void startTurn() {
 
     }
 
+    // ends the turns of the active player
     public boolean endTurn() {
         return true;
     }
 
+    // does everything that happens at the end of the day
     public boolean endDay() {
         return true;
     }

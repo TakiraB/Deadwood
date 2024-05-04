@@ -9,15 +9,18 @@ public class Board {
         this.activeScenes = activeScenes;
     }
 
+    // updates the Board
     public void updateBoard() {
 
     }
 
+    // finds all adjacent rooms to room and returns in list
     public List<Room> getAdjacent(Room room) {
         List<Room> list = new ArrayList<Room>();
         return list;
     }
 
+    // resets board
     public boolean resetboard() {
         return true;
     }

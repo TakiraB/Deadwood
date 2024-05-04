@@ -9,18 +9,22 @@ public class GamePieceManager {
         this.sceneCards = sceneCards;
     }
 
+    // roll a six sided die
     public int roll() {
         return 1;
     }
 
+    // roll a six sided die with rollWithModifier
     public int rollWithModifier(int rollWithModifier) {
-        return 1;
+        return 1 + rollWithModifier;
     }
 
+    // shuffle the sceneCards
     public void shuffle() {
 
     }
 
+    // pick a scene from the list of SceneCards
     public String pickScene() {
         return "scene";
     }

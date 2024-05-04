@@ -20,8 +20,7 @@ public class Trailer extends Room{
     }
 
     public List<Player> getPlayers() {
-        List<Player> list = new ArrayList<Player>();
-        return list;
+        return playersStart;
     }
 
     public void setPlayers(List<Player> playersStart) {

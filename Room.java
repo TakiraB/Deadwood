@@ -5,6 +5,7 @@ public class Room {
         this.name = name;
     }
 
+    // update the room
     public void updateRoom() {
 
     }

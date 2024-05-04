@@ -11,18 +11,22 @@ public class Scene {
         this.sceneCard = sceneCard;
     }
 
+    // wrap the scene and do the actions associated with wrapping a scene
     public boolean wrapScene() {
         return true;
     }
 
+    // increase the shots counter
     public void updateShots() {
 
     }
 
+    // update the scene
     public void updateScene() {
 
     }
 
+    // flip the SceneCard associated with this scene
     public boolean flipSceneCard() {
         return true;
     }
