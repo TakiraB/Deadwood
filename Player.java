@@ -4,7 +4,7 @@ public class Player {
     private int dollars;
     private int credits;
     private Role activeRole;
-    int practiceChips;
+    private int practiceChips;
 
     public Player(String name, int rank, int dollars, int credits, Role activeRole, int practiceChips) {
         this.name = name;
