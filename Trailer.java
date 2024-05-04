@@ -11,7 +11,20 @@ public class Trailer extends Room{
     // getters and setters
 
 
-    public List<Player> getPlayer() {
-        return playersStart;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<Player> getPlayers() {
+        List<Player> list = new ArrayList<Player>();
+        return list;
+    }
+
+    public void setPlayers(List<Player> playersStart) {
+        this.playersStart = playersStart;
     }
 }

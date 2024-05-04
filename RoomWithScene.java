@@ -17,7 +17,8 @@ public class RoomWithScene extends Room {
     }
 
     public List<Role> availableRoles() {
-        return List<Role>;
+        List<Role> list = new ArrayList<Role>();
+        return list;
     }
 
     // getters and setters

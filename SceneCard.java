@@ -14,7 +14,7 @@ public class SceneCard {
     }
 
     public SceneCard getSceneCard() {
-        return SceneCard;
+        
     }
 
     // Getters and setters 

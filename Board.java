@@ -14,7 +14,8 @@ public class Board {
     }
 
     public List<Room> getAdjacent(Room room) {
-
+        List<Room> list = new ArrayList<Room>();
+        return list;
     }
 
     public boolean resetboard() {
