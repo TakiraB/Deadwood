@@ -17,7 +17,7 @@ public class Player {
 
     // move to a destination (Room role)
     public String move(Room destination) {
-        
+        return "temp";
     }
 
     // practiceChips to add to rolls
