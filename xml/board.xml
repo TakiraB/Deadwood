@@ -1,34 +1,3 @@
-<!-- Structure of XML file -->
-<!--<board>
-    <set>
-        <neighbors>
-        </neigbors>
-        <area>
-        <takes>
-        </takes>
-        <parts>
-            <part>
-            <area>
-            <line></line>
-        </parts>
-    </set>
-    <trailer>
-        <neighbors>
-        </neighbors>
-        <area>
-    </trailer>
-    <office>
-        <neighbors>
-        </neighbors>
-        <area>
-        <upgrades>
-            <upgrade>
-            <area>
-            </upgrade>
-        </upgrades>
-    </office>
-    </board>-->
-
 <?xml version="1.0"?>
 <board name="default">
   <set name="Train Station">
