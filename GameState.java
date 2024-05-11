@@ -31,12 +31,27 @@ public class GameState {
     }
 
     // ends the turns of the active player
-    public boolean endTurn() {
-        return true;
+    public void endTurn() {
+        int indexOfActivePlayer = players.indexOf(activePlayer); // finds the index of the active player in the player array
+
+        // sets the next player in the array to the active player, if there is no next player then start from the 0 index player instead
+        if ((indexOfActivePlayer + 1) != players.size()) {
+            activePlayer = players.get(indexOfActivePlayer + 1);
+        } else {
+            activePlayer = players.get(0);
+        }
+
+        // do other things if needed here, before starting the next turn
+
+        // starts the next turn 
+        startTurn();
     }
 
     // does everything that happens at the end of the day
-    public boolean endDay() {
+    public boolean endDay(Board board) {
+        this.dayCount += 1;
+        // do the rest of the end of day stuff here
+        board.resetBoard();
         return true;
     }
 

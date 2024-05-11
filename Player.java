@@ -26,8 +26,8 @@ public class Player {
     }
 
     // rehearsing requires no parameters, only increasing practiceChips
-    public boolean rehearse(){
-        return true;
+    public void rehearse(){
+        this.practiceChips += 1;
     }
 
     // takes in parameters for rankChoice (provided by CastingOffice) and payment type
@@ -73,8 +73,11 @@ public class Player {
         this.rank = rank;
     }
 
-    public void setFunds(int dollars, int credits){
+    public void setDollars(int dollars) {
         this.dollars = dollars;
+    }
+
+    public void setCredits(int credits) {
         this.credits = credits;
     }
 

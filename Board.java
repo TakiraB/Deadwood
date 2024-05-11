@@ -21,7 +21,7 @@ public class Board {
     }
 
     // resets board
-    public boolean resetboard() {
+    public boolean resetBoard() {
         return true;
     }
 

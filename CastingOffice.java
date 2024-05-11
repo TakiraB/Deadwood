@@ -10,9 +10,9 @@ public class CastingOffice extends Room {
         this.rankPrices = rankPrices;
     }
 
-    // updates rank of player
-    public boolean updateRank(Player player) {
-        return true;
+    // updates rank of player, given player and rank
+    public void updateRank(Player player, int rank) {
+        player.setPlayerRank(rank);
     }
 
     // getters and setters

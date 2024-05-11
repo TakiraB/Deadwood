@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.Random;
 
 public class GamePieceManager {
     private int sides;
@@ -11,12 +12,13 @@ public class GamePieceManager {
 
     // roll a six sided die
     public int roll() {
-        return 1;
+        Random random = new Random();
+        return random.nextInt(this.sides) + 1;
     }
 
     // roll a six sided die with rollWithModifier
     public int rollWithModifier(int rollWithModifier) {
-        return 1 + rollWithModifier;
+        return roll() + rollWithModifier;
     }
 
     // shuffle the sceneCards

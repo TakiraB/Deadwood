@@ -13,8 +13,15 @@ public class LocationManager {
     }
 
     // verify that a player can move to the room they selected(next) from the current room
-    public boolean validateMove(Room next, Room current, Player player) {
-        return true;
+    public boolean validateMove(Room next, Room current) {
+        int index = adjacentRooms.indexOf(next); // finds the index of the next room in adjacentRooms
+
+        // if the next room is in adjacent rooms, return true, else false
+        if (index != -1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // getters and setters
