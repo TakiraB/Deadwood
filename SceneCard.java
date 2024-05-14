@@ -4,13 +4,17 @@ public class SceneCard {
     private String name;
     private int budget;
     private List<Role> roles;
+    private int sceneNumber;
     private String description;
+    private String imagePlaceholder;
 
-    public SceneCard(String name, int budget, List<Role> roles, String description) {
+    public SceneCard(String name, int budget, List<Role> roles, int sceneNumber, String description, String imagePlaceholder) {
         this.name = name;
         this.budget = budget;
         this.roles = roles;
+        this.sceneNumber = sceneNumber;
         this.description = description;
+        this.imagePlaceholder = imagePlaceholder;
     }
 
     // get the information for the SceneCard
@@ -51,5 +55,21 @@ public class SceneCard {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setSceneNumber(int sceneNumber){
+        this.sceneNumber=sceneNumber;
+    }
+
+    public int getSceneNumber(){
+        return sceneNumber;
+    }
+
+    public void setImage (String imagePlaceholder){
+        this.imagePlaceholder=imagePlaceholder;
+    }
+
+    public String getImage(){
+        return imagePlaceholder;
     }
 }
