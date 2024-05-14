@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.Random;
 
 public class GamePieceManager {
     private int sides;
@@ -12,23 +11,28 @@ public class GamePieceManager {
 
     // roll a six sided die
     public int roll() {
-        Random random = new Random();
-        return random.nextInt(this.sides) + 1;
+        return 1;
     }
 
     // roll a six sided die with rollWithModifier
     public int rollWithModifier(int rollWithModifier) {
-        return roll() + rollWithModifier;
+        return 1 + rollWithModifier;
     }
 
     // shuffle the sceneCards
-    public void shuffle() {
-
+    public void shuffle(ArrayList<SceneCard> sceneCards) {
+        Collections.shuffle(sceneCards);
     }
 
     // pick a scene from the list of SceneCards
-    public String pickScene() {
-        return "scene";
+    public SceneCard pickScene() {
+        if(sceneCards.isEmpty()){
+            System.out.println("There are no Scene Cards left!");
+            return null;
+        }
+        else {
+            return sceneCards.get(0);
+        }
     }
 
     // getters and setters
