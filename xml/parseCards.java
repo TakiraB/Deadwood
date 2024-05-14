@@ -1,3 +1,17 @@
+// Parsing Cards
+// SCENECARD CLASS
+// Each Card has a:
+// Name
+// Associated image file
+// Budget (in millions)
+// Scene (and number)
+// ROLE CLASS
+// List of Parts, which has:
+// Rank
+// Associated area
+// Line for each part
+
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
@@ -6,6 +20,8 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class parseCards {
         public Document getDocFromFile(String filename)
@@ -23,50 +39,51 @@ public class parseCards {
         return doc;
     }
 
-    public void readCardData(Document d) {
+    public ArrayList<SceneCard> readCardData(Document d) {
         Element root = d.getDocumentElement();
         NodeList cards = root.getElementsByTagName("card");
+
+        ArrayList<SceneCard> sceneCardArrayList = new ArrayList<>();
 
         for(int i = 0;i<cards.getLength();i++){
             Element cardList = (Element) cards.item(i);
             String cardName = cardList.getAttributes().getNamedItem("name").getNodeValue();
-            System.out.println("Card Title: "+ cardName);
             String cardImage = cardList.getAttributes().getNamedItem("img").getNodeValue();
-            System.out.println("Associated Image: "+ cardImage);
-            String cardBudget = cardList.getAttributes().getNamedItem("budget").getNodeValue();
-            System.out.println("Card Budget: "+ cardBudget);
+            int cardBudget = Integer.parseInt(cardList.getAttributes().getNamedItem("budget").getNodeValue());
 
             NodeList cardScenes = cardList.getElementsByTagName("scene");
 
+            int sceneNumber=0;
+            String sceneDescription="";
+
+            // ArrayList<Role> starredRolesArray = new ArrayList<>();
+
             for(int j=0;j<cardScenes.getLength();j++){
                 Element cardScene = (Element) cardScenes.item(j);
-                String sceneNumber = cardScene.getAttributes().getNamedItem("number").getNodeValue();
-                System.out.println("Scene Number: "+ sceneNumber);
-                String sceneDescription = cardScene.getTextContent().trim();
-                System.out.println("Scene Line: "+ sceneDescription);
+                // String sceneNumber = cardScene.getAttributes().getNamedItem("number").getNodeValue();
+                // String sceneDescription = cardScene.getTextContent().trim();
+                sceneNumber = Integer.parseInt(cardScene.getAttributes().getNamedItem("number").getNodeValue());
+                sceneDescription = cardScene.getTextContent().trim();
             }
+
+            ArrayList<Role> starredRolesArray = new ArrayList<>();
 
             NodeList parts = cardList.getElementsByTagName("part");
 
             for (int k=0;k<parts.getLength();k++){
                 Element partList = (Element) parts.item(k);
                 String partName = partList.getAttributes().getNamedItem("name").getNodeValue();
-                System.out.println("Part Name: "+ partName);
-                String partLevel = partList.getAttributes().getNamedItem("level").getNodeValue();
-                System.out.println("Part Level: "+ partLevel);
+                // String partLevel = partList.getAttributes().getNamedItem("level").getNodeValue();
+                int partLevel = Integer.parseInt(partList.getAttributes().getNamedItem("level").getNodeValue());
 
                 NodeList cardSceneAreaList = partList.getElementsByTagName("area");
 
                 for (int a=0;a<cardSceneAreaList.getLength();a++){
                     Element starredPartArea = (Element) cardSceneAreaList.item(a);
                     String x = starredPartArea.getAttribute("x");
-                    System.out.println("This should be the x-value: "+x);
                     String y = starredPartArea.getAttribute("y");
-                    System.out.println("This should be the y-value: "+y);
                     String h = starredPartArea.getAttribute("h");
-                    System.out.println("This should be the h-value: "+h);
                     String w = starredPartArea.getAttribute("w");
-                    System.out.println("This should be the w-value: "+w);
                 }
 
                 NodeList cardSceneLineList = partList.getElementsByTagName("line");
@@ -74,18 +91,43 @@ public class parseCards {
                 for (int b=0;b<cardSceneLineList.getLength();b++){
                     Element starredLines = (Element) cardSceneLineList.item(b);
                     String starredLineText = starredLines.getTextContent().trim();
-                    System.out.println("This should be the Starred Part Line: "+starredLineText);
+
+                    Role newRole = new Role(partName, starredLineText, true, partLevel);
+                    starredRolesArray.add(newRole);
                 }
+                
             }
+
+            // public class SceneCard {
+            //     private String name;
+            //     private int budget;
+            //     private List<Role> roles;
+            //     private int sceneNumber;
+            //     private String description;
+            //     private String imagePlaceholder;
+            
+            //     public SceneCard(String name, int budget, List<Role> roles, int sceneNumber, String description, String imagePlaceholder) {
+            //         this.name = name;
+            //         this.budget = budget;
+            //         this.roles = roles;
+            //         this.sceneNumber = sceneNumber;
+            //         this.description = description;
+            //         this.imagePlaceholder = imagePlaceholder;
+            //     }
+
+            SceneCard newSceneCard = new SceneCard(cardName, cardBudget, starredRolesArray, sceneNumber, sceneDescription, cardImage);
+            sceneCardArrayList.add(newSceneCard);
         }
+        return sceneCardArrayList;
     }
 
     public static void main(String args[]){
         Document doc = null;
         parseCards parsing = new parseCards();
         try{
-           doc = parsing.getDocFromFile("cards.xml");
-           parsing.readCardData(doc);
+            doc = parsing.getDocFromFile("cards.xml");
+            ArrayList<SceneCard> cards = parsing.readCardData(doc);
+        //    parsing.readCardData(doc);
         }catch (Exception e){
            System.out.println("Error = "+e);
         }
