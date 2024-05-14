@@ -1,14 +1,13 @@
 public class Role {
     private String name;
     private String script;
-    private boolean isActive;
     private boolean starredRole;
     private int rank;
 
-    public Role(String name, String script, boolean isActive, boolean starredRole, int rank){
+    public Role(String name, String script, boolean starredRole, int rank){
         this.name = name;
         this.script = script;
-        this.isActive = isActive;
+        // this.isActive = isActive;
         this.starredRole = starredRole;
         this.rank = rank;
     }
@@ -20,7 +19,10 @@ public class Role {
 
     // update role with information
     public void updateRole(Role role) {
-
+        this.name = name;
+        this.script = script;
+        this.starredRole = starredRole;
+        this.rank = rank;
     }
 
     // make sure player has the correct rank for the role
@@ -42,9 +44,9 @@ public class Role {
         return rank;
     }
 
-    public boolean getActive(){
-        return isActive;
-    }
+    // public boolean getActive(){
+    //     return isActive;
+    // }
 
     public boolean getStarredRole(){
         return starredRole;
@@ -58,9 +60,9 @@ public class Role {
         this.script = script;
     }
 
-    public void setActiveRole(boolean isActive){
-        this.isActive = isActive;
-    }
+    // public void setActiveRole(boolean isActive){
+    //     this.isActive = isActive;
+    // }
 
     public void setStarredRole(boolean starredRole){
         this.starredRole = starredRole;
