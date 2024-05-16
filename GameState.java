@@ -2,16 +2,14 @@ import java.util.*;
 
 public class GameState {
     private Player activePlayer;
-    private List<Player> players;
+    private ArrayList<Player> players;
     private int dayCount;
-    private String currentPhase;
     private Board board;
 
-    public GameState(Player activePlayer, List<Player> players, int dayCount, String currentPhase, Board board) {
+    public GameState(Player activePlayer, ArrayList<Player> players, int dayCount, Board board) {
         this.activePlayer = activePlayer;
         this.players = players;
         this.dayCount = dayCount;
-        this.currentPhase = currentPhase;
         this.board = board;
     }
 
@@ -51,7 +49,7 @@ public class GameState {
     public boolean endDay(Board board) {
         this.dayCount += 1;
         // do the rest of the end of day stuff here
-        board.resetBoard();
+        board.resetBoardLayout();
         return true;
     }
 
@@ -70,7 +68,7 @@ public class GameState {
         return players;
     }
 
-    public void setPlayers(List<Player> players) {
+    public void setPlayers(ArrayList<Player> players) {
         this.players = players;
     }
 
@@ -80,14 +78,6 @@ public class GameState {
 
     public void setDayCount(int dayCount) {
         this.dayCount = dayCount;
-    }
-
-    public String getCurrentPhase() {
-        return currentPhase;
-    }
-
-    public void setCurrentPhase(String currentPhase) {
-        this.currentPhase = currentPhase;
     }
 
     public Board getBoard() {

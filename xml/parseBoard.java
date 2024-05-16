@@ -39,7 +39,7 @@ public class parseBoard {
         return doc;
     }
 
-    public void readBoardData(Document d) {
+    public Board readBoardData(Document d) {
         // Get the root element of the document <board>
         Element root = d.getDocumentElement();
         NodeList sets = root.getElementsByTagName("set");
@@ -240,6 +240,7 @@ public class parseBoard {
             // Add Casting Office to the board
             newBoard.addRoomToBoard(newCastingOfficeRoom);
         }
+        return newBoard;
 }
 
 public static void main(String args[]){

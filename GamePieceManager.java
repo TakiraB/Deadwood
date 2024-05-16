@@ -11,12 +11,14 @@ public class GamePieceManager {
 
     // roll a six sided die
     public int roll() {
-        return 1;
+        Random random = new Random();
+        int rollValue = random.nextInt(sides + 1);
+        return rollValue;
     }
 
     // roll a six sided die with rollWithModifier
     public int rollWithModifier(int rollWithModifier) {
-        return 1 + rollWithModifier;
+        return roll() + rollWithModifier;
     }
 
     // shuffle the sceneCards
