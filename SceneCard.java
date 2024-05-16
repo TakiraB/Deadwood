@@ -17,7 +17,7 @@ public class SceneCard {
         this.imagePlaceholder = imagePlaceholder;
     }
 
-    // get the information for the SceneCard
+    // TODO: get the information for the SceneCard
     public SceneCard getSceneCard() {
         return this;
     }
