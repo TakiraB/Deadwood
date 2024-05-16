@@ -19,10 +19,10 @@ public class Role {
 
     // update role with information
     public void updateRole(Role role) {
-        this.name = name;
-        this.script = script;
-        this.starredRole = starredRole;
-        this.rank = rank;
+        this.name = role.name;
+        this.script = role.script;
+        this.starredRole = role.starredRole;
+        this.rank = role.rank;
     }
 
     // make sure player has the correct rank for the role
