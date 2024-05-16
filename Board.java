@@ -1,38 +1,61 @@
 import java.util.*;
+import java.util.HashMap;
+// import java.util.Map;
 
+// Reconfigured Board so HashMap controls the layout
+// String is the name of the Room as the key, and Room object as the value
 public class Board {
-    private List<Room> boardLayout;
+    private HashMap<String, Room> boardLayout;
     private int activeScenes;
 
-    public Board(List<Room> boardLayout, int activeScenes) {
-        this.boardLayout = boardLayout;
-        this.activeScenes = activeScenes;
+    // Removed activeScenes for now - not sure how to incorporate this
+    public Board() {
+        this.boardLayout = new HashMap<>();
+        // this.activeScenes = activeScenes;
     }
 
-    // updates the Board
+    // TODO: update the board logic (not sure about this either)
     public void updateBoard() {
 
     }
 
-    // finds all adjacent rooms to room and returns in list
+    // grabs adjacent rooms depending on current room
     public List<Room> getAdjacent(Room room) {
-        List<Room> list = new ArrayList<Room>();
+        // Initialize empty Array List
+        List<Room> list = new ArrayList<>();
+        // while(room != null){
+            // loop to get the neighbors of a given room
+            for (String adjacentNeighbor : room.getAdjacentNeighbors()) {
+                Room adjacentRoom = boardLayout.get(adjacentNeighbor);
+
+                // Add the neighbor to the list we initialized
+                if(adjacentRoom != null){
+                    list.add(adjacentRoom);
+                }
+            }
+        // }
         return list;
     }
 
-    // resets board
-    public boolean resetBoard() {
-        return true;
+    public void resetBoardLayout(){
+        boardLayout.clear();
+    }
+
+    // add a room to the board layout (used in XML)
+    public void addRoomToBoard(Room room){
+        // while(!boardLayout.containsKey(room.getName())){
+            boardLayout.put(room.getName(), room);
+        // }
     }
 
     // getters and setters
 
 
-    public List<Room> getBoardLayout() {
+    public HashMap<String, Room> getBoardLayout() {
         return boardLayout;
     }
 
-    public void setBoardLayout(List<Room> boardLayout) {
+    public void setBoardLayout(HashMap<String, Room> boardLayout) {
         this.boardLayout = boardLayout;
     }
 
@@ -42,5 +65,9 @@ public class Board {
 
     public void setActiveScenes(int activeScenes) {
         this.activeScenes = activeScenes;
+    }
+
+    public Room getRoomFromBoard(String name){
+        return boardLayout.get(name);
     }
 }
