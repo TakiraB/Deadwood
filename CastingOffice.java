@@ -1,36 +1,34 @@
 import java.util.*;
 
+// Updated CastingOffice to contain all attributes of the upgrade choices
+// Seperated into Upgrades class to hold all the choice information
 public class CastingOffice extends Room {
-    private List<String> rankChoices;
-    private List<Integer> rankPrices;
+    private ArrayList<Upgrades> upgradeChoices;
 
-    public CastingOffice(String name, List<String> rankChoices, List<Integer> rankPrices) {
+    public CastingOffice(String name) {
         super(name);
-        this.rankChoices = rankChoices;
-        this.rankPrices = rankPrices;
+        this.upgradeChoices=new ArrayList<>();
     }
 
-    // updates rank of player, given player and rank
-    public void updateRank(Player player, int rank) {
-        player.setPlayerRank(rank);
+    // updates rank of player
+    public boolean updateRank(Player player) {
+        return true;
     }
 
     // getters and setters
 
 
-    public List<String> getRankChoices() {
-        return rankChoices;
+    public ArrayList<Upgrades> getUpgradeChoices() {
+        return upgradeChoices;
     }
 
-    public void setRankChoices(List<String> rankChoices) {
-        this.rankChoices = rankChoices;
+    public void setRankChoices(ArrayList<Upgrades> upgradeChoices) {
+        this.upgradeChoices=upgradeChoices;
     }
 
-    public List<Integer> getRankPrices() {
-        return rankPrices;
+    public void addUpgradeChoice(Upgrades upgradeChoice){
+        upgradeChoices.add(upgradeChoice);
     }
 
-    public void setRankPrices(List<Integer> rankPrices) {
-        this.rankPrices = rankPrices;
-    }
 }
+
