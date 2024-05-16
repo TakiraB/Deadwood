@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Room {
-    protected static String name;
+    protected String name;
     private ArrayList<String> adjacentNeighbors;
 
     public Room(String name) {
