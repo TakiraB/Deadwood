@@ -3,23 +3,26 @@ import java.util.*;
 public class GameState {
     private Player activePlayer;
     private ArrayList<Player> players;
-    private int dayCount;
+    private int currentDayCount;
+    private int maxDayCount;
     private Board board;
 
     public GameState(Player activePlayer, ArrayList<Player> players, int dayCount, Board board) {
         this.activePlayer = activePlayer;
         this.players = players;
-        this.dayCount = dayCount;
+        this.currentDayCount = currentDayCount;
+        this.maxDayCount = maxDayCount;
         this.board = board;
     }
 
     // does everything for the game to start
     public void startGame() {
-
+        System.out.println("Deadwood game is starting... NOW!");
     }
 
     // does everything for when the game is supposed to end
     public boolean endGame() {
+        System.out.println("The game of Deadwood has ended! Woohoo!");
         return true;
     }
 
@@ -30,7 +33,8 @@ public class GameState {
 
     // ends the turns of the active player
     public void endTurn() {
-        int indexOfActivePlayer = players.indexOf(activePlayer); // finds the index of the active player in the player array
+        // finds the index of the active player in the player array
+        int indexOfActivePlayer = players.indexOf(activePlayer); 
 
         // sets the next player in the array to the active player, if there is no next player then start from the 0 index player instead
         if ((indexOfActivePlayer + 1) != players.size()) {
@@ -47,7 +51,7 @@ public class GameState {
 
     // does everything that happens at the end of the day
     public boolean endDay(Board board) {
-        this.dayCount += 1;
+        this.currentDayCount += 1;
         // do the rest of the end of day stuff here
         board.resetBoardLayout();
         return true;
@@ -72,12 +76,12 @@ public class GameState {
         this.players = players;
     }
 
-    public int getDayCount() {
-        return dayCount;
+    public int getCurrentDayCount() {
+        return currentDayCount;
     }
 
-    public void setDayCount(int dayCount) {
-        this.dayCount = dayCount;
+    public void setCurrentDayCount(int dayCount) {
+        this.currentDayCount = dayCount;
     }
 
     public Board getBoard() {
