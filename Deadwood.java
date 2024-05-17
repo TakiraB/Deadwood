@@ -10,7 +10,7 @@ public class Deadwood {
         parseBoard parsing = new parseBoard();
         Board board = new Board();
         try {
-            doc = parsing.getDocFromFile("board.xml");
+            doc = parsing.getDocFromFile("xml/board.xml");
             board = parsing.readBoardData(doc);
         } catch (Exception e) {
             System.out.println("Error = " + e);
@@ -25,7 +25,7 @@ public class Deadwood {
         boolean isValidInput = false;
         int playerCount = 0;
         // checking if the input from the player is a valid number between 2-8
-        while(!isValidInput) {
+        while (!isValidInput) {
             System.out.println("How many players are you playing with? (2-8 players are required) ");
             String userInput = userInputScanner.nextLine();
 
@@ -36,7 +36,8 @@ public class Deadwood {
                 if (1 < playerCount && playerCount < 9) {
                     isValidInput = true;
                 } else {
-                    System.out.println("That is not a number of players that we can handle, please put in a number between 2 and 8.");
+                    System.out.println(
+                            "That is not a number of players that we can handle, please put in a number between 2 and 8.");
                 }
             } catch (NumberFormatException e) {
                 System.out.println("That is not a number, please put in a number between 2 and 8.");
@@ -47,44 +48,42 @@ public class Deadwood {
         // gives each player a name sets all their other properties to 0/null
         ArrayList<Player> playerList = new ArrayList<Player>();
         for (int i = 0; i < playerCount; i++) {
-            System.out.println("What is the name for Player " + (i+1) + "?");
+            System.out.println("What is the name for Player " + (i + 1) + "?");
             String playerName = userInputScanner.nextLine();
 
             // Initialize Player object for if statement
             Player tempPlayer;
 
-            // Setting up Player starting room, setting up credits based on number of players per rules
-            if (playerCount == 5){
-                tempPlayer = new Player(playerName, 1, 0, 2, null, 0, board.getRoomFromBoard("Trailer"));
-            }
-            else if (playerCount == 6) {
-                tempPlayer = new Player(playerName, 1, 0, 4, null, 0, board.getRoomFromBoard("Trailer"));
-            }
-            else if (playerCount == 7 || playerCount == 8){
-                tempPlayer = new Player(playerName, 2, 0, 0, null, 0,board.getRoomFromBoard("Trailer"));
-            }
-            else{
-                tempPlayer = new Player(playerName, 1, 0, 0, null, 0, board.getRoomFromBoard("Trailer"));
+            // Setting up Player starting room, setting up credits based on number of
+            // players per rules
+            if (playerCount == 5) {
+                tempPlayer = new Player(playerName, 1, 0, 2, null, 0, board.getRoomFromBoard("Trailer"), false, false);
+            } else if (playerCount == 6) {
+                tempPlayer = new Player(playerName, 1, 0, 4, null, 0, board.getRoomFromBoard("Trailer"), false, false);
+            } else if (playerCount == 7 || playerCount == 8) {
+                tempPlayer = new Player(playerName, 2, 0, 0, null, 0, board.getRoomFromBoard("Trailer"), false, false);
+            } else {
+                tempPlayer = new Player(playerName, 1, 0, 0, null, 0, board.getRoomFromBoard("Trailer"), false, false);
             }
             // Add player to list of active players
             playerList.add(tempPlayer);
         }
-        
+
         // creation of GameState with the first activePlayer being randomized
         Random random = new Random();
         int firstPlayerInt = random.nextInt(playerCount);
-        // GameState gameState = new GameState(playerList.get(firstPlayerInt), playerList, 1, board);
+        // GameState gameState = new GameState(playerList.get(firstPlayerInt),
+        // playerList, 1, board);
 
         // Initialize the GameState
         GameState gameState;
 
         // Setting up the max number of days in the game based on the number of players
         // 3 if 2 players, and 4 for everything else
-        if(playerCount < 3){
+        if (playerCount < 3) {
             gameState = new GameState(playerList.get(firstPlayerInt), playerList, 1, 3, board);
-        }
-        else {
-            gameState = new GameState(playerList.get(firstPlayerInt), playerList, 1, 4, board); 
+        } else {
+            gameState = new GameState(playerList.get(firstPlayerInt), playerList, 1, 4, board);
         }
 
         // Start the game
@@ -94,7 +93,7 @@ public class Deadwood {
         boolean activeGame = true;
 
         // Main game loop while an active game is still going
-        while(activeGame){
+        while (activeGame) {
             // Get current active player
             Player activePlayer = gameState.getActivePlayer();
 
@@ -103,7 +102,7 @@ public class Deadwood {
 
             // While it is the Player's turn
             // Menu of player options to choose from
-            while(playerTurnActive){
+            while (playerTurnActive) {
                 System.out.println("Please select an action you would like to do from the following: ");
                 System.out.println("Move");
                 System.out.println("Act");
@@ -113,92 +112,137 @@ public class Deadwood {
                 System.out.println("Display");
                 System.out.println("End");
                 System.out.println("\n");
-            
-            // Get the player input of their choice of interaction
-            String playerInput = userInputScanner.nextLine().toLowerCase();
 
-            // Start of the switch statement for Player choices
-            switch(playerInput) {
+                // Get the player input of their choice of interaction
+                String playerInput = userInputScanner.nextLine().toLowerCase();
 
-                // Move case
-                // Does a validation for adjacent rooms players can move to immediately
-                // Prints adjacent neighbors out based on their current room, and allows users to choose from those options
-                // TODO: Figure out why user input is not being recongnized as a valid room (always goes to else block)
-                case "move":
-                    System.out.println("Where would you like to move to? You are currently located at the: " + activePlayer.getPlayerRoom());
-                    System.out.println("\n");
-                    System.out.println("Here are adjacent locations you can move to: ");
-                    System.out.println("\n");
+                // Start of the switch statement for Player choices
+                switch (playerInput) {
 
-                    for (int i=0;i<activePlayer.getPlayerRoom().getAdjacentNeighbors().size(); i++){
-                        System.out.println((i+1) + " " + activePlayer.getPlayerRoom().getAdjacentNeighbors().get(i));
+                    // Move case
+                    // Does a validation for adjacent rooms players can move to immediately
+                    // Prints adjacent neighbors out based on their current room, and allows users
+                    // to choose from those options
+                    case "move":
+                        if (activePlayer.getHasMoved()) {
+                            System.out.println("You have already moved, you will have to wait until your next turn!");
+                            break;
+                        }
+                        System.out.println("Where would you like to move to? You are currently located: "
+                                + activePlayer.getPlayerRoom().getName());
                         System.out.println("\n");
-                    }
-                    System.out.println("Please enter the name of the location you'd like to move to: ");
-                    String moveToLocation = userInputScanner.nextLine().toLowerCase();
-                    Room destination = board.getRoomFromBoard(moveToLocation);
-                    if(destination != null && activePlayer.getPlayerRoom().getAdjacentNeighbors().contains(destination.getName().toLowerCase())) {
-                        activePlayer.move(destination);
-                    }
-                    else {
-                        System.out.println("This move is not valid, either it doesn't exist or not adjacent.");
-                    }
-                    break;
+                        System.out.println("Here are adjacent locations you can move to:");
+                        System.out.println("\n");
 
-                // Act case
-                // Not sure if we want to keep practice chips as a parameter for acting
-                case "act":
-                    activePlayer.act(activePlayer.getPracticeChips());
-                    break;
-                
-                // Rehearse case
-                case "rehearse":
-                    activePlayer.rehearse();
-                    break;
-                
-                // TODO: logic for upgrade switch statement + upgrade method in Player
-                case "upgrade":
-                    System.out.println("Work in progress!");
-                    break;
-                
-                // TODO: Taking a Role use case logic
-                // Probably will need a list of roles based on current room, validation for being in a room with roles, etc.
-                case "take a role":
-                    System.out.println("Work in progress!");
-                    break;
-                
-                // Display current player stats
-                // TODO: Figure out how to display String version of the room, probably need to access Board's Hashmap
-                case "display":
-                    System.out.println("Here is your current stats: ");
-                    System.out.println("Name: " + activePlayer.getName());
-                    System.out.println("Rank: " + activePlayer.getRank());
-                    System.out.println("Dollars: " + activePlayer.getDollars());
-                    System.out.println("Credits: " + activePlayer.getCredits());
-                    System.out.println("Active Role: " + activePlayer.getRole());
-                    System.out.println("Practice Chips: " + activePlayer.getPracticeChips());
-                    System.out.println("Current Room: " + activePlayer.getPlayerRoom());
-                    System.out.println("\n");
-                    break;
+                        for (int i = 0; i < activePlayer.getPlayerRoom().getAdjacentNeighbors().size(); i++) {
+                            System.out.println(
+                                    (i + 1) + " " + activePlayer.getPlayerRoom().getAdjacentNeighbors().get(i));
+                            System.out.println("\n");
+                        }
+                        System.out.println("Please enter the name of the location you'd like to move to: ");
+                        String moveToLocation = userInputScanner.nextLine();
 
-                // Player doesn't have to do anything on their turn, end turn
-                case "end":
-                    playerTurnActive = false;
-                    gameState.endTurn();
-                    break;
-                
-                // Default to break out of switch statement (this could be the end turn case)
-                default:
-                    break;
+                        // takes the user input and converts it to title case (First letter of each word
+                        // is capital, everything else in lowercase)
+                        // this is required since the names of all the places room are in title case
+                        // TODO: check to make sure all titles are this way otherwise it will not work
+                        String[] words = moveToLocation.toLowerCase().split(" ");
+                        StringBuilder capitalized = new StringBuilder();
+                        for (String word : words) {
+                            if (word.length() > 0) {
+                                capitalized.append(Character.toUpperCase(word.charAt(0)))
+                                        .append(word.substring(1))
+                                        .append(" ");
+                            }
+                        }
+                        moveToLocation = capitalized.toString().trim();
+
+                        Room destination = board.getRoomFromBoard(moveToLocation);
+                        System.out.println(destination.getName());
+                        if (destination != null && activePlayer.getPlayerRoom().getAdjacentNeighbors()
+                                .contains(destination.getName())) {
+                            activePlayer.move(destination);
+                        } else {
+                            System.out.println("This move is not valid, either it doesn't exist or not adjacent.");
+                        }
+                        break;
+
+                    // Act case
+                    // Not sure if we want to keep practice chips as a parameter for acting
+                    case "act":
+                        if (activePlayer.getActiveRole() == null) {
+                            System.out.println("You have to have a role before you can act!");
+                            break;
+                        } else if (activePlayer.getHasActed()) {
+                            System.out.println("You have already acted, you can act again next turn!");
+                        }
+                        activePlayer.act(activePlayer.getPracticeChips());
+                        break;
+
+                    // Rehearse case
+                    case "rehearse":
+                        if (activePlayer.getActiveRole() == null) {
+                            System.out.println("You have to have a role before you can rehearse!");
+                            break;
+                        }
+                        activePlayer.rehearse();
+                        break;
+
+                    // TODO: logic for upgrade switch statement + upgrade method in Player
+                    case "upgrade":
+                        // making sure the player is in the casting room
+                        if (activePlayer.getPlayerRoom().getName() != "Casting Office") {
+                            System.out.println(
+                                    "You are not in the Casting Office. To upgrade, please move to the Casting Office and try again");
+                            break;
+                        }
+                        System.out.println("Work in progress!");
+                        break;
+
+                    // TODO: Taking a Role use case logic
+                    // Probably will need a list of roles based on current room, validation for
+                    // being in a room with roles, etc.
+                    case "take a role":
+                        if (activePlayer.getActiveRole() != null) {
+                            System.out.println("You already have a role!");
+                            break;
+                        }
+                        System.out.println("Work in progress!");
+                        break;
+
+                    // Display current player stats
+                    // TODO: Figure out how to display String version of the room, probably need to
+                    // access Board's Hashmap
+                    case "display":
+                        System.out.println("Here is your current stats: ");
+                        System.out.println("Name: " + activePlayer.getName());
+                        System.out.println("Rank: " + activePlayer.getRank());
+                        System.out.println("Dollars: " + activePlayer.getDollars());
+                        System.out.println("Credits: " + activePlayer.getCredits());
+                        System.out.println("Active Role: " + activePlayer.getRole());
+                        System.out.println("Practice Chips: " + activePlayer.getPracticeChips());
+                        System.out.println("Current Room: " + activePlayer.getPlayerRoom().getName());
+                        System.out.println("\n");
+                        break;
+
+                    // Player doesn't have to do anything on their turn, end turn
+                    case "end":
+                        playerTurnActive = false;
+                        gameState.endTurn();
+                        break;
+
+                    // Default to break out of switch statement (this could be the end turn case)
+                    default:
+                        break;
+                }
             }
         }
-    }
 
         // Set flag of ongoing game to false (indicating game over)
         activeGame = false;
         // random testing
         // System.out.println(gameState.getActivePlayer().getName());
-        
+
         gameState.endTurn();
         // System.out.println(gameState.getActivePlayer().getName());
 

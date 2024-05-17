@@ -16,7 +16,7 @@ public class Trailer extends Room{
     }
 
     public void setName(String name) {
-        Trailer.name = name;
+        this.name = name;
     }
 
     public List<Player> getPlayers() {

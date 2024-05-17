@@ -7,7 +7,7 @@ public class GameState {
     private int maxDayCount;
     private Board board;
 
-    public GameState(Player activePlayer, ArrayList<Player> players, int dayCount, Board board) {
+    public GameState(Player activePlayer, ArrayList<Player> players, int currentDayCount, int maxDayCount, Board board) {
         this.activePlayer = activePlayer;
         this.players = players;
         this.currentDayCount = currentDayCount;
@@ -33,6 +33,9 @@ public class GameState {
 
     // ends the turns of the active player
     public void endTurn() {
+        // so that player can act on their next turn
+        activePlayer.setHasActed(false);
+        activePlayer.setHasMoved(false);
         // finds the index of the active player in the player array
         int indexOfActivePlayer = players.indexOf(activePlayer); 
 
@@ -44,7 +47,7 @@ public class GameState {
         }
 
         // do other things if needed here, before starting the next turn
-
+        System.out.println("It is now " + activePlayer.getName() + "'s turn!");
         // starts the next turn 
         startTurn();
     }
@@ -90,5 +93,13 @@ public class GameState {
 
     public void setBoard(Board board) {
         this.board = board;
+    }
+
+    public int getMaxDayCount() {
+        return maxDayCount;
+    }
+
+    public void setMaxDayCount(int maxDayCount) {
+        this.maxDayCount = maxDayCount;
     }
 }

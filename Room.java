@@ -5,7 +5,7 @@ public class Room {
     private ArrayList<String> adjacentNeighbors;
 
     public Room(String name) {
-        Room.name = name;
+        this.name = name;
         this.adjacentNeighbors = new ArrayList<>();
     }
 
@@ -22,7 +22,7 @@ public class Room {
     }
 
     public void setName(String name) {
-        Room.name = name;
+        this.name = name;
     }
 
     public ArrayList<String> getAdjacentNeighbors(){

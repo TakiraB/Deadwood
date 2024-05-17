@@ -67,6 +67,18 @@ public class parseBoard {
                 for(int k=0; k<neighborNameList.getLength(); k++){
                     Element singleNeighbor = (Element) neighborNameList.item(k);
                     String singleNeighborName = singleNeighbor.getAttributes().getNamedItem("name").getNodeValue();
+
+                    // the neighbors are set to title case to make sure that you can travel to them and for consistency
+                    String[] words = singleNeighborName.toLowerCase().split(" ");
+                    StringBuilder capitalized = new StringBuilder();
+                    for (String word: words) {
+                        if (word.length() > 0) {
+                            capitalized.append(Character.toUpperCase(word.charAt(0)))
+                                       .append(word.substring(1))
+                                       .append(" ");
+                        }
+                    }
+                    singleNeighborName = capitalized.toString().trim();
                     newRoom.setAdjacentNeighbors(singleNeighborName);
                 }
 

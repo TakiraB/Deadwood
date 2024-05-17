@@ -6,9 +6,11 @@ public class Player {
     private Role activeRole;
     private int practiceChips;
     private Room currentRoom;
+    private boolean hasMoved;
+    private boolean hasActed;
 
 
-    public Player(String name, int rank, int dollars, int credits, Role activeRole, int practiceChips, Room currentRoom) {
+    public Player(String name, int rank, int dollars, int credits, Role activeRole, int practiceChips, Room currentRoom, boolean hasMoved, boolean hasActed) {
         this.name = name;
         this.rank = rank;
         this.dollars = dollars;
@@ -16,12 +18,15 @@ public class Player {
         this.activeRole = activeRole;
         this.practiceChips = practiceChips;
         this.currentRoom = currentRoom;
+        this.hasMoved = hasMoved;
+        this.hasActed = hasActed;
     }
 
     // move to a destination (Room role)
     public String move(Room destination) {
         if(currentRoom.getAdjacentNeighbors().contains(destination.getName())){
             this.setPlayerRoom(destination);
+            this.setHasMoved(true);
             return "You have successfully moved!";
         }
         else {
@@ -95,8 +100,11 @@ public class Player {
         this.rank = rank;
     }
 
-    public void setFunds(int dollars, int credits){
+    public void setDollars(int dollars) {
         this.dollars = dollars;
+    }
+
+    public void setCredits(int credits) {
         this.credits = credits;
     }
 
@@ -114,6 +122,22 @@ public class Player {
 
     public void setPlayerRoom(Room newRoom) {
         this.currentRoom = newRoom;
+    }
+
+    public boolean getHasMoved() {
+        return hasMoved;
+    }
+
+    public void setHasMoved(boolean hasMoved) {
+        this.hasMoved = hasMoved;
+    }
+
+    public boolean getHasActed() {
+        return hasActed;
+    }
+
+    public void setHasActed(boolean hasActed) {
+        this.hasActed = hasActed;
     }
 }
 
