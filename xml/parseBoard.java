@@ -146,7 +146,7 @@ public class parseBoard {
         NodeList trailer = root.getElementsByTagName("trailer");
         for(int q=0;q<trailer.getLength();q++){
             Element trailerElement = (Element)trailer.item(q);
-            String trailerName = "trailer";
+            String trailerName = "Trailer";
 
             // Not creating RoomWithScene
             Room newTrailerRoom = new Room(trailerName);
