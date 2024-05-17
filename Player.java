@@ -23,14 +23,10 @@ public class Player {
 
     // move to a destination (Room role)
     public String move(Room destination) {
-        if(currentRoom.getAdjacentNeighbors().contains(destination.getName())){
-            this.setPlayerRoom(destination);
-            this.setHasMoved(true);
-            return "You have successfully moved!";
-        }
-        else {
-            return "That room is not adjacent, you cannot move there this turn. Please try moving closer to the desired room.";
-        }
+        this.setPlayerRoom(destination);
+        this.setHasMoved(true);
+        return "You have successfully moved!";
+
     }
 
     // TODO: finish act logic

@@ -149,8 +149,6 @@ public class Deadwood {
                         // is capital, everything else in lowercase)
                         // this is required since the names of all the places room are in title case
                         // TODO: check to make sure all titles are this way otherwise it will not work
-                        // Casting Office is office in getAdjacentNeighbors
-                        // TODO: this does not work since casting office room does not get saved to activePlayer
                         String[] words = moveToLocation.toLowerCase().split(" ");
                         StringBuilder capitalized = new StringBuilder();
                         for (String word : words) {
@@ -162,6 +160,7 @@ public class Deadwood {
                         }
                         moveToLocation = capitalized.toString().trim();
                         Room destination;
+
                         // special case for casting office
                         if (moveToLocation.equals("Office")) {
                             destination = board.getRoomFromBoard("Casting Office");
@@ -172,7 +171,7 @@ public class Deadwood {
                         if (destination != null && 
                                 (activePlayer.getPlayerRoom().getAdjacentNeighbors().contains(destination.getName()) 
                                 || activePlayer.getPlayerRoom().getAdjacentNeighbors().contains(moveToLocation))) {
-                            activePlayer.move(destination); // TODO: This doesnt work for casting office, idk why every other place works
+                            System.out.println(activePlayer.move(destination)); // TODO: This doesnt work for casting office, idk why every other place works
                             System.out.println("You have successfully moved to " + destination.getName());
                         } else {
                             System.out.println("This move is not valid, either it doesn't exist or not adjacent.");
@@ -192,11 +191,8 @@ public class Deadwood {
                         break;
 
                     // Rehearse case
+                    // This should be done
                     case "rehearse":
-                        if (activePlayer.getActiveRole() == null) {
-                            System.out.println("You have to have a role before you can rehearse!");
-                            break;
-                        }
                         activePlayer.rehearse();
                         break;
 
