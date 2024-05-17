@@ -9,7 +9,6 @@ public class Player {
     private boolean hasMoved;
     private boolean hasActed;
 
-
     public Player(String name, int rank, int dollars, int credits, Role activeRole, int practiceChips, Room currentRoom, boolean hasMoved, boolean hasActed) {
         this.name = name;
         this.rank = rank;
@@ -35,7 +34,13 @@ public class Player {
     }
 
     // TODO: finish act logic
-    public boolean act(int practiceChips){
+    public boolean act(){
+        // if it is on the card do this
+        if (activeRole.getStarredRole()) {
+            int budget;
+        } else { // do this is not on card
+
+        }
         if(activeRole != null) {
             activeRole.getRoleName();
             activeRole.getScript();

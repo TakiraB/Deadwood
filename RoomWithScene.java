@@ -6,11 +6,13 @@ public class RoomWithScene extends Room {
     private ArrayList<Role> offCardRoles;
     // private int takesForSuccess;
     private ArrayList<Takes> takesForSuccess;
+    private SceneCard sceneCard;
 
     // Now holds all the information for off-card roles associated with a Room with a scene
     public RoomWithScene(String name) {
         super(name);
         this.offCardRoles = new ArrayList<>();
+        this.sceneCard = null;
     }
 
     // adds role to the room
@@ -46,5 +48,13 @@ public class RoomWithScene extends Room {
 
     public ArrayList<Takes> getTakesList(){
         return takesForSuccess;
+    }
+
+    public SceneCard getSceneCard() {
+        return this.sceneCard;
+    }
+
+    public void setSceneCard(SceneCard sceneCard) {
+        this.sceneCard = sceneCard;
     }
 }

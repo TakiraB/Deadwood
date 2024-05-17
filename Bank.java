@@ -1,11 +1,11 @@
 import java.util.*;
 
 public class Bank {
-    private List<List<Integer>> playerFunds;
+    // private List<List<Integer>> playerFunds;
 
-    public Bank(List<List<Integer>> playerFunds) {
-        this.playerFunds = playerFunds;
-    }
+    // public Bank(List<List<Integer>> playerFunds) {
+    //     this.playerFunds = playerFunds;
+    // }
 
     // gives player value amount of credits
     public String giveCredit(Player player, int value){
@@ -21,15 +21,30 @@ public class Bank {
         return "Dollars awarded!";
     }
 
-    // changes player's credits and dollars to creditValue and dollarValue respectively
-    public void updateFunds(Player player, int creditValue, int dollarValue){
-        player.setCredits(creditValue);
-        player.setDollars(dollarValue);
+    // removes dollars from the player's dollars
+    public void payDollars(Player player, int dollars) {
+        int newDollars = player.getDollars() - dollars;
+        player.setDollars(newDollars);
     }
 
-    // verifies that player has specified dollars and credits
-    public boolean verifyFunds(Player player, int dollars, int credits){
-        if (player.getDollars() >= dollars && player.getCredits() >= credits) {
+    // removes credits from the player's credits
+    public void payCredits(Player player, int credits) {
+        int newCredits = player.getCredits() - credits;
+        player.setCredits(newCredits);
+    }
+
+    // checks if player has enough dollars
+    public boolean checkDollars(Player player, int dollars) {
+        if (player.getDollars() >= dollars) {
+            return true;
+        } else{
+            return false;
+        }
+    }
+
+    // checks if player has enough credits
+    public boolean checkCredits(Player player, int credits) {
+        if (player.getCredits() >= credits) {
             return true;
         } else {
             return false;
@@ -39,11 +54,11 @@ public class Bank {
     // getters and setters
 
 
-    public List<List<Integer>> getPlayerFunds() {
-        return playerFunds;
-    }
+    // public List<List<Integer>> getPlayerFunds() {
+    //     return playerFunds;
+    // }
 
-    public void setPlayerFunds(List<List<Integer>> playerFunds) {
-        this.playerFunds = playerFunds;
-    }
+    // public void setPlayerFunds(List<List<Integer>> playerFunds) {
+    //     this.playerFunds = playerFunds;
+    // }
 }

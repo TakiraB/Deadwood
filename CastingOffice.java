@@ -11,8 +11,12 @@ public class CastingOffice extends Room {
     }
 
     // updates rank of player
-    public boolean updateRank(Player player) {
-        return true;
+    public void updateRank(Player player, int rank) {
+        player.setPlayerRank(rank);
+    }
+
+    public void addUpgradeChoice(Upgrades upgradeChoice){
+        upgradeChoices.add(upgradeChoice);
     }
 
     // getters and setters
@@ -25,10 +29,5 @@ public class CastingOffice extends Room {
     public void setRankChoices(ArrayList<Upgrades> upgradeChoices) {
         this.upgradeChoices=upgradeChoices;
     }
-
-    public void addUpgradeChoice(Upgrades upgradeChoice){
-        upgradeChoices.add(upgradeChoice);
-    }
-
 }
 

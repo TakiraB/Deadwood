@@ -21,9 +21,31 @@ public class GameState {
     }
 
     // does everything for when the game is supposed to end
-    public boolean endGame() {
+    public void endGame() {
         System.out.println("The game of Deadwood has ended! Woohoo!");
-        return true;
+        System.out.println("Time to find out who won!");
+        ArrayList<Integer> playerPointTotals = new ArrayList<>();
+        for (int i = 0; i < players.size(); i++) {
+            Player totallingPlayer = players.get(i);
+            Integer total = totallingPlayer.getDollars();
+            total = total + totallingPlayer.getCredits();
+            total = total + (5 * totallingPlayer.getRank());
+            playerPointTotals.add(total);
+        }
+
+
+        List<Integer> indexes = new ArrayList<>();
+        for (int i = 0; i < playerPointTotals.size(); i++) {
+            indexes.add(i);
+        }
+        Collections.sort(indexes, Comparator.comparingInt(playerPointTotals::get).reversed());
+
+        int place = 0;
+        String[] places = {"first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth"};
+        for (Integer index: indexes) {
+            System.err.println(players.get(index).getName() + " got " + places[place] + " with " + playerPointTotals.get(index) + " points.");
+            place++;
+        }
     }
 
     // starts the turn of the next active player
@@ -47,7 +69,7 @@ public class GameState {
         }
 
         // do other things if needed here, before starting the next turn
-        System.out.println("It is now " + activePlayer.getName() + "'s turn!");
+        System.out.println("\nIt is now " + activePlayer.getName() + "'s turn!\n");
         // starts the next turn 
         startTurn();
     }

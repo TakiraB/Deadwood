@@ -16,6 +16,8 @@ public class Deadwood {
             System.out.println("Error = " + e);
         }
 
+        System.out.println(board.getBoardLayout());
+
         // prepping the scanner for user input
         Scanner userInputScanner = new Scanner(System.in);
         System.out.println("Welcome to Deadwood!");
@@ -124,6 +126,7 @@ public class Deadwood {
                     // Prints adjacent neighbors out based on their current room, and allows users
                     // to choose from those options
                     case "move":
+                        // makes sure the player has not already moved this turn
                         if (activePlayer.getHasMoved()) {
                             System.out.println("You have already moved, you will have to wait until your next turn!");
                             break;
@@ -146,6 +149,8 @@ public class Deadwood {
                         // is capital, everything else in lowercase)
                         // this is required since the names of all the places room are in title case
                         // TODO: check to make sure all titles are this way otherwise it will not work
+                        // Casting Office is office in getAdjacentNeighbors
+                        // TODO: this does not work since casting office room does not get saved to activePlayer
                         String[] words = moveToLocation.toLowerCase().split(" ");
                         StringBuilder capitalized = new StringBuilder();
                         for (String word : words) {
@@ -156,12 +161,19 @@ public class Deadwood {
                             }
                         }
                         moveToLocation = capitalized.toString().trim();
+                        Room destination;
+                        // special case for casting office
+                        if (moveToLocation.equals("Office")) {
+                            destination = board.getRoomFromBoard("Casting Office");
+                        } else {
+                            destination = board.getRoomFromBoard(moveToLocation);
+                        }
 
-                        Room destination = board.getRoomFromBoard(moveToLocation);
-                        System.out.println(destination.getName());
-                        if (destination != null && activePlayer.getPlayerRoom().getAdjacentNeighbors()
-                                .contains(destination.getName())) {
-                            activePlayer.move(destination);
+                        if (destination != null && 
+                                (activePlayer.getPlayerRoom().getAdjacentNeighbors().contains(destination.getName()) 
+                                || activePlayer.getPlayerRoom().getAdjacentNeighbors().contains(moveToLocation))) {
+                            activePlayer.move(destination); // TODO: This doesnt work for casting office, idk why every other place works
+                            System.out.println("You have successfully moved to " + destination.getName());
                         } else {
                             System.out.println("This move is not valid, either it doesn't exist or not adjacent.");
                         }
@@ -176,7 +188,7 @@ public class Deadwood {
                         } else if (activePlayer.getHasActed()) {
                             System.out.println("You have already acted, you can act again next turn!");
                         }
-                        activePlayer.act(activePlayer.getPracticeChips());
+                        activePlayer.act();
                         break;
 
                     // Rehearse case
@@ -188,15 +200,60 @@ public class Deadwood {
                         activePlayer.rehearse();
                         break;
 
-                    // TODO: logic for upgrade switch statement + upgrade method in Player
+                    // TODO: logic for upgrade switch statement + upgrade method in Player 
+                    // This should be completed
                     case "upgrade":
                         // making sure the player is in the casting room
-                        if (activePlayer.getPlayerRoom().getName() != "Casting Office") {
+                        System.out.println(activePlayer.getPlayerRoom().getName());
+                        if (!activePlayer.getPlayerRoom().getName().equals("Casting Office")) {
                             System.out.println(
                                     "You are not in the Casting Office. To upgrade, please move to the Casting Office and try again");
                             break;
                         }
-                        System.out.println("Work in progress!");
+
+                        // have to cast the Room Casting Office to class castingOfficeUpgrades to allows for .getUpgradeChoices to be called
+                        Room tempCastingOffice = board.getBoardLayout().get("Casting Office");
+                        CastingOffice castingOfficeUpgrades = (CastingOffice) tempCastingOffice;
+                        for (int i = 0; i  < castingOfficeUpgrades.getUpgradeChoices().size(); i++){
+                            System.out.print("To upgrade to Rank " + castingOfficeUpgrades.getUpgradeChoices().get(i).getUpgradeLevel());
+                            System.out.print(", it will cost " + castingOfficeUpgrades.getUpgradeChoices().get(i).getUpgradeAmount());
+                            System.out.print(" " + castingOfficeUpgrades.getUpgradeChoices().get(i).getCurrencyType() + "s.");
+                            System.out.println();
+                        }
+                        System.out.println("What rank would you like to upgrade to?");
+                        int chosenRank = userInputScanner.nextInt();
+                        userInputScanner.nextLine();
+                        System.out.println("Would you like to pay using dollar or credit?");
+                        String chosenPaymentType = userInputScanner.nextLine().toLowerCase();
+                        int chosenUpgrades = 9999999;
+                        for (int i = 0; i  < castingOfficeUpgrades.getUpgradeChoices().size(); i++){
+                            if (castingOfficeUpgrades.getUpgradeChoices().get(i).getUpgradeLevel() == chosenRank && 
+                                    castingOfficeUpgrades.getUpgradeChoices().get(i).getCurrencyType().equals(chosenPaymentType)) {
+                                chosenUpgrades = castingOfficeUpgrades.getUpgradeChoices().get(i).getUpgradeAmount();
+                            }
+                        }
+                        Bank bank = new Bank();
+                        int paymentAmount = chosenUpgrades;
+                        System.out.println(chosenUpgrades);
+                        if (chosenPaymentType.equals("dollar")) {
+                            if (bank.checkDollars(activePlayer, paymentAmount)) {
+                                bank.payDollars(activePlayer, paymentAmount);
+                                castingOfficeUpgrades.updateRank(activePlayer, chosenRank);
+                                System.out.println("You have successfully upgraded to Rank " + chosenRank + "!");
+                            } else {
+                                System.out.println("You do not have enough dollars to upgrade to that rank");
+                            }
+                        } else if (chosenPaymentType == "credit") {
+                            if (bank.checkCredits(activePlayer, paymentAmount)) {
+                                bank.payCredits(activePlayer, paymentAmount);
+                                castingOfficeUpgrades.updateRank(activePlayer, chosenRank);
+                                System.out.println("You have successfully upgraded to Rank " + chosenRank + "!");
+                            } else {
+                                System.out.println("You do not have enough credits to upgrade to that rank");
+                            }
+                        } else {
+                            System.out.println("You have either selected a rank or currency that exists. Please try again.");
+                        }
                         break;
 
                     // TODO: Taking a Role use case logic
@@ -222,6 +279,14 @@ public class Deadwood {
                         System.out.println("Active Role: " + activePlayer.getRole());
                         System.out.println("Practice Chips: " + activePlayer.getPracticeChips());
                         System.out.println("Current Room: " + activePlayer.getPlayerRoom().getName());
+                        String allAdj = "";
+                        for (String str: activePlayer.getPlayerRoom().getAdjacentNeighbors()) {
+                            if (!allAdj.isEmpty()) {
+                                allAdj += ", ";
+                            }
+                            allAdj += str;
+                        }
+                        System.out.println("Adjacent Rooms: " + allAdj);
                         System.out.println("\n");
                         break;
 
@@ -245,6 +310,9 @@ public class Deadwood {
 
         gameState.endTurn();
         // System.out.println(gameState.getActivePlayer().getName());
+
+        gameState.endGame();
+
 
         // closes scanner since vscode was yelling at me
         userInputScanner.close();
