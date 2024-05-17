@@ -7,16 +7,23 @@ public class Deadwood {
     public static void main(String args[]) {
         // creation of board
         Document doc = null;
-        parseBoard parsing = new parseBoard();
+        parseBoard parsingBoard = new parseBoard();
         Board board = new Board();
         try {
-            doc = parsing.getDocFromFile("xml/board.xml");
-            board = parsing.readBoardData(doc);
+            doc = parsingBoard.getDocFromFile("xml/board.xml");
+            board = parsingBoard.readBoardData(doc);
         } catch (Exception e) {
             System.out.println("Error = " + e);
         }
 
-        System.out.println(board.getBoardLayout());
+        parseCards parsingCards = new parseCards();
+        try{
+            doc = parsingCards.getDocFromFile("cards.xml");
+            ArrayList<SceneCard> cards = parsingCards.readCardData(doc);
+        //    parsing.readCardData(doc);
+        }catch (Exception e){
+           System.out.println("Error = "+e);
+        }
 
         // prepping the scanner for user input
         Scanner userInputScanner = new Scanner(System.in);
