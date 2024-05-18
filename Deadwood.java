@@ -1,7 +1,10 @@
 import org.w3c.dom.Document;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Map;
 
 public class Deadwood {
     public static void main(String args[]) {
@@ -16,14 +19,25 @@ public class Deadwood {
             System.out.println("Error = " + e);
         }
 
+        // creation of all the sceneCards
         parseCards parsingCards = new parseCards();
-        try{
-            doc = parsingCards.getDocFromFile("cards.xml");
-            ArrayList<SceneCard> cards = parsingCards.readCardData(doc);
-        //    parsing.readCardData(doc);
-        }catch (Exception e){
-           System.out.println("Error = "+e);
+        ArrayList<SceneCard> cards = new ArrayList<SceneCard>();
+        try {
+            doc = parsingCards.getDocFromFile("xml/cards.xml");
+            cards = parsingCards.readCardData(doc);
+        } catch (Exception e) {
+            System.out.println("Error = " + e);
         }
+
+        // creating a randomized order for sceneCards to be added to rooms
+        List<Integer> numbers = new ArrayList<>();
+        for (int i = 0; i < cards.size(); i++) {
+            numbers.add(i);
+        }
+        Collections.shuffle(numbers);
+
+        // giving each RoomWithScene a sceneCard
+        board.sceneCardDistribution(numbers, cards, 1);
 
         // prepping the scanner for user input
         Scanner userInputScanner = new Scanner(System.in);
@@ -117,7 +131,7 @@ public class Deadwood {
                 System.out.println("Act");
                 System.out.println("Rehearse");
                 System.out.println("Upgrade");
-                System.out.println("Take Role");
+                System.out.println("Take a Role");
                 System.out.println("Display");
                 System.out.println("End");
                 System.out.println("\n");
@@ -175,10 +189,13 @@ public class Deadwood {
                             destination = board.getRoomFromBoard(moveToLocation);
                         }
 
-                        if (destination != null && 
-                                (activePlayer.getPlayerRoom().getAdjacentNeighbors().contains(destination.getName()) 
-                                || activePlayer.getPlayerRoom().getAdjacentNeighbors().contains(moveToLocation))) {
-                            System.out.println(activePlayer.move(destination)); // TODO: This doesnt work for casting office, idk why every other place works
+                        if (destination != null &&
+                                (activePlayer.getPlayerRoom().getAdjacentNeighbors().contains(destination.getName())
+                                        || activePlayer.getPlayerRoom().getAdjacentNeighbors()
+                                                .contains(moveToLocation))) {
+                            System.out.println(activePlayer.move(destination)); // TODO: This doesnt work for casting
+                                                                                // office, idk why every other place
+                                                                                // works
                             System.out.println("You have successfully moved to " + destination.getName());
                         } else {
                             System.out.println("This move is not valid, either it doesn't exist or not adjacent.");
@@ -203,7 +220,7 @@ public class Deadwood {
                         activePlayer.rehearse();
                         break;
 
-                    // TODO: logic for upgrade switch statement + upgrade method in Player 
+                    // TODO: logic for upgrade switch statement + upgrade method in Player
                     // This should be completed
                     case "upgrade":
                         // making sure the player is in the casting room
@@ -214,13 +231,17 @@ public class Deadwood {
                             break;
                         }
 
-                        // have to cast the Room Casting Office to class castingOfficeUpgrades to allows for .getUpgradeChoices to be called
+                        // have to cast the Room Casting Office to class castingOfficeUpgrades to allows
+                        // for .getUpgradeChoices to be called
                         Room tempCastingOffice = board.getBoardLayout().get("Casting Office");
                         CastingOffice castingOfficeUpgrades = (CastingOffice) tempCastingOffice;
-                        for (int i = 0; i  < castingOfficeUpgrades.getUpgradeChoices().size(); i++){
-                            System.out.print("To upgrade to Rank " + castingOfficeUpgrades.getUpgradeChoices().get(i).getUpgradeLevel());
-                            System.out.print(", it will cost " + castingOfficeUpgrades.getUpgradeChoices().get(i).getUpgradeAmount());
-                            System.out.print(" " + castingOfficeUpgrades.getUpgradeChoices().get(i).getCurrencyType() + "s.");
+                        for (int i = 0; i < castingOfficeUpgrades.getUpgradeChoices().size(); i++) {
+                            System.out.print("To upgrade to Rank "
+                                    + castingOfficeUpgrades.getUpgradeChoices().get(i).getUpgradeLevel());
+                            System.out.print(", it will cost "
+                                    + castingOfficeUpgrades.getUpgradeChoices().get(i).getUpgradeAmount());
+                            System.out.print(
+                                    " " + castingOfficeUpgrades.getUpgradeChoices().get(i).getCurrencyType() + "s.");
                             System.out.println();
                         }
                         System.out.println("What rank would you like to upgrade to?");
@@ -229,9 +250,10 @@ public class Deadwood {
                         System.out.println("Would you like to pay using dollar or credit?");
                         String chosenPaymentType = userInputScanner.nextLine().toLowerCase();
                         int chosenUpgrades = 9999999;
-                        for (int i = 0; i  < castingOfficeUpgrades.getUpgradeChoices().size(); i++){
-                            if (castingOfficeUpgrades.getUpgradeChoices().get(i).getUpgradeLevel() == chosenRank && 
-                                    castingOfficeUpgrades.getUpgradeChoices().get(i).getCurrencyType().equals(chosenPaymentType)) {
+                        for (int i = 0; i < castingOfficeUpgrades.getUpgradeChoices().size(); i++) {
+                            if (castingOfficeUpgrades.getUpgradeChoices().get(i).getUpgradeLevel() == chosenRank &&
+                                    castingOfficeUpgrades.getUpgradeChoices().get(i).getCurrencyType()
+                                            .equals(chosenPaymentType)) {
                                 chosenUpgrades = castingOfficeUpgrades.getUpgradeChoices().get(i).getUpgradeAmount();
                             }
                         }
@@ -255,7 +277,8 @@ public class Deadwood {
                                 System.out.println("You do not have enough credits to upgrade to that rank");
                             }
                         } else {
-                            System.out.println("You have either selected a rank or currency that exists. Please try again.");
+                            System.out.println(
+                                    "You have either selected a rank or currency that exists. Please try again.");
                         }
                         break;
 
@@ -266,7 +289,70 @@ public class Deadwood {
                         if (activePlayer.getActiveRole() != null) {
                             System.out.println("You already have a role!");
                             break;
+                        } else if (!(activePlayer.getPlayerRoom() instanceof RoomWithScene)) {
+                            System.out.println("You are not in a room with roles!");
+                            break;
                         }
+
+                        RoomWithScene activePlayerLocation = (RoomWithScene) activePlayer.getPlayerRoom();
+                        ArrayList<Role> offCardRoles = activePlayerLocation.getOffCardRoles();
+                        List<Role> onCardRoles = activePlayerLocation.getSceneCard().getRoles();
+                        System.out.println();
+                        System.out.println("The off card roles available are:");
+                        for (Role role : offCardRoles) {
+                            if (activePlayer.getRank() >= role.getRank()) {
+                                System.out.println("Rank " + role.getRank() + ": " + role.getRoleName());
+                            }
+                        }
+                        System.out.println();
+                        System.out.println("The on card roles available are:");
+                        for (Role role : onCardRoles) {
+                            if (activePlayer.getRank() >= role.getRank()) {
+                                System.out.println("Rank " + role.getRank() + ": " + role.getRoleName());
+                            }
+                        }
+                        System.out.println();
+
+                        System.out.println("Would you like an off card role or an on card role (off or on)");
+
+                        String roleTypeInput = userInputScanner.nextLine();
+                        boolean didNotGetRole = true;
+                        if (roleTypeInput.equals("off")) {
+                            System.out.println("Which off card role would you like?");
+                            while (didNotGetRole) {
+                                for (Role role : offCardRoles) {
+                                    String roleInput = userInputScanner.nextLine();
+                                    if (role.getRoleName().toLowerCase().equals(roleInput.toLowerCase())) {
+                                        activePlayer.setActiveRole(role);
+                                        didNotGetRole = false;
+                                        System.out.println("You got " + activePlayer.getRole().getRoleName());
+                                        break;
+                                    }
+                                }
+                                if (didNotGetRole) {
+                                    System.out.println("You did not input a valid role please try again.");
+                                }
+                            }
+                        } else if (roleTypeInput.equals("on")) {
+                            System.out.println("Which on card role would you like?");
+                            while (didNotGetRole) {
+                                for (Role role : onCardRoles) {
+                                    String roleInput = userInputScanner.nextLine();
+                                    if (role.getRoleName().toLowerCase().equals(roleInput.toLowerCase())) {
+                                        activePlayer.setActiveRole(role);
+                                        didNotGetRole = false;
+                                        System.out.println("You got " + activePlayer.getRole().getRoleName());
+                                        break;
+                                    }
+                                }
+                                if (didNotGetRole) {
+                                    System.out.println("You did not input a valid role please try again.");
+                                }
+                            }
+                        } else {
+                            System.out.println("Please use take a role again if you would like to do so and use either off or on when asked.");
+                        }
+
                         System.out.println("Work in progress!");
                         break;
 
@@ -283,7 +369,7 @@ public class Deadwood {
                         System.out.println("Practice Chips: " + activePlayer.getPracticeChips());
                         System.out.println("Current Room: " + activePlayer.getPlayerRoom().getName());
                         String allAdj = "";
-                        for (String str: activePlayer.getPlayerRoom().getAdjacentNeighbors()) {
+                        for (String str : activePlayer.getPlayerRoom().getAdjacentNeighbors()) {
                             if (!allAdj.isEmpty()) {
                                 allAdj += ", ";
                             }
@@ -315,7 +401,6 @@ public class Deadwood {
         // System.out.println(gameState.getActivePlayer().getName());
 
         gameState.endGame();
-
 
         // closes scanner since vscode was yelling at me
         userInputScanner.close();

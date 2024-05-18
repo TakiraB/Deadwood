@@ -57,4 +57,12 @@ public class RoomWithScene extends Room {
     public void setSceneCard(SceneCard sceneCard) {
         this.sceneCard = sceneCard;
     }
+
+    public void setOffCardRoles(ArrayList<Role> offCardRoles) {
+        this.offCardRoles = offCardRoles;
+    }
+
+    public ArrayList<Role> getOffCardRoles() {
+        return this.offCardRoles;
+    }
 }

@@ -1,6 +1,5 @@
-import java.util.*;
-import java.util.HashMap;
 // import java.util.Map;
+import java.util.*;
 
 // Reconfigured Board so HashMap controls the layout
 // String is the name of the Room as the key, and Room object as the value
@@ -35,6 +34,20 @@ public class Board {
             }
         // }
         return list;
+    }
+
+    // gives all RoomWithScene a SceneCard, randomly and will make sure each is not used twice
+    public void sceneCardDistribution(List<Integer> numbers, ArrayList<SceneCard> cards, int day) {
+        // numbers is a random order of 0-39, temp will get the value at index and then pass the corresponding SceneCard to room
+        int temp = 0 + ((day - 1) * 10);
+        for (Map.Entry<String, Room> key : boardLayout.entrySet()) {
+            Room room = key.getValue();
+            if (room instanceof RoomWithScene) {
+                RoomWithScene currentRoomWithScene = (RoomWithScene) room;
+                currentRoomWithScene.setSceneCard(cards.get(numbers.get(temp)));
+                temp++;
+            }
+        }
     }
 
     public void resetBoardLayout(){
