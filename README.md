@@ -15,7 +15,7 @@ You play against your friends to succeed in as many sets across the board as you
 ## Setup
 
 1. Download or clone the repository containing the Java files.
-2. Ensure you have the necessary XML files (`board.xml` and `cards.xml`) in the project directory. They should be located in a folder called "xml" in the same directory as the project files. 
+2. Ensure you have the necessary XML files (`board.xml` and `cards.xml`) in the project directory. They should be located in a folder called `xml` in the same directory as the project files. 
 
 ## How to Compile and Play
 
