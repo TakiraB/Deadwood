@@ -4,33 +4,33 @@ public class Upgrades {
     private int upgradeAmount;
 
     public Upgrades(int upgradeLevel, String currencyType, int upgradeAmount) {
-        this.upgradeLevel=upgradeLevel;
+        this.upgradeLevel = upgradeLevel;
         this.currencyType = currencyType;
         this.upgradeAmount = upgradeAmount;
     }
 
-    public int getUpgradeLevel(){
+    public int getUpgradeLevel() {
         return upgradeLevel;
     }
 
-    public void setUpgradeLevel(int upgradeLevel){
-        this.upgradeLevel=upgradeLevel;
+    public void setUpgradeLevel(int upgradeLevel) {
+        this.upgradeLevel = upgradeLevel;
     }
 
-    public String getCurrencyType(){
+    public String getCurrencyType() {
         return currencyType;
     }
 
-    public void setCurrencyType(String currencyType){
-        this.currencyType=currencyType;
+    public void setCurrencyType(String currencyType) {
+        this.currencyType = currencyType;
     }
 
-    public int getUpgradeAmount(){
+    public int getUpgradeAmount() {
         return upgradeAmount;
     }
 
-    public void setUpgradeAmount(int upgradeAmount){
-        this.upgradeAmount=upgradeAmount;
+    public void setUpgradeAmount(int upgradeAmount) {
+        this.upgradeAmount = upgradeAmount;
     }
 
 }

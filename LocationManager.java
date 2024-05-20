@@ -12,13 +12,13 @@ public class LocationManager {
         return true;
     }
 
-    // verify that a player can move to the room they selected(next) from the current room
+    // verify that a player can move to the room they selected(next) from the
+    // current room
     public boolean validateMove(Room next, Room current, Player player) {
         return true;
     }
 
     // getters and setters
-
 
     public List<Room> getAdjacentRooms() {
         return adjacentRooms;

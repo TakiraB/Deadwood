@@ -2,18 +2,18 @@ public class Bank {
     // private List<List<Integer>> playerFunds;
 
     // public Bank(List<List<Integer>> playerFunds) {
-    //     this.playerFunds = playerFunds;
+    // this.playerFunds = playerFunds;
     // }
 
     // gives player value amount of credits
-    public String giveCredit(Player player, int value){
+    public String giveCredit(Player player, int value) {
         int tempCredits = player.getCredits() + value;
         player.setCredits(tempCredits);
         return "Credit awarded!";
     }
 
     // gives player value amount of dollars
-    public String giveDollar(Player player, int value){
+    public String giveDollar(Player player, int value) {
         int tempDollars = player.getDollars() + value;
         player.setDollars(tempDollars);
         return "Dollars awarded!";
@@ -35,7 +35,7 @@ public class Bank {
     public boolean checkDollars(Player player, int dollars) {
         if (player.getDollars() >= dollars) {
             return true;
-        } else{
+        } else {
             return false;
         }
     }
@@ -51,12 +51,11 @@ public class Bank {
 
     // getters and setters
 
-
     // public List<List<Integer>> getPlayerFunds() {
-    //     return playerFunds;
+    // return playerFunds;
     // }
 
     // public void setPlayerFunds(List<List<Integer>> playerFunds) {
-    //     this.playerFunds = playerFunds;
+    // this.playerFunds = playerFunds;
     // }
 }

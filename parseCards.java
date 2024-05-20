@@ -11,7 +11,6 @@
 // Associated area
 // Line for each part
 
-
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
@@ -24,7 +23,7 @@ import java.util.ArrayList;
 // import java.util.List;
 
 public class parseCards {
-        public Document getDocFromFile(String filename)
+    public Document getDocFromFile(String filename)
             throws ParserConfigurationException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
@@ -39,7 +38,8 @@ public class parseCards {
         return doc;
     }
 
-    // Loop through each <card> and store all the information into Role objects (Starred Roles)
+    // Loop through each <card> and store all the information into Role objects
+    // (Starred Roles)
     // Returns an ArrayList of SceneCard objects
     public ArrayList<SceneCard> readCardData(Document d) {
         Element root = d.getDocumentElement();
@@ -49,7 +49,7 @@ public class parseCards {
         ArrayList<SceneCard> sceneCardArrayList = new ArrayList<>();
 
         // Loop through each card element to get card specific attributes
-        for(int i = 0;i<cards.getLength();i++){
+        for (int i = 0; i < cards.getLength(); i++) {
             Element cardList = (Element) cards.item(i);
             String cardName = cardList.getAttributes().getNamedItem("name").getNodeValue();
             String cardImage = cardList.getAttributes().getNamedItem("img").getNodeValue();
@@ -58,15 +58,16 @@ public class parseCards {
             NodeList cardScenes = cardList.getElementsByTagName("scene");
 
             // Initializations so objects can properly store information (too deep in loop)
-            int sceneNumber=0;
-            String sceneDescription="";
+            int sceneNumber = 0;
+            String sceneDescription = "";
 
             // ArrayList<Role> starredRolesArray = new ArrayList<>();
 
             // Loop through card scenes
-            for(int j=0;j<cardScenes.getLength();j++){
+            for (int j = 0; j < cardScenes.getLength(); j++) {
                 Element cardScene = (Element) cardScenes.item(j);
-                // String sceneNumber = cardScene.getAttributes().getNamedItem("number").getNodeValue();
+                // String sceneNumber =
+                // cardScene.getAttributes().getNamedItem("number").getNodeValue();
                 // String sceneDescription = cardScene.getTextContent().trim();
                 sceneNumber = Integer.parseInt(cardScene.getAttributes().getNamedItem("number").getNodeValue());
                 sceneDescription = cardScene.getTextContent().trim();
@@ -77,15 +78,16 @@ public class parseCards {
 
             // Loop through role information
             NodeList parts = cardList.getElementsByTagName("part");
-            for (int k=0;k<parts.getLength();k++){
+            for (int k = 0; k < parts.getLength(); k++) {
                 Element partList = (Element) parts.item(k);
                 String partName = partList.getAttributes().getNamedItem("name").getNodeValue();
-                // String partLevel = partList.getAttributes().getNamedItem("level").getNodeValue();
+                // String partLevel =
+                // partList.getAttributes().getNamedItem("level").getNodeValue();
                 int partLevel = Integer.parseInt(partList.getAttributes().getNamedItem("level").getNodeValue());
 
                 // TODO: Capture area information for starred scenes
                 NodeList cardSceneAreaList = partList.getElementsByTagName("area");
-                for (int a=0;a<cardSceneAreaList.getLength();a++){
+                for (int a = 0; a < cardSceneAreaList.getLength(); a++) {
                     Element starredPartArea = (Element) cardSceneAreaList.item(a);
                     String x = starredPartArea.getAttribute("x");
                     String y = starredPartArea.getAttribute("y");
@@ -95,7 +97,7 @@ public class parseCards {
 
                 // Loop through scripts for each starred role
                 NodeList cardSceneLineList = partList.getElementsByTagName("line");
-                for (int b=0;b<cardSceneLineList.getLength();b++){
+                for (int b = 0; b < cardSceneLineList.getLength(); b++) {
                     Element starredLines = (Element) cardSceneLineList.item(b);
                     String starredLineText = starredLines.getTextContent().trim();
 
@@ -104,27 +106,27 @@ public class parseCards {
                     // Add them to our ArrayList
                     starredRolesArray.add(newRole);
                 }
-                
+
             }
 
             // Create SceneCard objects and store them in appropriate ArrayList
-            SceneCard newSceneCard = new SceneCard(cardName, cardBudget, starredRolesArray, sceneNumber, sceneDescription, cardImage);
+            SceneCard newSceneCard = new SceneCard(cardName, cardBudget, starredRolesArray, sceneNumber,
+                    sceneDescription, cardImage);
             sceneCardArrayList.add(newSceneCard);
         }
         // Returns ArrayList of Scenecard objects
         return sceneCardArrayList;
     }
 
-    public static void main(String args[]){
+    public static void main(String args[]) {
         Document doc = null;
         parseCards parsing = new parseCards();
-        try{
+        try {
             doc = parsing.getDocFromFile("cards.xml");
             ArrayList<SceneCard> cards = parsing.readCardData(doc);
-        //    parsing.readCardData(doc);
-        }catch (Exception e){
-           System.out.println("Error = "+e);
+            // parsing.readCardData(doc);
+        } catch (Exception e) {
+            System.out.println("Error = " + e);
         }
-     }
+    }
 }
-
