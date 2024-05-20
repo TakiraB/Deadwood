@@ -3,6 +3,7 @@ import java.util.*;
 public class SceneCard {
     private String name;
     private int budget;
+    // starred roles
     private List<Role> roles;
     private int sceneNumber;
     private String description;
@@ -17,10 +18,10 @@ public class SceneCard {
         this.imagePlaceholder = imagePlaceholder;
     }
 
-    // TODO: get the information for the SceneCard
-    public SceneCard getSceneCard() {
-        return this;
-    }
+    // // TODO: get the information for the SceneCard
+    // public SceneCard getSceneCard() {
+    //     return this;
+    // }
 
     // Getters and setters 
 
@@ -72,4 +73,5 @@ public class SceneCard {
     public String getImage(){
         return imagePlaceholder;
     }
+
 }

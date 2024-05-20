@@ -2,9 +2,9 @@ import java.util.*;
 
 public class GamePieceManager {
     private int sides;
-    private List<SceneCard> sceneCards;
+    private ArrayList<SceneCard> sceneCards;
 
-    public GamePieceManager(int sides, List<SceneCard> sceneCards) {
+    public GamePieceManager(int sides, ArrayList<SceneCard> sceneCards) {
         this.sides = sides;
         this.sceneCards = sceneCards;
     }
@@ -48,11 +48,11 @@ public class GamePieceManager {
         this.sides = sides;
     }
 
-    public List<SceneCard> getSceneCards() {
+    public ArrayList<SceneCard> getSceneCards() {
         return sceneCards;
     }
 
-    public void setSceneCards(List<SceneCard> sceneCards) {
+    public void setSceneCards(ArrayList<SceneCard> sceneCards) {
         this.sceneCards = sceneCards;
     }
 }

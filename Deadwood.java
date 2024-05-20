@@ -13,7 +13,7 @@ public class Deadwood {
         parseBoard parsingBoard = new parseBoard();
         Board board = new Board();
         try {
-            doc = parsingBoard.getDocFromFile("xml/board.xml");
+            doc = parsingBoard.getDocFromFile("board.xml");
             board = parsingBoard.readBoardData(doc);
         } catch (Exception e) {
             System.out.println("Error = " + e);
@@ -23,7 +23,7 @@ public class Deadwood {
         parseCards parsingCards = new parseCards();
         ArrayList<SceneCard> cards = new ArrayList<SceneCard>();
         try {
-            doc = parsingCards.getDocFromFile("xml/cards.xml");
+            doc = parsingCards.getDocFromFile("cards.xml");
             cards = parsingCards.readCardData(doc);
         } catch (Exception e) {
             System.out.println("Error = " + e);
@@ -38,6 +38,8 @@ public class Deadwood {
 
         // giving each RoomWithScene a sceneCard
         board.sceneCardDistribution(numbers, cards, 1);
+
+        GamePieceManager gamePieceManager = new GamePieceManager(6, cards);
 
         // prepping the scanner for user input
         Scanner userInputScanner = new Scanner(System.in);
@@ -194,9 +196,8 @@ public class Deadwood {
                                 (activePlayer.getPlayerRoom().getAdjacentNeighbors().contains(destination.getName())
                                         || activePlayer.getPlayerRoom().getAdjacentNeighbors()
                                                 .contains(moveToLocation))) {
-                            System.out.println(activePlayer.move(destination)); // TODO: This doesnt work for casting
-                                                                                // office, idk why every other place
-                                                                                // works
+                            // System.out.println(activePlayer.move(destination));
+                            activePlayer.move(destination);
                             System.out.println("You have successfully moved to " + destination.getName());
                         } else {
                             System.out.println("This move is not valid, either it doesn't exist or not adjacent.");
@@ -212,13 +213,13 @@ public class Deadwood {
                         } else if (activePlayer.getHasActed()) {
                             System.out.println("You have already acted, you can act again next turn!");
                         }
-                        activePlayer.act();
+                        activePlayer.act(board, gamePieceManager);
                         break;
 
                     // Rehearse case
                     // This should be done
                     case "rehearse":
-                        activePlayer.rehearse();
+                        activePlayer.rehearse(board);
                         break;
 
                     // TODO: logic for upgrade switch statement + upgrade method in Player
@@ -355,7 +356,13 @@ public class Deadwood {
                         System.out.println("Rank: " + activePlayer.getRank());
                         System.out.println("Dollars: " + activePlayer.getDollars());
                         System.out.println("Credits: " + activePlayer.getCredits());
-                        System.out.println("Active Role: " + activePlayer.getRole());
+                        if (activePlayer.getRole() != null) {
+                            System.out.println("Active Role: " + activePlayer.getRole().getRoleName());
+                        }
+                        else {
+                            System.out.println("Active Role: No Role");
+                        }
+
                         System.out.println("Practice Chips: " + activePlayer.getPracticeChips());
                         System.out.println("Current Room: " + activePlayer.getPlayerRoom().getName());
                         String allAdj = "";
