@@ -1,5 +1,3 @@
-import java.util.*;
-
 public class Bank {
     // private List<List<Integer>> playerFunds;
 

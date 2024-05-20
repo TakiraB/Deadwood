@@ -100,7 +100,6 @@ public class Player {
 
         // If the roll is successful, distribute awards based on starred role
         if (sceneRoll >= sceneBudget){
-            activeCurrentRoom.removeTakesForScene();
             if (activeRole.getStarredRole() == true){
                 // activeCurrentRoom.removeTakesForScene();
                 this.credits += 2;
@@ -112,6 +111,7 @@ public class Player {
                 this.dollars += 1;
                 System.out.println("Success! Here's a credit and a dollar.");
             }
+            activeCurrentRoom.removeTakesForScene();
         }
         else {
             if (activeRole.getStarredRole() == false){
@@ -123,32 +123,21 @@ public class Player {
             }
         }
 
+        this.hasActed = true;
         if (activeCurrentRoom.getTakesList().isEmpty()){
             activeCurrentRoom.checkWrapScene(activeCurrentSceneCard);
+            this.activeRole = null;
         }
         return true;
     }
-
-    // rehearsing requires no parameters, only increasing practiceChips
-    // public boolean rehearse(){
-    //     if(activeRole != null){
-    //         practiceChips++;
-    //         System.out.println("You have successfully rehearsed! Here's a practice chip!");
-    //     }
-    //     else {
-    //         System.out.println("Boo! You aren't in a role right now.");
-    //         return false;
-    //     }
-    //     return true;
-    // }
 
     public boolean rehearse(Board board){
 
         // Get the name of the current room they are in, and grab that Room object from the Board
         String activeCurrentRoomName = currentRoom.getName();
-        RoomWithScene activeCurrentRoom = (RoomWithScene) board.getRoomFromBoard(activeCurrentRoomName);
+        //RoomWithScene activeCurrentRoom = (RoomWithScene) board.getRoomFromBoard(activeCurrentRoomName);
         
-        SceneCard activeCurrentSceneCard;
+        //SceneCard activeCurrentSceneCard;
 
         RoomWithScene rehearseRoom = (RoomWithScene) currentRoom;
         SceneCard currentScene = rehearseRoom.getSceneCard();
@@ -157,12 +146,13 @@ public class Player {
         System.out.println("Current Scene: " + currentScene.getName());
         System.out.println("Scene Budget: " + currentScene.getBudget());
 
-        if(activeRole != null && practiceChips < budget){
+        if (practiceChips >= budget - 1){
+            System.out.println("You cannot get more practice chips, since you are already are guaranteed success when acting");
+        } else if(activeRole != null && practiceChips < budget){
             practiceChips++;
             System.out.println("You have successfully rehearsed! Here's a practice chip!");
-        } else if (practiceChips >= budget){
-            System.out.println("You cannot get more practice chips, since you are already are guaranteed success when acting");
-        }
+            this.hasActed = true;
+        } 
         else {
             System.out.println("Boo! You aren't in a role right now.");
             return false;
