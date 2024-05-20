@@ -4,15 +4,17 @@ import java.util.*;
 public class RoomWithScene extends Room {
     private boolean activeScene;
     private ArrayList<Role> offCardRoles;
-    // private int takesForSuccess;
     private ArrayList<Takes> takesForSuccess;
     private SceneCard sceneCard;
+    private Scene currentScene;
 
     // Now holds all the information for off-card roles associated with a Room with a scene
     public RoomWithScene(String name) {
         super(name);
         this.offCardRoles = new ArrayList<>();
+        this.takesForSuccess = new ArrayList<>();
         this.sceneCard = null;
+        this.currentScene = new Scene(name, false, false, null);
     }
 
     // adds role to the room
@@ -46,6 +48,15 @@ public class RoomWithScene extends Room {
         takesForSuccess.add(take);
     }
 
+    public void removeTakesForScene(){
+        if(!takesForSuccess.isEmpty()){
+            takesForSuccess.remove(0);
+        }
+        else {
+            System.out.println("The scene is wrapped, there are no shot counters to be removed!");
+        }
+    }
+
     public ArrayList<Takes> getTakesList(){
         return takesForSuccess;
     }
@@ -56,5 +67,38 @@ public class RoomWithScene extends Room {
 
     public void setSceneCard(SceneCard sceneCard) {
         this.sceneCard = sceneCard;
+        if (sceneCard != null) {
+            this.activeScene = true;
+        }
+        else {
+            this.activeScene = false;
+        }
+    }
+
+    public boolean hasSceneCard() {
+        return sceneCard != null;
+    }
+
+    public Scene getRoomScene() {
+        return currentScene;
+    }
+
+    public void setRoomScene(Scene newScene){
+        this.currentScene = newScene;
+    }
+
+    public void checkWrapScene(SceneCard currentSceneCard) {
+        if (currentScene != null && takesForSuccess.isEmpty()) {
+            currentScene.wrapScene(this, currentSceneCard);
+            setActiveScene(false);
+        }
+    }
+
+    public void setOffCardRoles(ArrayList<Role> offCardRoles) {
+        this.offCardRoles = offCardRoles;
+    }
+
+    public ArrayList<Role> getOffCardRoles() {
+        return this.offCardRoles;
     }
 }

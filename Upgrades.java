@@ -32,4 +32,5 @@ public class Upgrades {
     public void setUpgradeAmount(int upgradeAmount){
         this.upgradeAmount=upgradeAmount;
     }
+
 }
