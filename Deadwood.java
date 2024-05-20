@@ -219,6 +219,26 @@ public class Deadwood {
                             break;
                         }
                         activePlayer.act(board, gamePieceManager);
+                        activePlayer.setPracticeChips(0);
+                        int wrappedRooms = 0;
+                        for (Room room: board.getBoardLayout().values()) {
+                            if (room instanceof RoomWithScene) {
+                                RoomWithScene roomWithScene = (RoomWithScene) room;
+                                if (!roomWithScene.getRoomScene().getSceneCardActive()) {
+                                    wrappedRooms += 1;
+                                }
+                            }
+                        }
+                        if (wrappedRooms == 9) {
+                            gameState.endDay(board, numbers, cards, gameState.getCurrentDayCount());
+                            for (Player player : playerList) {
+                                player.setActiveRole(null);
+                                player.setHasActed(false);
+                                player.setHasMoved(false);
+                                player.setPlayerRoom(board.getRoomFromBoard("trailer"));
+                                player.setPracticeChips(0);
+                            }
+                        }
                         break;
 
                     // Rehearse case
