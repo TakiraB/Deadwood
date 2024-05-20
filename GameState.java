@@ -75,10 +75,10 @@ public class GameState {
     }
 
     // does everything that happens at the end of the day
-    public boolean endDay(Board board) {
+    public boolean endDay(Board board, List<Integer> numbers, ArrayList<SceneCard> cards, int day) {
         this.currentDayCount += 1;
         // do the rest of the end of day stuff here
-        board.resetBoardLayout();
+        board.sceneCardDistribution(numbers, cards, currentDayCount);
         return true;
     }
 

@@ -1,6 +1,5 @@
-import java.util.*;
-import java.util.HashMap;
 // import java.util.Map;
+import java.util.*;
 
 // Reconfigured Board so HashMap controls the layout
 // String is the name of the Room as the key, and Room object as the value
@@ -21,7 +20,7 @@ public class Board {
 
     // grabs adjacent rooms depending on current room
     public List<Room> getAdjacent(Room room) {
-        // Initialize empty Array List
+        // Initialize empty Array List (not sure if this is needed yet)
         List<Room> list = new ArrayList<>();
         // while(room != null){
             // loop to get the neighbors of a given room
@@ -43,9 +42,10 @@ public class Board {
 
     // add a room to the board layout (used in XML)
     public void addRoomToBoard(Room room){
-        // while(!boardLayout.containsKey(room.getName())){
+        if(!boardLayout.containsKey(room.getName())){
             boardLayout.put(room.getName(), room);
-        // }
+
+        }
     }
 
     // getters and setters
@@ -70,4 +70,6 @@ public class Board {
     public Room getRoomFromBoard(String name){
         return boardLayout.get(name);
     }
+
+
 }

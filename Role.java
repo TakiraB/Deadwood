@@ -3,6 +3,7 @@ public class Role {
     private String script;
     private boolean starredRole;
     private int rank;
+    private Player playerOnRole;
 
     public Role(String name, String script, boolean starredRole, int rank){
         this.name = name;
@@ -71,4 +72,14 @@ public class Role {
     public void setRank(int rank){
         this.rank = rank;
     }
+
+    public Player getPlayerOnRole(){
+        return playerOnRole;
+    }
+
+    public void setPlayer(Player newPlayer){
+        this.playerOnRole = newPlayer;
+    }
+
+    
 }
