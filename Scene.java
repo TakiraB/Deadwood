@@ -29,7 +29,6 @@ public class Scene {
         GamePieceManager scenePieceManager = new GamePieceManager(6, null);
         int sceneBudget = currentSceneCard.getBudget();
         List<Role> starredRoles = currentSceneCard.getRoles();
-        System.out.println("Here are your bonuses for finishing the scene!");
 
         // checking players in role on card
         ArrayList<Player> playerOnCard = new ArrayList<>();
@@ -41,6 +40,7 @@ public class Scene {
 
         // bonuses are only given if there is a player on the sceneCard when wrapped
         if (playerOnCard.size() > 0) {
+            System.out.println("Here are your bonuses for finishing the scene!");
             // get and sort the rolls for the bonuses
             ArrayList<Integer> rollResults = new ArrayList<Integer>();
             for (int i = 0; i < sceneBudget; i++) {
@@ -72,6 +72,8 @@ public class Scene {
                             .println(offCardPlayer.getName() + " now has " + offCardPlayer.getDollars() + " dollars!");
                 }
             }
+        } else {
+            System.out.println("There was no players on card role, so no bonus was given.");
         }
     }
 

@@ -102,6 +102,7 @@ public class parseBoard {
                     int takeNumber = Integer.parseInt(singleTake.getAttributes().getNamedItem("number").getNodeValue());
                     NodeList takeArea = singleTake.getElementsByTagName("area");
                     Takes newTake = new Takes(takeNumber);
+                    newRoom.addTakesForScene(newTake);
 
                     // TODO: Store Areas for each take
                     for (int c = 0; c < takeArea.getLength(); c++) {

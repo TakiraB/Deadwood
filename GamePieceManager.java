@@ -12,7 +12,7 @@ public class GamePieceManager {
     // roll a six sided die
     public int roll() {
         Random random = new Random();
-        int rollValue = random.nextInt(sides + 1);
+        int rollValue = random.nextInt(sides) + 1;
         return rollValue;
     }
 
