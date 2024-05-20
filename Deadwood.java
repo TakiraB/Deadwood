@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.Map;
 
 public class Deadwood {
     public static void main(String args[]) {
@@ -97,8 +96,6 @@ public class Deadwood {
         // creation of GameState with the first activePlayer being randomized
         Random random = new Random();
         int firstPlayerInt = random.nextInt(playerCount);
-        // GameState gameState = new GameState(playerList.get(firstPlayerInt),
-        // playerList, 1, board);
 
         // Initialize the GameState
         GameState gameState;
@@ -150,8 +147,13 @@ public class Deadwood {
                     // Prints adjacent neighbors out based on their current room, and allows users
                     // to choose from those options
                     case "move":
+                        // player cannot move if in a role
+                        if (activePlayer.getRole() != null) {
+                            System.out.println("You are currently in a Role, you cannot move until you're role is completed!");
+                            break;
+                        }
                         // makes sure the player has not already moved this turn
-                        if (activePlayer.getHasMoved()) {
+                        else if (activePlayer.getHasMoved()) {
                             System.out.println("You have already moved, you will have to wait until your next turn!");
                             break;
                         }
@@ -172,7 +174,6 @@ public class Deadwood {
                         // takes the user input and converts it to title case (First letter of each word
                         // is capital, everything else in lowercase)
                         // this is required since the names of all the places room are in title case
-                        // TODO: check to make sure all titles are this way otherwise it will not work
                         String[] words = moveToLocation.toLowerCase().split(" ");
                         StringBuilder capitalized = new StringBuilder();
                         for (String word : words) {
@@ -192,6 +193,7 @@ public class Deadwood {
                             destination = board.getRoomFromBoard(moveToLocation);
                         }
 
+                        // moves activePlayer to the destination if the destination can be moved to
                         if (destination != null &&
                                 (activePlayer.getPlayerRoom().getAdjacentNeighbors().contains(destination.getName())
                                         || activePlayer.getPlayerRoom().getAdjacentNeighbors()
@@ -205,25 +207,28 @@ public class Deadwood {
                         break;
 
                     // Act case
-                    // Not sure if we want to keep practice chips as a parameter for acting
                     case "act":
                         if (activePlayer.getActiveRole() == null) {
                             System.out.println("You have to have a role before you can act!");
                             break;
                         } else if (activePlayer.getHasActed()) {
-                            System.out.println("You have already acted, you can act again next turn!");
+                            System.out.println("You have already acted or rehearse this turn, you can do either next turn!");
+                            break;
                         }
                         activePlayer.act(board, gamePieceManager);
                         break;
 
                     // Rehearse case
-                    // This should be done
                     case "rehearse":
+                        if (activePlayer.getHasActed()) {
+                            System.out.println("You have already acted or rehearse this turn, you can do either next turn!");
+                            break;
+                        }
                         activePlayer.rehearse(board);
                         break;
 
-                    // TODO: logic for upgrade switch statement + upgrade method in Player
-                    // This should be completed
+
+                    // Upgrade case
                     case "upgrade":
                         // making sure the player is in the casting room
                         System.out.println(activePlayer.getPlayerRoom().getName());
@@ -233,8 +238,7 @@ public class Deadwood {
                             break;
                         }
 
-                        // have to cast the Room Casting Office to class castingOfficeUpgrades to allows
-                        // for .getUpgradeChoices to be called
+                        // prints out all the available options for rank upgrades
                         Room tempCastingOffice = board.getBoardLayout().get("Casting Office");
                         CastingOffice castingOfficeUpgrades = (CastingOffice) tempCastingOffice;
                         for (int i = 0; i < castingOfficeUpgrades.getUpgradeChoices().size(); i++) {
@@ -246,6 +250,8 @@ public class Deadwood {
                                     " " + castingOfficeUpgrades.getUpgradeChoices().get(i).getCurrencyType() + "s.");
                             System.out.println();
                         }
+                        
+                        // asking the player was rank they would like to upgrade to and how they would like to pay for it
                         System.out.println("What rank would you like to upgrade to?");
                         int chosenRank = userInputScanner.nextInt();
                         userInputScanner.nextLine();
@@ -319,15 +325,20 @@ public class Deadwood {
                         String takeRoleInput = userInputScanner.nextLine();
                         if (takeRoleInput.equals("yes")) {
                             boolean didNotGetRole = true;
-                            while(didNotGetRole) {
+                            while (didNotGetRole) {
                                 System.out.println("What role would you like to take?");
                                 String roleInput = userInputScanner.nextLine();
                                 for (Role role : offCardRoles) {
                                     if (role.getRoleName().toLowerCase().equals(roleInput.toLowerCase())) {
-                                        activePlayer.setActiveRole(role);
-                                        didNotGetRole = false;
-                                        System.out.println("You got " + activePlayer.getRole().getRoleName());
-                                        break;
+                                        if (role.getPlayerOnRole() != null) {
+                                            activePlayer.setActiveRole(role);
+                                            didNotGetRole = false;
+                                            System.out.println("You got " + activePlayer.getRole().getRoleName());
+                                            break;
+                                        } else {
+                                            System.out.println("There is a player already in that role, take a different role or type no if you no longer want to take a role.");
+                                        }
+
                                     }
                                 }
                                 for (Role role : onCardRoles) {
@@ -358,8 +369,7 @@ public class Deadwood {
                         System.out.println("Credits: " + activePlayer.getCredits());
                         if (activePlayer.getRole() != null) {
                             System.out.println("Active Role: " + activePlayer.getRole().getRoleName());
-                        }
-                        else {
+                        } else {
                             System.out.println("Active Role: No Role");
                         }
 
@@ -378,7 +388,7 @@ public class Deadwood {
 
                     case "display players":
                         System.out.println("Here is where all players are located:");
-                        for (Player player: playerList) {
+                        for (Player player : playerList) {
                             System.out.println(player.getName() + " is located at " + player.getPlayerRoom().getName());
                         }
                         System.out.println();
