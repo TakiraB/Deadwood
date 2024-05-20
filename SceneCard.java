@@ -9,7 +9,8 @@ public class SceneCard {
     private String description;
     private String imagePlaceholder;
 
-    public SceneCard(String name, int budget, List<Role> roles, int sceneNumber, String description, String imagePlaceholder) {
+    public SceneCard(String name, int budget, List<Role> roles, int sceneNumber, String description,
+            String imagePlaceholder) {
         this.name = name;
         this.budget = budget;
         this.roles = roles;
@@ -20,11 +21,10 @@ public class SceneCard {
 
     // // TODO: get the information for the SceneCard
     // public SceneCard getSceneCard() {
-    //     return this;
+    // return this;
     // }
 
-    // Getters and setters 
-
+    // Getters and setters
 
     public String getName() {
         return name;
@@ -58,19 +58,19 @@ public class SceneCard {
         this.description = description;
     }
 
-    public void setSceneNumber(int sceneNumber){
-        this.sceneNumber=sceneNumber;
+    public void setSceneNumber(int sceneNumber) {
+        this.sceneNumber = sceneNumber;
     }
 
-    public int getSceneNumber(){
+    public int getSceneNumber() {
         return sceneNumber;
     }
 
-    public void setImage (String imagePlaceholder){
-        this.imagePlaceholder=imagePlaceholder;
+    public void setImage(String imagePlaceholder) {
+        this.imagePlaceholder = imagePlaceholder;
     }
 
-    public String getImage(){
+    public String getImage() {
         return imagePlaceholder;
     }
 

@@ -7,7 +7,8 @@ public class GameState {
     private int maxDayCount;
     private Board board;
 
-    public GameState(Player activePlayer, ArrayList<Player> players, int currentDayCount, int maxDayCount, Board board) {
+    public GameState(Player activePlayer, ArrayList<Player> players, int currentDayCount, int maxDayCount,
+            Board board) {
         this.activePlayer = activePlayer;
         this.players = players;
         this.currentDayCount = currentDayCount;
@@ -33,7 +34,6 @@ public class GameState {
             playerPointTotals.add(total);
         }
 
-
         List<Integer> indexes = new ArrayList<>();
         for (int i = 0; i < playerPointTotals.size(); i++) {
             indexes.add(i);
@@ -41,9 +41,10 @@ public class GameState {
         Collections.sort(indexes, Comparator.comparingInt(playerPointTotals::get).reversed());
 
         int place = 0;
-        String[] places = {"first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth"};
-        for (Integer index: indexes) {
-            System.err.println(players.get(index).getName() + " got " + places[place] + " with " + playerPointTotals.get(index) + " points.");
+        String[] places = { "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth" };
+        for (Integer index : indexes) {
+            System.err.println(players.get(index).getName() + " got " + places[place] + " with "
+                    + playerPointTotals.get(index) + " points.");
             place++;
         }
     }
@@ -59,9 +60,10 @@ public class GameState {
         activePlayer.setHasActed(false);
         activePlayer.setHasMoved(false);
         // finds the index of the active player in the player array
-        int indexOfActivePlayer = players.indexOf(activePlayer); 
+        int indexOfActivePlayer = players.indexOf(activePlayer);
 
-        // sets the next player in the array to the active player, if there is no next player then start from the 0 index player instead
+        // sets the next player in the array to the active player, if there is no next
+        // player then start from the 0 index player instead
         if ((indexOfActivePlayer + 1) != players.size()) {
             activePlayer = players.get(indexOfActivePlayer + 1);
         } else {
@@ -70,7 +72,7 @@ public class GameState {
 
         // do other things if needed here, before starting the next turn
         System.out.println("\nIt is now " + activePlayer.getName() + "'s turn!\n");
-        // starts the next turn 
+        // starts the next turn
         startTurn();
     }
 
@@ -83,7 +85,6 @@ public class GameState {
     }
 
     // getters and setters
-
 
     public Player getActivePlayer() {
         return activePlayer;
