@@ -134,7 +134,8 @@ public class Deadwood {
                 System.out.println("Rehearse");
                 System.out.println("Upgrade");
                 System.out.println("Take a Role");
-                System.out.println("Display");
+                System.out.println("Display Stats");
+                System.out.println("Display Players");
                 System.out.println("End");
                 System.out.println("\n");
 
@@ -314,15 +315,14 @@ public class Deadwood {
                         }
                         System.out.println();
 
-                        System.out.println("Would you like an off card role or an on card role (off or on)");
-
-                        String roleTypeInput = userInputScanner.nextLine();
-                        boolean didNotGetRole = true;
-                        if (roleTypeInput.equals("off")) {
-                            System.out.println("Which off card role would you like?");
-                            while (didNotGetRole) {
+                        System.out.println("Would you like to take a role? (yes or no)");
+                        String takeRoleInput = userInputScanner.nextLine();
+                        if (takeRoleInput.equals("yes")) {
+                            boolean didNotGetRole = true;
+                            while(didNotGetRole) {
+                                System.out.println("What role would you like to take?");
+                                String roleInput = userInputScanner.nextLine();
                                 for (Role role : offCardRoles) {
-                                    String roleInput = userInputScanner.nextLine();
                                     if (role.getRoleName().toLowerCase().equals(roleInput.toLowerCase())) {
                                         activePlayer.setActiveRole(role);
                                         didNotGetRole = false;
@@ -330,15 +330,7 @@ public class Deadwood {
                                         break;
                                     }
                                 }
-                                if (didNotGetRole) {
-                                    System.out.println("You did not input a valid role please try again.");
-                                }
-                            }
-                        } else if (roleTypeInput.equals("on")) {
-                            System.out.println("Which on card role would you like?");
-                            while (didNotGetRole) {
                                 for (Role role : onCardRoles) {
-                                    String roleInput = userInputScanner.nextLine();
                                     if (role.getRoleName().toLowerCase().equals(roleInput.toLowerCase())) {
                                         activePlayer.setActiveRole(role);
                                         didNotGetRole = false;
@@ -351,14 +343,14 @@ public class Deadwood {
                                 }
                             }
                         } else {
-                            System.out.println("Please use take a role again if you would like to do so and use either off or on when asked.");
+                            System.out.println("Please use take a role again if you would like to take a role.");
                         }
-
-                        System.out.println("Work in progress!");
                         break;
 
                     // Display current player stats
-                    case "display":
+                    // TODO: Figure out how to display String version of the room, probably need to
+                    // access Board's Hashmap
+                    case "display stats":
                         System.out.println("Here is your current stats: ");
                         System.out.println("Name: " + activePlayer.getName());
                         System.out.println("Rank: " + activePlayer.getRank());
@@ -381,7 +373,15 @@ public class Deadwood {
                             allAdj += str;
                         }
                         System.out.println("Adjacent Rooms: " + allAdj);
-                        System.out.println("\n");
+                        System.out.println();
+                        break;
+
+                    case "display players":
+                        System.out.println("Here is where all players are located:");
+                        for (Player player: playerList) {
+                            System.out.println(player.getName() + " is located at " + player.getPlayerRoom().getName());
+                        }
+                        System.out.println();
                         break;
 
                     // Player doesn't have to do anything on their turn, end turn
