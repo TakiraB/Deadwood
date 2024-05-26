@@ -7,8 +7,10 @@ public class RoomWithScene extends Room {
     private ArrayList<Takes> takesForSuccess;
     private SceneCard sceneCard;
     private Scene currentScene;
+    private Area sceneRoomArea;
 
-    // Now holds all the information for off-card roles associated with a Room with a scene
+    // Now holds all the information for off-card roles associated with a Room with
+    // a scene
     public RoomWithScene(String name) {
         super(name);
         this.offCardRoles = new ArrayList<>();
@@ -35,7 +37,6 @@ public class RoomWithScene extends Room {
 
     // getters and setters
 
-
     public boolean getActiveScene() {
         return activeScene;
     }
@@ -44,20 +45,19 @@ public class RoomWithScene extends Room {
         this.activeScene = activeScene;
     }
 
-    public void addTakesForScene(Takes take){
+    public void addTakesForScene(Takes take) {
         takesForSuccess.add(take);
     }
 
-    public void removeTakesForScene(){
-        if(!takesForSuccess.isEmpty()){
+    public void removeTakesForScene() {
+        if (!takesForSuccess.isEmpty()) {
             takesForSuccess.remove(0);
-        }
-        else {
+        } else {
             System.out.println("The scene is wrapped, there are no shot counters to be removed!");
         }
     }
 
-    public ArrayList<Takes> getTakesList(){
+    public ArrayList<Takes> getTakesList() {
         return takesForSuccess;
     }
 
@@ -69,8 +69,7 @@ public class RoomWithScene extends Room {
         this.sceneCard = sceneCard;
         if (sceneCard != null) {
             this.activeScene = true;
-        }
-        else {
+        } else {
             this.activeScene = false;
         }
     }
@@ -83,7 +82,7 @@ public class RoomWithScene extends Room {
         return currentScene;
     }
 
-    public void setRoomScene(Scene newScene){
+    public void setRoomScene(Scene newScene) {
         this.currentScene = newScene;
     }
 
@@ -100,5 +99,13 @@ public class RoomWithScene extends Room {
 
     public ArrayList<Role> getOffCardRoles() {
         return this.offCardRoles;
+    }
+
+    public Area getSceneRoomArea(){
+        return sceneRoomArea;
+    }
+
+    public void setSceneRoomArea(Area roomArea){
+        this.sceneRoomArea = roomArea;
     }
 }
