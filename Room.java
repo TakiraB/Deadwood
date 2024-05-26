@@ -3,6 +3,7 @@ import java.util.ArrayList;
 public class Room {
     protected String name;
     private ArrayList<String> adjacentNeighbors;
+    private Area roomArea;
 
     public Room(String name) {
         this.name = name;
@@ -16,7 +17,6 @@ public class Room {
 
     // getters and setters
 
-
     public String getName() {
         return name;
     }
@@ -25,12 +25,20 @@ public class Room {
         this.name = name;
     }
 
-    public ArrayList<String> getAdjacentNeighbors(){
+    public ArrayList<String> getAdjacentNeighbors() {
         return adjacentNeighbors;
     }
 
-    public void setAdjacentNeighbors(String adjacentNeighbor){
+    public void setAdjacentNeighbors(String adjacentNeighbor) {
         adjacentNeighbors.add(adjacentNeighbor);
+    }
+
+    public Area getRoomArea(){
+        return roomArea;
+    }
+
+    public void setRoomArea(Area roomArea){
+        this.roomArea = roomArea;
     }
 
 }
