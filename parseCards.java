@@ -87,12 +87,18 @@ public class parseCards {
 
                 // TODO: Capture area information for starred scenes
                 NodeList cardSceneAreaList = partList.getElementsByTagName("area");
+                Area newStarredRoleArea = null;
                 for (int a = 0; a < cardSceneAreaList.getLength(); a++) {
                     Element starredPartArea = (Element) cardSceneAreaList.item(a);
-                    String x = starredPartArea.getAttribute("x");
-                    String y = starredPartArea.getAttribute("y");
-                    String h = starredPartArea.getAttribute("h");
-                    String w = starredPartArea.getAttribute("w");
+                    // String x = starredPartArea.getAttribute("x");
+                    // String y = starredPartArea.getAttribute("y");
+                    // String h = starredPartArea.getAttribute("h");
+                    // String w = starredPartArea.getAttribute("w");
+                    int x = Integer.parseInt(starredPartArea.getAttributes().getNamedItem("x").getNodeValue());
+                    int y = Integer.parseInt(starredPartArea.getAttributes().getNamedItem("y").getNodeValue());
+                    int h = Integer.parseInt(starredPartArea.getAttributes().getNamedItem("h").getNodeValue());
+                    int w = Integer.parseInt(starredPartArea.getAttributes().getNamedItem("w").getNodeValue());
+                    newStarredRoleArea = new Area(x,y,h,w);
                 }
 
                 // Loop through scripts for each starred role
@@ -103,6 +109,7 @@ public class parseCards {
 
                     // Create Role objects for each starred role
                     Role newRole = new Role(partName, starredLineText, true, partLevel);
+                    newRole.setRoleArea(newStarredRoleArea);
                     // Add them to our ArrayList
                     starredRolesArray.add(newRole);
                 }
