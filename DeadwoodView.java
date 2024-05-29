@@ -13,9 +13,13 @@ import javax.swing.*;
 import javax.imageio.ImageIO;
 import java.awt.event.*;
 import javax.swing.border.*;
+import java.awt.image.BufferedImage;
+import org.w3c.dom.Document;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
 
 // Extends Jframe (creates window)
-public class DeadwoodView extends JFrame {
+public class DeadwoodView extends JFrame implements ViewInterface {
 
   // JLabels (text/images)
   JLabel boardlabel;
@@ -41,13 +45,16 @@ public class DeadwoodView extends JFrame {
   
   // JLayered Pane (for having multiple layers)
   JLayeredPane bPane;
+
+  private Board board;
   
   // Constructor
   
-  public DeadwoodView() {
-      
+  public DeadwoodView(Board board) {
        // Set the title of the JFrame
        super("Deadwood");
+
+       this.board = board;
        // Set the exit option for the JFrame
        setDefaultCloseOperation(EXIT_ON_CLOSE);
       
@@ -169,6 +176,7 @@ public class DeadwoodView extends JFrame {
        textAction.setBounds(icon.getIconWidth()+15, 370, 200, 250);
        textAction.setBorder(BorderFactory.createLineBorder(Color.BLACK));
        bPane.add(textAction, Integer.valueOf(2));
+
   }
   
   // This class implements Mouse Events
@@ -199,13 +207,41 @@ public class DeadwoodView extends JFrame {
       }
    }
 
+   public void setSceneCardsBoard(){
+      // ImageIcon sceneCardDown = new ImageIcon("images/CardBack-small.jpg");
+      for (Room boardRoom : board.getBoardLayout().values()) {
+         // get the area of each RoomWithScene
+         if(boardRoom instanceof RoomWithScene){
+            RoomWithScene sceneRoom = (RoomWithScene) boardRoom;
+            Area sceneArea = sceneRoom.getSceneRoomArea();
+
+            // place Cardback-small.jpg at each area spot
+            JLabel cardBackImage = new JLabel();
+            ImageIcon sceneCardDown = new ImageIcon("images/CardBack-small.jpg");
+            cardBackImage.setIcon(sceneCardDown);
+            cardBackImage.setBounds(sceneArea.getXValue(), sceneArea.getYValue(), sceneArea.getWidth(), sceneArea.getHeight());
+            bPane.add(cardBackImage, Integer.valueOf(2));
+
+         }
+      }
+   }
 
   public static void main(String[] args) {
+   Document doc = null;
+   parseBoard parsingBoard = new parseBoard();
+   Board board = new Board();
+   try {
+       doc = parsingBoard.getDocFromFile("board.xml");
+       board = parsingBoard.readBoardData(doc);
+   } catch (Exception e) {
+       System.out.println("Error = " + e);
+   }
   
-    DeadwoodView board = new DeadwoodView();
-    board.setVisible(true);
+    DeadwoodView boardView = new DeadwoodView(board);
+    boardView.setVisible(true);
     
     // Take input from the user about number of players
-    JOptionPane.showInputDialog(board, "How many players?"); 
+    JOptionPane.showInputDialog(boardView, "How many players?"); 
   }
+
 }
