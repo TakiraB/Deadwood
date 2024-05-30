@@ -12,7 +12,7 @@ public class DeadwoodController {
     private GameState gameState;
     private GamePieceManager pieceManager;
 
-    public DeadwoodController(Board board, DeadwoodView view, ArrayList<SceneCard> sceneCards){
+    public DeadwoodController(Board board, DeadwoodView view){
         this.board = board;
         this.view = view;
         this.playerList = new ArrayList<>();
@@ -23,6 +23,10 @@ public class DeadwoodController {
 
     // setPlayersClass (may get absorbed into method above, or set the player count)
     public void setActivePlayers(int playerCount){
+    // if (playerCount < 2 || playerCount > 8) {
+    //     JOptionPane.showMessageDialog(view,"That's not an appropriate amount of players! Sorry! :(");
+    // }
+    
     for (int i = 0; i < playerCount; i++) {
         String playerName = JOptionPane.showInputDialog("What is the name for Player " + (i + 1) + "?");
         // Initialize Player object for if statement
