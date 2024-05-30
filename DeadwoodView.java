@@ -1,10 +1,6 @@
 /*
-
    Deadwood GUI helper file
    Author: Moushumi Sharmin
-   This file shows how to create a simple GUI using Java Swing and Awt Library
-   Classes Used: JFrame, JLabel, JButton, JLayeredPane
-
 */
 
 // Imports for Swing components
@@ -58,16 +54,15 @@ public class DeadwoodView extends JFrame implements ViewInterface {
 
    // JLayered Pane (for having multiple layers)
    JLayeredPane bPane;
-
    private Board board;
 
    // Constructor
-
    public DeadwoodView(Board board) {
       // Set the title of the JFrame
       super("Deadwood");
 
       this.board = board;
+
       // Set the exit option for the JFrame
       setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -88,25 +83,25 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       setSize(icon.getIconWidth() + 200, icon.getIconHeight() + 00);
 
       // Add a scene card to this room
-      cardlabel = new JLabel();
-      ImageIcon cIcon = new ImageIcon("01.png");
-      cardlabel.setIcon(cIcon);
-      cardlabel.setBounds(20, 65, cIcon.getIconWidth() + 2, cIcon.getIconHeight());
-      cardlabel.setOpaque(true);
+      // cardlabel = new JLabel();
+      // ImageIcon cIcon = new ImageIcon("01.png");
+      // cardlabel.setIcon(cIcon);
+      // cardlabel.setBounds(20, 65, cIcon.getIconWidth() + 2, cIcon.getIconHeight());
+      // cardlabel.setOpaque(true);
 
-      // Add the card to the lower layer
-      bPane.add(cardlabel, Integer.valueOf(1));
+      // // Add the card to the lower layer
+      // bPane.add(cardlabel, Integer.valueOf(1));
 
       // Add a dice to represent a player.
       // Role for Crusty the prospector. The x and y co-ordiantes are taken from
       // Board.xml file
-      playerlabel = new JLabel();
-      ImageIcon pIcon = new ImageIcon("r2.png");
-      playerlabel.setIcon(pIcon);
-      // playerlabel.setBounds(114,227,pIcon.getIconWidth(),pIcon.getIconHeight());
-      playerlabel.setBounds(114, 227, 46, 46);
-      playerlabel.setVisible(false);
-      bPane.add(playerlabel, Integer.valueOf(3));
+      // playerlabel = new JLabel();
+      // ImageIcon pIcon = new ImageIcon("r2.png");
+      // playerlabel.setIcon(pIcon);
+      // // playerlabel.setBounds(114,227,pIcon.getIconWidth(),pIcon.getIconHeight());
+      // playerlabel.setBounds(114, 227, 46, 46);
+      // playerlabel.setVisible(false);
+      // bPane.add(playerlabel, Integer.valueOf(3));
 
       // Create the Menu for action buttons
       mLabel = new JLabel("Player Actions");
@@ -294,26 +289,26 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       //------------------------------------------
 
       // Create the Current player label
-      currentPlayerLabel = new JLabel("Who's Turn Is It?");
+      currentPlayerLabel = new JLabel("Current Player Statistics");
       currentPlayerLabel.setBounds(icon.getIconWidth() + 15, 300, 150, 20);
       bPane.add(currentPlayerLabel, Integer.valueOf(2));
 
       // Set the current player text area (not modifiable by user)
       activePlayer = new JTextArea();
-      activePlayer.setBounds(icon.getIconWidth() + 15, 320, 150, 20);
+      activePlayer.setBounds(icon.getIconWidth() + 15, 320, 200, 250);
       activePlayer.setEditable(false);
       activePlayer.setBorder(BorderFactory.createLineBorder(Color.BLACK));
       bPane.add(activePlayer, Integer.valueOf(2));
 
       // Create action log label
       logLabel = new JLabel("Recent Actions");
-      logLabel.setBounds(icon.getIconWidth() + 15, 350, 150, 20);
-      bPane.add(logLabel, Integer.valueOf(2));
+      logLabel.setBounds(icon.getIconWidth() + 15, 600, 150, 20);
+      bPane.add(logLabel, Integer.valueOf(3));
 
       // Create text area for action log
       textAction = new JTextArea();
       textAction.setEditable(false);
-      textAction.setBounds(icon.getIconWidth() + 15, 370, 200, 250);
+      textAction.setBounds(icon.getIconWidth() + 15, 620, 200, 250);
       textAction.setBorder(BorderFactory.createLineBorder(Color.BLACK));
       bPane.add(textAction, Integer.valueOf(2));
 
@@ -346,31 +341,29 @@ public class DeadwoodView extends JFrame implements ViewInterface {
 
 
       public void mouseEntered(MouseEvent e) {
+
       }
 
       public void mouseExited(MouseEvent e) {
       }
    }
-
-   
    // MouseAdapter is used when not all functionalities of MouseListener are needed to be implemented
    // I originally had the border stuff in MouseListener, but it was applying to all the buttons
    // So, keeping the functionality separate will make it easier in case I want to apply other effects to the action buttons
    class borderMouseListener extends MouseAdapter {
 
+      // when mouse enters button area, create a border around the area for readability
       @Override
       public void mouseEntered(MouseEvent e) {
-         // when mouse enters button area, create a border around the area for readability
-         // JButton dummyButton = (JButton) e.getSource().setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+         // cast as JButton from object (e.getsource()) so we can apply the border
          JButton dummyButton = (JButton) e.getSource();
          dummyButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-
-         // if(e.getSource() == trailerButton)
       }
 
       @Override
+      // once the mouse exits the button area, make the border invisible again
       public void mouseExited(MouseEvent e) {
-         // once the mouse exits the button area, make the border invisible again
+         // cast as JButton from object (e.getsource()) so we can manipulate the border on mouse exiting
          JButton dummyButton = (JButton) e.getSource();
          dummyButton.setBorder(BorderFactory.createEmptyBorder());
       }
@@ -400,9 +393,141 @@ public class DeadwoodView extends JFrame implements ViewInterface {
          }
       }
    }
+   // playerlabel = new JLabel();
+   // ImageIcon pIcon = new ImageIcon("r2.png");
+   // playerlabel.setIcon(pIcon);
+   // // playerlabel.setBounds(114,227,pIcon.getIconWidth(),pIcon.getIconHeight());
+   // playerlabel.setBounds(114, 227, 46, 46);
+   // playerlabel.setVisible(false);
+   // bPane.add(playerlabel, Integer.valueOf(3));
+
+   // trailerButton.setBounds(1020, 270, 140, 40);
 
    public void setPlayerIcons(int numPlayers){
+      
+      // Initialize all the player colored dice (white dice used for actual roles)
+      ImageIcon player1 = new ImageIcon("dice/dice/b1.png");
+      ImageIcon player2 = new ImageIcon("dice/dice/c1.png");
+      ImageIcon player3 = new ImageIcon("dice/dice/g1.png");
+      ImageIcon player4 = new ImageIcon("dice/dice/o1.png");
+      ImageIcon player5 = new ImageIcon("dice/dice/p1.png");
+      ImageIcon player6 = new ImageIcon("dice/dice/r1.png");
+      ImageIcon player7 = new ImageIcon("dice/dice/v1.png");
+      ImageIcon player8 = new ImageIcon("dice/dice/y1.png");
 
+      JLabel player1Label = new JLabel();
+      player1Label.setIcon(player1);
+      player1Label.setBounds(1005, 315, player1.getIconWidth(), player1.getIconHeight());
+      player1Label.setVisible(false);
+      bPane.add(player1Label, Integer.valueOf(3));
+
+      JLabel player2Label = new JLabel();
+      player2Label.setIcon(player2);
+      player2Label.setBounds(1050, 315, player2.getIconWidth(), player2.getIconHeight());
+      player2Label.setVisible(false);
+      bPane.add(player2Label, Integer.valueOf(3));
+
+      JLabel player3Label = new JLabel();
+      player3Label.setIcon(player3);
+      player3Label.setBounds(1095, 315, player3.getIconWidth(), player3.getIconHeight());
+      player3Label.setVisible(false);
+      bPane.add(player3Label, Integer.valueOf(3));
+
+      JLabel player4Label = new JLabel();
+      player4Label.setIcon(player4);
+      player4Label.setBounds(1140, 315, player3.getIconWidth(), player3.getIconHeight());
+      player4Label.setVisible(false);
+      bPane.add(player4Label, Integer.valueOf(3));
+
+      JLabel player5Label = new JLabel();
+      player5Label.setIcon(player5);
+      player5Label.setBounds(1005, 365, player3.getIconWidth(), player3.getIconHeight());
+      player5Label.setVisible(false);
+      bPane.add(player5Label, Integer.valueOf(3));
+
+      JLabel player6Label = new JLabel();
+      player6Label.setIcon(player6);
+      player6Label.setBounds(1050, 365, player3.getIconWidth(), player3.getIconHeight());
+      player6Label.setVisible(false);
+      bPane.add(player6Label, Integer.valueOf(3));
+
+      JLabel player7Label = new JLabel();
+      player7Label.setIcon(player7);
+      player7Label.setBounds(1095, 365, player3.getIconWidth(), player3.getIconHeight());
+      player7Label.setVisible(false);
+      bPane.add(player7Label, Integer.valueOf(3));
+
+      JLabel player8Label = new JLabel();
+      player8Label.setIcon(player8);
+      player8Label.setBounds(1140, 365, player3.getIconWidth(), player3.getIconHeight());
+      player8Label.setVisible(false);
+      bPane.add(player8Label, Integer.valueOf(3));
+
+      if (numPlayers == 2){
+         // JLabel player1Label = new JLabel();
+         // player1Label.setIcon(player1);
+         // player1Label.setBounds(1005, 315, player1.getIconWidth(), player1.getIconHeight());
+         // player1Label.setVisible(true);
+         // bPane.add(player1Label, Integer.valueOf(3));
+
+         // JLabel player2Label = new JLabel();
+         // player2Label.setIcon(player2);
+         // player2Label.setBounds(1050, 315, player2.getIconWidth(), player2.getIconHeight());
+         // player2Label.setVisible(true);
+         // bPane.add(player2Label, Integer.valueOf(3));
+
+         player1Label.setVisible(true);
+         player2Label.setVisible(true);
+      }
+      else if (numPlayers == 3){
+         player1Label.setVisible(true);
+         player2Label.setVisible(true);
+         player3Label.setVisible(true);
+      }
+
+      else if(numPlayers == 4) {
+         player1Label.setVisible(true);
+         player2Label.setVisible(true);
+         player3Label.setVisible(true);
+         player4Label.setVisible(true);
+      }
+
+      else if (numPlayers == 5) {
+         player1Label.setVisible(true);
+         player2Label.setVisible(true);
+         player3Label.setVisible(true);
+         player4Label.setVisible(true);
+         player5Label.setVisible(true);
+
+      }
+      else if (numPlayers == 6) {
+         player1Label.setVisible(true);
+         player2Label.setVisible(true);
+         player3Label.setVisible(true);
+         player4Label.setVisible(true);
+         player5Label.setVisible(true);
+         player6Label.setVisible(true);
+
+      }
+      else if (numPlayers == 7) {
+         player1Label.setVisible(true);
+         player2Label.setVisible(true);
+         player3Label.setVisible(true);
+         player4Label.setVisible(true);
+         player5Label.setVisible(true);
+         player6Label.setVisible(true);
+         player7Label.setVisible(true);
+      }
+      else {
+         player1Label.setVisible(true);
+         player2Label.setVisible(true);
+         player3Label.setVisible(true);
+         player4Label.setVisible(true);
+         player5Label.setVisible(true);
+         player6Label.setVisible(true);
+         player7Label.setVisible(true);
+         player8Label.setVisible(true);
+      }
    }
    
    //------------------------------------------
@@ -425,7 +550,9 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       boardView.setSceneCardsBoard();
 
       // Take input from the user about number of players
-      JOptionPane.showInputDialog(boardView, "How many players?");
+      int numPlayers =Integer.parseInt(JOptionPane.showInputDialog(boardView, "How many players?"));
+
+      boardView.setPlayerIcons(numPlayers);
    }
 
 }
