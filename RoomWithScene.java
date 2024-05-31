@@ -7,6 +7,7 @@ public class RoomWithScene extends Room {
     private ArrayList<Takes> takesForSuccess;
     private SceneCard sceneCard;
     private Scene currentScene;
+    private Area sceneRoomArea;
 
     // Now holds all the information for off-card roles associated with a Room with
     // a scene
@@ -98,5 +99,13 @@ public class RoomWithScene extends Room {
 
     public ArrayList<Role> getOffCardRoles() {
         return this.offCardRoles;
+    }
+
+    public Area getSceneRoomArea(){
+        return sceneRoomArea;
+    }
+
+    public void setSceneRoomArea(Area roomArea){
+        this.sceneRoomArea = roomArea;
     }
 }

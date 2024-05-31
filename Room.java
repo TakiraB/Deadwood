@@ -3,6 +3,7 @@ import java.util.ArrayList;
 public class Room {
     protected String name;
     private ArrayList<String> adjacentNeighbors;
+    private Area roomArea;
 
     public Room(String name) {
         this.name = name;
@@ -30,6 +31,14 @@ public class Room {
 
     public void setAdjacentNeighbors(String adjacentNeighbor) {
         adjacentNeighbors.add(adjacentNeighbor);
+    }
+
+    public Area getRoomArea(){
+        return roomArea;
+    }
+
+    public void setRoomArea(Area roomArea){
+        this.roomArea = roomArea;
     }
 
 }

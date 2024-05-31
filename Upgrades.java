@@ -2,6 +2,7 @@ public class Upgrades {
     private int upgradeLevel;
     private String currencyType;
     private int upgradeAmount;
+    private Area choiceArea;
 
     public Upgrades(int upgradeLevel, String currencyType, int upgradeAmount) {
         this.upgradeLevel = upgradeLevel;
@@ -31,6 +32,14 @@ public class Upgrades {
 
     public void setUpgradeAmount(int upgradeAmount) {
         this.upgradeAmount = upgradeAmount;
+    }
+
+    public Area getUpgradeArea(){
+        return choiceArea;
+    }
+
+    public void setUpgradeArea(Area choiceArea){
+        this.choiceArea = choiceArea;
     }
 
 }

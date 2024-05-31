@@ -8,6 +8,7 @@ public class SceneCard {
     private int sceneNumber;
     private String description;
     private String imagePlaceholder;
+    private Area onCardArea;
 
     public SceneCard(String name, int budget, List<Role> roles, int sceneNumber, String description,
             String imagePlaceholder) {
@@ -72,6 +73,14 @@ public class SceneCard {
 
     public String getImage() {
         return imagePlaceholder;
+    }
+
+    public Area getSceneCardArea() {
+        return onCardArea;
+    }
+
+    public void setSceneCardArea(Area onCardArea){
+        this.onCardArea = onCardArea;
     }
 
 }

@@ -86,10 +86,16 @@ public class parseBoard {
             // TODO: Store Areas for each set
             NodeList setArea = set.getElementsByTagName("area");
             Element areas = (Element) setArea.item(0);
-            String x1 = areas.getAttribute("x");
-            String y1 = areas.getAttribute("y");
-            String h1 = areas.getAttribute("h");
-            String w1 = areas.getAttribute("w");
+            // String x1 = areas.getAttribute("x");
+            // String y1 = areas.getAttribute("y");
+            // String h1 = areas.getAttribute("h");
+            // String w1 = areas.getAttribute("w");
+            int x1 = Integer.parseInt(areas.getAttributes().getNamedItem("x").getNodeValue());
+            int y1 = Integer.parseInt(areas.getAttributes().getNamedItem("y").getNodeValue());
+            int h1 = Integer.parseInt(areas.getAttributes().getNamedItem("h").getNodeValue());
+            int w1 = Integer.parseInt(areas.getAttributes().getNamedItem("w").getNodeValue());
+            Area newRoomArea = new Area(x1, y1, h1, w1);
+            newRoom.setSceneRoomArea(newRoomArea);
 
             // Loop through and parsing/storing Takes (how many takes for successful scene)
             NodeList takes = set.getElementsByTagName("takes");
@@ -102,16 +108,23 @@ public class parseBoard {
                     int takeNumber = Integer.parseInt(singleTake.getAttributes().getNamedItem("number").getNodeValue());
                     NodeList takeArea = singleTake.getElementsByTagName("area");
                     Takes newTake = new Takes(takeNumber);
-                    newRoom.addTakesForScene(newTake);
+                    // newRoom.addTakesForScene(newTake);
 
                     // TODO: Store Areas for each take
                     for (int c = 0; c < takeArea.getLength(); c++) {
                         Element takeAreas = (Element) takeArea.item(c);
-                        String x2 = takeAreas.getAttribute("x");
-                        String y2 = takeAreas.getAttribute("y");
-                        String h2 = takeAreas.getAttribute("h");
-                        String w2 = takeAreas.getAttribute("w");
+                        // String x2 = takeAreas.getAttribute("x");
+                        // String y2 = takeAreas.getAttribute("y");
+                        // String h2 = takeAreas.getAttribute("h");
+                        // String w2 = takeAreas.getAttribute("w");
+                        int x2 = Integer.parseInt(takeAreas.getAttributes().getNamedItem("x").getNodeValue());
+                        int y2 = Integer.parseInt(takeAreas.getAttributes().getNamedItem("y").getNodeValue());
+                        int h2 = Integer.parseInt(takeAreas.getAttributes().getNamedItem("h").getNodeValue());
+                        int w2 = Integer.parseInt(takeAreas.getAttributes().getNamedItem("w").getNodeValue());
+                        Area newTakesArea = new Area(x2, y2, h2, w2);
+                        newTake.setTakeArea(newTakesArea);
                     }
+                    newRoom.addTakesForScene(newTake);
                 }
             }
 
@@ -129,12 +142,18 @@ public class parseBoard {
 
                     // TODO: Store Area for each off-card role
                     NodeList partAreaList = individualPart.getElementsByTagName("area");
+                    Area newRoleAreas = null;
                     for (int o = 0; o < partAreaList.getLength(); o++) {
                         Element partArea = (Element) partAreaList.item(o);
-                        String x3 = partArea.getAttribute("x");
-                        String y3 = partArea.getAttribute("y");
-                        String h3 = partArea.getAttribute("h");
-                        String w3 = partArea.getAttribute("w");
+                        // String x3 = partArea.getAttribute("x");
+                        // String y3 = partArea.getAttribute("y");
+                        // String h3 = partArea.getAttribute("h");
+                        // String w3 = partArea.getAttribute("w");
+                        int x3 = Integer.parseInt(partArea.getAttributes().getNamedItem("x").getNodeValue());
+                        int y3 = Integer.parseInt(partArea.getAttributes().getNamedItem("y").getNodeValue());
+                        int h3 = Integer.parseInt(partArea.getAttributes().getNamedItem("h").getNodeValue());
+                        int w3 = Integer.parseInt(partArea.getAttributes().getNamedItem("w").getNodeValue());
+                        newRoleAreas = new Area(x3,y3,h3,w3);
                     }
 
                     // initialize empty string since I can't create Role object - too deep in the
@@ -150,6 +169,7 @@ public class parseBoard {
 
                     // Create off-card roles associated with each set on the map
                     Role newRole = new Role(partName, line, false, partLevel);
+                    newRole.setRoleArea(newRoleAreas);
                     newRoom.addRole(newRole);
                 }
             }
@@ -186,10 +206,16 @@ public class parseBoard {
             // TODO: store Trailer area dims
             NodeList trailerArea = trailerElement.getElementsByTagName("area");
             Element trailerAreaDims = (Element) trailerArea.item(0);
-            String x4 = trailerAreaDims.getAttribute("x");
-            String y4 = trailerAreaDims.getAttribute("y");
-            String h4 = trailerAreaDims.getAttribute("h");
-            String w4 = trailerAreaDims.getAttribute("w");
+            // String x4 = trailerAreaDims.getAttribute("x");
+            // String y4 = trailerAreaDims.getAttribute("y");
+            // String h4 = trailerAreaDims.getAttribute("h");
+            // String w4 = trailerAreaDims.getAttribute("w");
+            int x4 = Integer.parseInt(trailerAreaDims.getAttributes().getNamedItem("x").getNodeValue());
+            int y4 = Integer.parseInt(trailerAreaDims.getAttributes().getNamedItem("y").getNodeValue());
+            int h4 = Integer.parseInt(trailerAreaDims.getAttributes().getNamedItem("h").getNodeValue());
+            int w4 = Integer.parseInt(trailerAreaDims.getAttributes().getNamedItem("w").getNodeValue());
+            Area newTrailerArea = new Area(x4, y4, h4, w4);
+            newTrailerRoom.setRoomArea(newTrailerArea);
 
             // Add Trailer to the Board
             newBoard.addRoomToBoard(newTrailerRoom);
@@ -222,10 +248,16 @@ public class parseBoard {
             // TODO: Store Office area dims
             NodeList officeArea = officeElement.getElementsByTagName("area");
             Element officeAreaDims = (Element) officeArea.item(0);
-            String x5 = officeAreaDims.getAttribute("x");
-            String y5 = officeAreaDims.getAttribute("y");
-            String h5 = officeAreaDims.getAttribute("h");
-            String w5 = officeAreaDims.getAttribute("w");
+            // String x5 = officeAreaDims.getAttribute("x");
+            // String y5 = officeAreaDims.getAttribute("y");
+            // String h5 = officeAreaDims.getAttribute("h");
+            // String w5 = officeAreaDims.getAttribute("w");
+            int x5 = Integer.parseInt(officeAreaDims.getAttributes().getNamedItem("x").getNodeValue());
+            int y5 = Integer.parseInt(officeAreaDims.getAttributes().getNamedItem("y").getNodeValue());
+            int h5 = Integer.parseInt(officeAreaDims.getAttributes().getNamedItem("h").getNodeValue());
+            int w5 = Integer.parseInt(officeAreaDims.getAttributes().getNamedItem("w").getNodeValue());
+            Area newOfficeArea = new Area(x5, y5, h5, w5);
+            newCastingOfficeRoom.setOfficeArea(newOfficeArea);
 
             // Loop through individual upgrade choices, grabbing level, currency type and
             // upgrade amount
@@ -253,10 +285,16 @@ public class parseBoard {
                         Element officeUpgradeAreaDims = (Element) officeUpgradeArea.item(v);
 
                         // TODO: Store Office Upgrade area dims
-                        String x6 = officeUpgradeAreaDims.getAttribute("x");
-                        String y6 = officeUpgradeAreaDims.getAttribute("y");
-                        String h6 = officeUpgradeAreaDims.getAttribute("h");
-                        String w6 = officeUpgradeAreaDims.getAttribute("w");
+                        // String x6 = officeUpgradeAreaDims.getAttribute("x");
+                        // String y6 = officeUpgradeAreaDims.getAttribute("y");
+                        // String h6 = officeUpgradeAreaDims.getAttribute("h");
+                        // String w6 = officeUpgradeAreaDims.getAttribute("w");
+                        int x6 = Integer.parseInt(officeUpgradeAreaDims.getAttributes().getNamedItem("x").getNodeValue());
+                        int y6 = Integer.parseInt(officeUpgradeAreaDims.getAttributes().getNamedItem("y").getNodeValue());
+                        int h6 = Integer.parseInt(officeUpgradeAreaDims.getAttributes().getNamedItem("h").getNodeValue());
+                        int w6 = Integer.parseInt(officeUpgradeAreaDims.getAttributes().getNamedItem("w").getNodeValue());
+                        Area newUpgradeChoicesArea = new Area(x6, y6, h6, w6);
+                        newUpgradeChoice.setUpgradeArea(newUpgradeChoicesArea);
                     }
                 }
             }
