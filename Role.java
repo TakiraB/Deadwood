@@ -89,5 +89,4 @@ public class Role {
     public void setRoleArea(Area roleArea) {
         this.roleArea = roleArea;
     }
-
 }

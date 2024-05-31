@@ -12,7 +12,7 @@ public class GamePieceManager {
     // roll a six sided die
     public int roll() {
         Random random = new Random();
-        int rollValue = random.nextInt(sides + 1);
+        int rollValue = random.nextInt(sides) + 1;
         return rollValue;
     }
 
@@ -28,17 +28,15 @@ public class GamePieceManager {
 
     // pick a scene from the list of SceneCards
     public SceneCard pickScene() {
-        if(sceneCards.isEmpty()){
+        if (sceneCards.isEmpty()) {
             System.out.println("There are no Scene Cards left!");
             return null;
-        }
-        else {
+        } else {
             return sceneCards.get(0);
         }
     }
 
     // getters and setters
-
 
     public int getSides() {
         return sides;

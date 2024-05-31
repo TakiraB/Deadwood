@@ -134,6 +134,7 @@ public class Deadwood {
                 System.out.println("Display Stats");
                 System.out.println("Display Players");
                 System.out.println("End");
+                System.out.println("End Game");
                 System.out.println("\n");
 
                 // Get the player input of their choice of interaction
@@ -149,7 +150,8 @@ public class Deadwood {
                     case "move":
                         // player cannot move if in a role
                         if (activePlayer.getRole() != null) {
-                            System.out.println("You are currently in a Role, you cannot move until you're role is completed!");
+                            System.out.println(
+                                    "You are currently in a Role, you cannot move until you're role is completed!");
                             break;
                         }
                         // makes sure the player has not already moved this turn
@@ -212,21 +214,42 @@ public class Deadwood {
                             System.out.println("You have to have a role before you can act!");
                             break;
                         } else if (activePlayer.getHasActed()) {
-                            System.out.println("You have already acted or rehearse this turn, you can do either next turn!");
+                            System.out.println(
+                                    "You have already acted or rehearse this turn, you can do either next turn!");
                             break;
                         }
                         activePlayer.act(board, gamePieceManager);
+                        activePlayer.setPracticeChips(0);
+                        int wrappedRooms = 0;
+                        for (Room room: board.getBoardLayout().values()) {
+                            if (room instanceof RoomWithScene) {
+                                RoomWithScene roomWithScene = (RoomWithScene) room;
+                                if (!roomWithScene.getRoomScene().getSceneCardActive()) {
+                                    wrappedRooms += 1;
+                                }
+                            }
+                        }
+                        if (wrappedRooms == 9) {
+                            gameState.endDay(board, numbers, cards, gameState.getCurrentDayCount());
+                            for (Player player : playerList) {
+                                player.setActiveRole(null);
+                                player.setHasActed(false);
+                                player.setHasMoved(false);
+                                player.setPlayerRoom(board.getRoomFromBoard("trailer"));
+                                player.setPracticeChips(0);
+                            }
+                        }
                         break;
 
                     // Rehearse case
                     case "rehearse":
                         if (activePlayer.getHasActed()) {
-                            System.out.println("You have already acted or rehearse this turn, you can do either next turn!");
+                            System.out.println(
+                                    "You have already acted or rehearse this turn, you can do either next turn!");
                             break;
                         }
                         activePlayer.rehearse(board);
                         break;
-
 
                     // Upgrade case
                     case "upgrade":
@@ -250,8 +273,9 @@ public class Deadwood {
                                     " " + castingOfficeUpgrades.getUpgradeChoices().get(i).getCurrencyType() + "s.");
                             System.out.println();
                         }
-                        
-                        // asking the player was rank they would like to upgrade to and how they would like to pay for it
+
+                        // asking the player was rank they would like to upgrade to and how they would
+                        // like to pay for it
                         System.out.println("What rank would you like to upgrade to?");
                         int chosenRank = userInputScanner.nextInt();
                         userInputScanner.nextLine();
@@ -328,15 +352,21 @@ public class Deadwood {
                             while (didNotGetRole) {
                                 System.out.println("What role would you like to take?");
                                 String roleInput = userInputScanner.nextLine();
+                                if (roleInput.equals("none")) {
+                                    didNotGetRole = false;
+                                    break;
+                                }
                                 for (Role role : offCardRoles) {
                                     if (role.getRoleName().toLowerCase().equals(roleInput.toLowerCase())) {
-                                        if (role.getPlayerOnRole() != null) {
+                                        if (role.getPlayerOnRole() == null) {
                                             activePlayer.setActiveRole(role);
+                                            role.setPlayerOnRole(activePlayer);
                                             didNotGetRole = false;
                                             System.out.println("You got " + activePlayer.getRole().getRoleName());
                                             break;
                                         } else {
-                                            System.out.println("There is a player already in that role, take a different role or type no if you no longer want to take a role.");
+                                            System.out.println(
+                                                    "There is a player already in that role, take a different role or type none if you no longer want to take a role.");
                                         }
 
                                     }
@@ -344,6 +374,7 @@ public class Deadwood {
                                 for (Role role : onCardRoles) {
                                     if (role.getRoleName().toLowerCase().equals(roleInput.toLowerCase())) {
                                         activePlayer.setActiveRole(role);
+                                        role.setPlayerOnRole(activePlayer);
                                         didNotGetRole = false;
                                         System.out.println("You got " + activePlayer.getRole().getRoleName());
                                         break;
@@ -359,8 +390,6 @@ public class Deadwood {
                         break;
 
                     // Display current player stats
-                    // TODO: Figure out how to display String version of the room, probably need to
-                    // access Board's Hashmap
                     case "display stats":
                         System.out.println("Here is your current stats: ");
                         System.out.println("Name: " + activePlayer.getName());
@@ -386,10 +415,18 @@ public class Deadwood {
                         System.out.println();
                         break;
 
+                    // displays all players locations
                     case "display players":
                         System.out.println("Here is where all players are located:");
                         for (Player player : playerList) {
-                            System.out.println(player.getName() + " is located at " + player.getPlayerRoom().getName());
+                            if (player == activePlayer) {
+                                System.out.println("Active Player: " + player.getName() + " is located at "
+                                        + player.getPlayerRoom().getName());
+                            } else {
+                                System.out.println(
+                                        player.getName() + " is located at " + player.getPlayerRoom().getName());
+                            }
+
                         }
                         System.out.println();
                         break;
@@ -400,24 +437,20 @@ public class Deadwood {
                         gameState.endTurn();
                         break;
 
-                    // Default to break out of switch statement (this could be the end turn case)
+                    // end game case
+                    case "end game":
+                        gameState.endGame();
+                        activeGame = false;
+                        playerTurnActive = false;
+
+                        // Default to break out of switch statement
                     default:
                         break;
                 }
             }
         }
 
-        // Set flag of ongoing game to false (indicating game over)
-        activeGame = false;
-        // random testing
-        // System.out.println(gameState.getActivePlayer().getName());
-
-        gameState.endTurn();
-        // System.out.println(gameState.getActivePlayer().getName());
-
-        gameState.endGame();
-
-        // closes scanner since vscode was yelling at me
+        // close scanner
         userInputScanner.close();
     }
 }

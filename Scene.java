@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Scene {
@@ -6,7 +8,6 @@ public class Scene {
     private boolean sceneWrapped;
     private boolean sceneCardActive;
     private SceneCard sceneCard;
-    private GamePieceManager scenePieceManager;
 
     public Scene(String name, boolean sceneWrapped, boolean sceneCardActive, SceneCard sceneCard) {
         this.name = name;
@@ -23,42 +24,58 @@ public class Scene {
         this.sceneCard = null;
     }
 
-    public void giveWrappedBonuses(RoomWithScene activeRoom, SceneCard currentSceneCard){
+    // gives all the player's their bonuses from the scene wrapping
+    public void giveWrappedBonuses(RoomWithScene activeRoom, SceneCard currentSceneCard) {
+        GamePieceManager scenePieceManager = new GamePieceManager(6, null);
         int sceneBudget = currentSceneCard.getBudget();
-        // System.out.println("Still need to implement this logic!");
         List<Role> starredRoles = currentSceneCard.getRoles();
-        System.out.println(starredRoles);
-        System.out.println("Here are your bonuses for finishing the scene!");
 
-        for(Role activeRole : starredRoles){
-            Player activePlayer = activeRole.getPlayerOnRole();
-            if (activePlayer != null){
-                System.out.println(activePlayer.getName());
-                if(activeRole.getStarredRole() == true){
-                    int bonusInitialized = 0;
-                    for(int i=0; i<sceneBudget; i++){
-                        bonusInitialized += scenePieceManager.roll();
-                }
-                activePlayer.setDollars(activePlayer.getDollars()+bonusInitialized);
-                System.out.println(activePlayer.getName() + " was given " + bonusInitialized + " dollars!");
-                }
-                else {
-                    activePlayer.setDollars(activePlayer.getDollars()+sceneBudget);
-                    System.out.println("Do we ever get here?");
-                }
+        // checking players in role on card
+        ArrayList<Player> playerOnCard = new ArrayList<>();
+        for (Role starredRole : starredRoles) {
+            if (starredRole.getPlayerOnRole() != null) {
+                playerOnCard.add(starredRole.getPlayerOnRole());
             }
         }
 
-        for (Role offCardRole: activeRoom.getOffCardRoles()) {
-            Player offCardPlayer = offCardRole.getPlayerOnRole();
-            if (offCardPlayer != null) {
-                System.out.println(offCardPlayer.getName());
-                offCardPlayer.setDollars(offCardPlayer.getDollars() + offCardRole.getRank());
-                System.out.println(offCardPlayer.getName() + " was given " + offCardRole.getRank() + " dollars!");
+        // bonuses are only given if there is a player on the sceneCard when wrapped
+        if (playerOnCard.size() > 0) {
+            System.out.println("Here are your bonuses for finishing the scene!");
+            // get and sort the rolls for the bonuses
+            ArrayList<Integer> rollResults = new ArrayList<Integer>();
+            for (int i = 0; i < sceneBudget; i++) {
+                rollResults.add(scenePieceManager.roll());
             }
+            Collections.sort(rollResults, Comparator.reverseOrder());
+
+            // give the rewards to the correct players
+            int rewardGiver = 0;
+            for (Integer reward : rollResults) {
+                if (rewardGiver > playerOnCard.size()) {
+                    rewardGiver = 0;
+                }
+                Player currentPlayer = playerOnCard.get(rewardGiver);
+                int currentPlayerDollars = currentPlayer.getDollars();
+                currentPlayer.setDollars(currentPlayerDollars + reward);
+            }
+
+            // print all the new balances of the players
+            for (Player player : playerOnCard) {
+                System.err.println(player.getName() + " now has " + player.getDollars());
+            }
+
+            for (Role offCardRole : activeRoom.getOffCardRoles()) {
+                Player offCardPlayer = offCardRole.getPlayerOnRole();
+                if (offCardPlayer != null) {
+                    offCardPlayer.setDollars(offCardPlayer.getDollars() + offCardRole.getRank());
+                    System.out
+                            .println(offCardPlayer.getName() + " now has " + offCardPlayer.getDollars() + " dollars!");
+                }
+            }
+        } else {
+            System.out.println("There was no players on card role, so no bonus was given.");
         }
     }
-
 
     // // increase the shots counter
     // public void updateShots() {
@@ -72,11 +89,10 @@ public class Scene {
 
     // // flip the SceneCard associated with this scene
     // public boolean flipSceneCard() {
-    //     return true;
+    // return true;
     // }
 
     // getters and setters
-
 
     public String getName() {
         return name;

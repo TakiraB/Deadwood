@@ -1,3 +1,4 @@
+
 // import java.util.Map;
 import java.util.*;
 
@@ -23,22 +24,24 @@ public class Board {
         // Initialize empty Array List (not sure if this is needed yet)
         List<Room> list = new ArrayList<>();
         // while(room != null){
-            // loop to get the neighbors of a given room
-            for (String adjacentNeighbor : room.getAdjacentNeighbors()) {
-                Room adjacentRoom = boardLayout.get(adjacentNeighbor);
+        // loop to get the neighbors of a given room
+        for (String adjacentNeighbor : room.getAdjacentNeighbors()) {
+            Room adjacentRoom = boardLayout.get(adjacentNeighbor);
 
-                // Add the neighbor to the list we initialized
-                if(adjacentRoom != null){
-                    list.add(adjacentRoom);
-                }
+            // Add the neighbor to the list we initialized
+            if (adjacentRoom != null) {
+                list.add(adjacentRoom);
             }
+        }
         // }
         return list;
     }
 
-    // gives all RoomWithScene a SceneCard, randomly and will make sure each is not used twice
+    // gives all RoomWithScene a SceneCard, randomly and will make sure each is not
+    // used twice
     public void sceneCardDistribution(List<Integer> numbers, ArrayList<SceneCard> cards, int day) {
-        // numbers is a random order of 0-39, temp will get the value at index and then pass the corresponding SceneCard to room
+        // numbers is a random order of 0-39, temp will get the value at index and then
+        // pass the corresponding SceneCard to room
         int temp = 0 + ((day - 1) * 10);
         for (Map.Entry<String, Room> key : boardLayout.entrySet()) {
             Room room = key.getValue();
@@ -50,20 +53,19 @@ public class Board {
         }
     }
 
-    public void resetBoardLayout(){
+    public void resetBoardLayout() {
         boardLayout.clear();
     }
 
     // add a room to the board layout (used in XML)
-    public void addRoomToBoard(Room room){
-        if(!boardLayout.containsKey(room.getName())){
+    public void addRoomToBoard(Room room) {
+        if (!boardLayout.containsKey(room.getName())) {
             boardLayout.put(room.getName(), room);
 
         }
     }
 
     // getters and setters
-
 
     public HashMap<String, Room> getBoardLayout() {
         return boardLayout;
@@ -81,9 +83,8 @@ public class Board {
         this.activeScenes = activeScenes;
     }
 
-    public Room getRoomFromBoard(String name){
+    public Room getRoomFromBoard(String name) {
         return boardLayout.get(name);
     }
-
 
 }
