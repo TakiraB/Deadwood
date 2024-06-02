@@ -48,22 +48,21 @@ public class DeadwoodView extends JFrame implements ViewInterface {
    JButton secretButton;
    JButton trainButton;
 
-
    JTextArea activePlayer;
    JTextArea textAction;
 
    // JLayered Pane (for having multiple layers)
    JLayeredPane bPane;
    private Board board;
-   private GameState gameState;
+   private DeadwoodController boardController;
 
    // Constructor
-   public DeadwoodView(Board board, GameState gameState) {
+   public DeadwoodView(Board board, DeadwoodController boardController) {
       // Set the title of the JFrame
       super("Deadwood");
 
       this.board = board;
-      this.gameState = gameState;
+      this.boardController = boardController;
 
       // Set the exit option for the JFrame
       setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -83,6 +82,9 @@ public class DeadwoodView extends JFrame implements ViewInterface {
 
       // Set the size of the GUI
       setSize(icon.getIconWidth() + 200, icon.getIconHeight() + 00);
+
+      // max window on open
+      setExtendedState(JFrame.MAXIMIZED_BOTH);
 
       // Add a scene card to this room
       // cardlabel = new JLabel();
@@ -110,59 +112,59 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       mLabel.setBounds(icon.getIconWidth() + 20, 0, 150, 20);
       bPane.add(mLabel, Integer.valueOf(2));
 
-      //---------------------------
+      // ---------------------------
       // BUTTONS FOR MENU
-      //---------------------------
+      // ---------------------------
 
       bMove = new JButton("MOVE");
       bMove.setEnabled(true);
       bMove.setBackground(Color.white);
       bMove.setBounds(icon.getIconWidth() + 15, 90, 150, 20);
-      bMove.addMouseListener(new boardMouseListener(gameState));
+      bMove.addMouseListener(new boardMouseListener(boardController.getGameState()));
 
       bAct = new JButton("ACT");
       bAct.setBackground(Color.white);
       bAct.setBounds(icon.getIconWidth() + 15, 30, 150, 20);
-      bAct.addMouseListener(new boardMouseListener(this.gameState));
+      bAct.addMouseListener(new boardMouseListener(boardController.getGameState()));
 
       bRehearse = new JButton("REHEARSE");
       bRehearse.setBackground(Color.white);
       bRehearse.setBounds(icon.getIconWidth() + 15, 60, 150, 20);
-      bRehearse.addMouseListener(new boardMouseListener(gameState));
+      bRehearse.addMouseListener(new boardMouseListener(boardController.getGameState()));
 
       bUpgrade = new JButton("UPGRADE");
       bUpgrade.setBackground(Color.white);
       bUpgrade.setBounds(icon.getIconWidth() + 15, 90, 150, 20);
-      bUpgrade.addMouseListener(new boardMouseListener(gameState));
+      bUpgrade.addMouseListener(new boardMouseListener(boardController.getGameState()));
 
       bTakeRole = new JButton("TAKE A ROLE");
       bTakeRole.setBackground(Color.white);
       bTakeRole.setBounds(icon.getIconWidth() + 15, 120, 150, 20);
-      bTakeRole.addMouseListener(new boardMouseListener(gameState));
+      bTakeRole.addMouseListener(new boardMouseListener(boardController.getGameState()));
 
       bYourStats = new JButton("YOUR STATS");
       bYourStats.setBackground(Color.white);
       bYourStats.setBounds(icon.getIconWidth() + 15, 150, 150, 20);
-      bYourStats.addMouseListener(new boardMouseListener(gameState));
+      bYourStats.addMouseListener(new boardMouseListener(boardController.getGameState()));
 
       bPlayerLocations = new JButton("DISPLAY PLAYERS");
       bPlayerLocations.setBackground(Color.white);
       bPlayerLocations.setBounds(icon.getIconWidth() + 15, 180, 150, 20);
-      bPlayerLocations.addMouseListener(new boardMouseListener(gameState));
+      bPlayerLocations.addMouseListener(new boardMouseListener(boardController.getGameState()));
 
       bEndTurn = new JButton("END TURN");
       bEndTurn.setBackground(Color.white);
       bEndTurn.setBounds(icon.getIconWidth() + 15, 210, 150, 20);
-      bEndTurn.addMouseListener(new boardMouseListener(gameState));
+      bEndTurn.addMouseListener(new boardMouseListener(boardController.getGameState()));
 
       bEndGame = new JButton("END GAME");
       bEndGame.setBackground(Color.white);
       bEndGame.setBounds(icon.getIconWidth() + 15, 240, 150, 20);
-      bEndGame.addMouseListener(new boardMouseListener(gameState));
+      bEndGame.addMouseListener(new boardMouseListener(boardController.getGameState()));
 
-      //-------------------------------------
+      // -------------------------------------
       // CREATING BUTTONS FOR PLAYERS MOVING
-      //-------------------------------------
+      // -------------------------------------
 
       // Trailer button
       JButton trailerButton = new JButton();
@@ -254,15 +256,15 @@ public class DeadwoodView extends JFrame implements ViewInterface {
 
       // Train Station button
       JButton trainButton = new JButton();
-      trainButton.setBounds(28, 185, 190,  38);
+      trainButton.setBounds(28, 185, 190, 38);
       trainButton.setOpaque(false);
       trainButton.setContentAreaFilled(false);
       trainButton.setBorder(BorderFactory.createEmptyBorder());
       trainButton.addMouseListener(new borderMouseListener());
 
-      //------------------------------------------
+      // ------------------------------------------
       // ADDING BUTTONS TO FRAME ON VARIOUS LEVELS
-      //------------------------------------------
+      // ------------------------------------------
 
       bPane.add(bMove, Integer.valueOf(2));
       bPane.add(bAct, Integer.valueOf(2));
@@ -286,9 +288,9 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       bPane.add(castingButton, Integer.valueOf(3));
       bPane.add(trainButton, Integer.valueOf(3));
 
-      //------------------------------------------
+      // ------------------------------------------
       // ADDITIONAL TEXT AREAS (CURRENT PLAYER AND ACTION LOG)
-      //------------------------------------------
+      // ------------------------------------------
 
       // Create the Current player label
       currentPlayerLabel = new JLabel("Current Player Statistics");
@@ -316,9 +318,9 @@ public class DeadwoodView extends JFrame implements ViewInterface {
 
    }
 
-   //------------------------------------------
+   // ------------------------------------------
    // MOUSE EVENTS
-   //------------------------------------------
+   // ------------------------------------------
 
    class boardMouseListener implements MouseListener {
 
@@ -333,13 +335,21 @@ public class DeadwoodView extends JFrame implements ViewInterface {
 
          if (e.getSource() == bAct) {
             // playerlabel.setVisible(true);
-            textAction.append(gameState.getActivePlayer() + " has tried to act.");
-            textAction.append("\n");
+            textAction.append(gameState.getActivePlayer().getName() + " has tried to act.\n");
+            textAction.append(gameState.getActivePlayer().getPlayerRoom().getName() + "\n");
             System.out.println("Acting is Selected\n");
          } else if (e.getSource() == bRehearse) {
             System.out.println("Rehearse is Selected\n");
          } else if (e.getSource() == bMove) {
             System.out.println("Move is Selected\n");
+         } else if (e.getSource() == bTakeRole) {
+            System.out.println("take a role is Selected\n");
+         } else if (e.getSource() == bPlayerLocations) {
+            System.out.println("player locations is Selected\n");
+         } else if (e.getSource() == bEndTurn) {
+            System.out.println("end turn is Selected\n");
+         } else if (e.getSource() == bEndGame) {
+            System.out.println("end game is Selected\n");
          }
       }
 
@@ -349,7 +359,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       public void mouseReleased(MouseEvent e) {
       }
 
-
       public void mouseEntered(MouseEvent e) {
 
       }
@@ -357,12 +366,17 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       public void mouseExited(MouseEvent e) {
       }
    }
-   // MouseAdapter is used when not all functionalities of MouseListener are needed to be implemented
-   // I originally had the border stuff in MouseListener, but it was applying to all the buttons
-   // So, keeping the functionality separate will make it easier in case I want to apply other effects to the action buttons
+
+   // MouseAdapter is used when not all functionalities of MouseListener are needed
+   // to be implemented
+   // I originally had the border stuff in MouseListener, but it was applying to
+   // all the buttons
+   // So, keeping the functionality separate will make it easier in case I want to
+   // apply other effects to the action buttons
    class borderMouseListener extends MouseAdapter {
 
-      // when mouse enters button area, create a border around the area for readability
+      // when mouse enters button area, create a border around the area for
+      // readability
       @Override
       public void mouseEntered(MouseEvent e) {
          // cast as JButton from object (e.getsource()) so we can apply the border
@@ -373,16 +387,18 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       @Override
       // once the mouse exits the button area, make the border invisible again
       public void mouseExited(MouseEvent e) {
-         // cast as JButton from object (e.getsource()) so we can manipulate the border on mouse exiting
+         // cast as JButton from object (e.getsource()) so we can manipulate the border
+         // on mouse exiting
          JButton dummyButton = (JButton) e.getSource();
          dummyButton.setBorder(BorderFactory.createEmptyBorder());
       }
 
    }
 
-   //------------------------------------------
-   // Setting face-down scene card images at every set at the start of the game, uncovered when one person is in the room (not implemented yet)
-   //------------------------------------------
+   // ------------------------------------------
+   // Setting face-down scene card images at every set at the start of the game,
+   // uncovered when one person is in the room (not implemented yet)
+   // ------------------------------------------
 
    public void setSceneCardsBoard() {
       // ImageIcon sceneCardDown = new ImageIcon("images/CardBack-small.jpg");
@@ -413,8 +429,8 @@ public class DeadwoodView extends JFrame implements ViewInterface {
 
    // trailerButton.setBounds(1020, 270, 140, 40);
 
-   public void setPlayerIcons(int numPlayers){
-      
+   public void setPlayerIcons(int numPlayers) {
+
       // Initialize all the player colored dice (white dice used for actual roles)
       ImageIcon player1 = new ImageIcon("dice/dice/b1.png");
       ImageIcon player2 = new ImageIcon("dice/dice/c1.png");
@@ -473,29 +489,30 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       player8Label.setVisible(false);
       bPane.add(player8Label, Integer.valueOf(3));
 
-      if (numPlayers == 2){
+      if (numPlayers == 2) {
          // JLabel player1Label = new JLabel();
          // player1Label.setIcon(player1);
-         // player1Label.setBounds(1005, 315, player1.getIconWidth(), player1.getIconHeight());
+         // player1Label.setBounds(1005, 315, player1.getIconWidth(),
+         // player1.getIconHeight());
          // player1Label.setVisible(true);
          // bPane.add(player1Label, Integer.valueOf(3));
 
          // JLabel player2Label = new JLabel();
          // player2Label.setIcon(player2);
-         // player2Label.setBounds(1050, 315, player2.getIconWidth(), player2.getIconHeight());
+         // player2Label.setBounds(1050, 315, player2.getIconWidth(),
+         // player2.getIconHeight());
          // player2Label.setVisible(true);
          // bPane.add(player2Label, Integer.valueOf(3));
 
          player1Label.setVisible(true);
          player2Label.setVisible(true);
-      }
-      else if (numPlayers == 3){
+      } else if (numPlayers == 3) {
          player1Label.setVisible(true);
          player2Label.setVisible(true);
          player3Label.setVisible(true);
       }
 
-      else if(numPlayers == 4) {
+      else if (numPlayers == 4) {
          player1Label.setVisible(true);
          player2Label.setVisible(true);
          player3Label.setVisible(true);
@@ -509,8 +526,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
          player4Label.setVisible(true);
          player5Label.setVisible(true);
 
-      }
-      else if (numPlayers == 6) {
+      } else if (numPlayers == 6) {
          player1Label.setVisible(true);
          player2Label.setVisible(true);
          player3Label.setVisible(true);
@@ -518,8 +534,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
          player5Label.setVisible(true);
          player6Label.setVisible(true);
 
-      }
-      else if (numPlayers == 7) {
+      } else if (numPlayers == 7) {
          player1Label.setVisible(true);
          player2Label.setVisible(true);
          player3Label.setVisible(true);
@@ -527,8 +542,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
          player5Label.setVisible(true);
          player6Label.setVisible(true);
          player7Label.setVisible(true);
-      }
-      else {
+      } else {
          player1Label.setVisible(true);
          player2Label.setVisible(true);
          player3Label.setVisible(true);
@@ -539,10 +553,10 @@ public class DeadwoodView extends JFrame implements ViewInterface {
          player8Label.setVisible(true);
       }
    }
-   
-   //------------------------------------------
+
+   // ------------------------------------------
    // MAIN FOR TESTING
-   //------------------------------------------
+   // ------------------------------------------
 
    public static void main(String[] args) {
       Document doc = null;
@@ -556,21 +570,13 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       }
 
       DeadwoodController boardController = new DeadwoodController(board);
-      DeadwoodView boardView = new DeadwoodView(board, boardController.getGameState());
+      DeadwoodView boardView = new DeadwoodView(board, boardController);
 
       // Take input from the user about number of players
       int numPlayers = Integer.parseInt(JOptionPane.showInputDialog(boardView, "How many players?"));
-      // boardController.setActivePlayers(numPlayers);
       boardController.initializeActivePlayers(numPlayers);
-      // DeadwoodController boardController = new DeadwoodController(board, boardView);
       boardView.setVisible(true);
       boardView.setSceneCardsBoard();
-      // // Take input from the user about number of players
-      // int numPlayers = Integer.parseInt(JOptionPane.showInputDialog(boardView, "How many players?"));
-      // // boardController.setActivePlayers(numPlayers);
-      // boardController.initializeActivePlayers(numPlayers);
       boardView.setPlayerIcons(numPlayers);
-      // boardView.setPlayerIcons(numPlayers);
    }
-
 }

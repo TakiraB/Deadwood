@@ -112,9 +112,19 @@ public class DeadwoodController {
         // Setting up the max number of days in the game based on the number of players
         // 3 if 2 players, and 4 for everything else
         if (numPlayers < 3) {
-            gameState = new GameState(playerList.get(firstPlayerInt), playerList, 1, 3, board);
+            // gameState = new GameState(playerList.get(firstPlayerInt), playerList, 1, 3, board);
+            gameState.setActivePlayer(playerList.get(firstPlayerInt));
+            gameState.setPlayers(playerList);
+            gameState.setCurrentDayCount(1);
+            gameState.setMaxDayCount(3);
+            gameState.setBoard(board);
         } else {
-            gameState = new GameState(playerList.get(firstPlayerInt), playerList, 1, 4, board);
+            // gameState = new GameState(playerList.get(firstPlayerInt), playerList, 1, 4, board);
+            gameState.setActivePlayer(playerList.get(firstPlayerInt));
+            gameState.setPlayers(playerList);
+            gameState.setCurrentDayCount(1);
+            gameState.setMaxDayCount(4);
+            gameState.setBoard(board);
         }
     }
 
