@@ -12,7 +12,7 @@ public class DeadwoodController {
     private GameState gameState;
     private GamePieceManager pieceManager;
 
-    public DeadwoodController(Board board, DeadwoodView view){
+    public DeadwoodController(Board board, DeadwoodView view) {
         this.board = board;
         this.view = view;
         this.playerList = new ArrayList<>();
@@ -25,10 +25,10 @@ public class DeadwoodController {
         parseBoard parsingBoard = new parseBoard();
         Board board = new Board();
         try {
-           doc = parsingBoard.getDocFromFile("board.xml");
-           board = parsingBoard.readBoardData(doc);
+            doc = parsingBoard.getDocFromFile("board.xml");
+            board = parsingBoard.readBoardData(doc);
         } catch (Exception e) {
-           System.out.println("Error = " + e);
+            System.out.println("Error = " + e);
         }
     }
 
@@ -56,29 +56,31 @@ public class DeadwoodController {
     }
 
     // Create Player objects based on the number of players
-    public void setActivePlayers(int playerCount){
-    // if (playerCount < 2 || playerCount > 8) {
-    //     JOptionPane.showMessageDialog(view,"That's not an appropriate amount of players! Sorry! :(");
-    // }
-    for (int i = 0; i < playerCount; i++) {
-        String playerName = JOptionPane.showInputDialog("What is the name for Player " + (i + 1) + "?");
-        // Initialize Player object for if statement
-        Player tempPlayer;
-        // Setting up Player starting room, setting up credits based on number of players per rules
-        if (playerCount == 5) {
-            tempPlayer = new Player(playerName, 1, 0, 2, null, 0, board.getRoomFromBoard("Trailer"), false, false);
-        } else if (playerCount == 6) {
-            tempPlayer = new Player(playerName, 1, 0, 4, null, 0, board.getRoomFromBoard("Trailer"), false, false);
-        } else if (playerCount == 7 || playerCount == 8) {
-            tempPlayer = new Player(playerName, 2, 0, 0, null, 0, board.getRoomFromBoard("Trailer"), false, false);
-        } else {
-            tempPlayer = new Player(playerName, 1, 0, 0, null, 0, board.getRoomFromBoard("Trailer"), false, false);
+    public void setActivePlayers(int playerCount) {
+        // if (playerCount < 2 || playerCount > 8) {
+        // JOptionPane.showMessageDialog(view,"That's not an appropriate amount of
+        // players! Sorry! :(");
+        // }
+        for (int i = 0; i < playerCount; i++) {
+            String playerName = JOptionPane.showInputDialog("What is the name for Player " + (i + 1) + "?");
+            // Initialize Player object for if statement
+            Player tempPlayer;
+            // Setting up Player starting room, setting up credits based on number of
+            // players per rules
+            if (playerCount == 5) {
+                tempPlayer = new Player(playerName, 1, 0, 2, null, 0, board.getRoomFromBoard("Trailer"), false, false);
+            } else if (playerCount == 6) {
+                tempPlayer = new Player(playerName, 1, 0, 4, null, 0, board.getRoomFromBoard("Trailer"), false, false);
+            } else if (playerCount == 7 || playerCount == 8) {
+                tempPlayer = new Player(playerName, 2, 0, 0, null, 0, board.getRoomFromBoard("Trailer"), false, false);
+            } else {
+                tempPlayer = new Player(playerName, 1, 0, 0, null, 0, board.getRoomFromBoard("Trailer"), false, false);
+            }
+            // Add player to list of active players
+            playerList.add(tempPlayer);
         }
-    // Add player to list of active players
-    playerList.add(tempPlayer);
+        view.setPlayerIcons(playerCount);
     }
-    view.setPlayerIcons(playerCount);
-}
 
     // // creation of GameState with the first activePlayer being randomized
     // Random random = new Random();
@@ -86,20 +88,22 @@ public class DeadwoodController {
     // // Initialize the GameState
     // GameState gameState;
 
-    // // Setting up the max number of days in the game based on the number of players
+    // // Setting up the max number of days in the game based on the number of
+    // players
     // // 3 if 2 players, and 4 for everything else
     // if (playerCount < 3) {
-    //     gameState = new GameState(playerList.get(firstPlayerInt), playerList, 1, 3, board);
+    // gameState = new GameState(playerList.get(firstPlayerInt), playerList, 1, 3,
+    // board);
     // } else {
-    //     gameState = new GameState(playerList.get(firstPlayerInt), playerList, 1, 4, board);
+    // gameState = new GameState(playerList.get(firstPlayerInt), playerList, 1, 4,
+    // board);
     // }
-    
+
     // // Start the game
     // gameState.startGame();
 
-
     // initialize the game state
-    public void setGameState(int numPlayers){
+    public void setGameState(int numPlayers) {
         Random random = new Random();
         int firstPlayerInt = random.nextInt(numPlayers);
 
@@ -109,11 +113,11 @@ public class DeadwoodController {
             gameState = new GameState(playerList.get(firstPlayerInt), playerList, 1, 3, board);
         } else {
             gameState = new GameState(playerList.get(firstPlayerInt), playerList, 1, 4, board);
-        }     
+        }
     }
 
     // initialize the active players in the game
-    public void initializeActivePlayers(int numPlayers){
+    public void initializeActivePlayers(int numPlayers) {
         setGameState(numPlayers);
         setActivePlayers(numPlayers);
     }
@@ -135,6 +139,3 @@ public class DeadwoodController {
     // need some kind of start game method
 
 }
-
-
-

@@ -551,7 +551,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       boardView.setSceneCardsBoard();
 
       // Take input from the user about number of players
-      int numPlayers =Integer.parseInt(JOptionPane.showInputDialog(boardView, "How many players?"));
+      int numPlayers = Integer.parseInt(JOptionPane.showInputDialog(boardView, "How many players?"));
       boardController.setActivePlayers(numPlayers);
 
       boardView.setPlayerIcons(numPlayers);
