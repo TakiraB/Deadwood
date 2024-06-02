@@ -419,6 +419,10 @@ public class DeadwoodView extends JFrame implements ViewInterface {
          }
       }
    }
+
+   public void displayGameMessage(String gameMessage){
+      JOptionPane.showMessageDialog(this, gameMessage);
+   }
    // playerlabel = new JLabel();
    // ImageIcon pIcon = new ImageIcon("r2.png");
    // playerlabel.setIcon(pIcon);
