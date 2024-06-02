@@ -55,13 +55,15 @@ public class DeadwoodView extends JFrame implements ViewInterface {
    // JLayered Pane (for having multiple layers)
    JLayeredPane bPane;
    private Board board;
+   private GameState gameState;
 
    // Constructor
-   public DeadwoodView(Board board) {
+   public DeadwoodView(Board board, GameState gameState) {
       // Set the title of the JFrame
       super("Deadwood");
 
       this.board = board;
+      this.gameState = gameState;
 
       // Set the exit option for the JFrame
       setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -116,47 +118,47 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       bMove.setEnabled(true);
       bMove.setBackground(Color.white);
       bMove.setBounds(icon.getIconWidth() + 15, 90, 150, 20);
-      bMove.addMouseListener(new boardMouseListener());
+      bMove.addMouseListener(new boardMouseListener(gameState));
 
       bAct = new JButton("ACT");
       bAct.setBackground(Color.white);
       bAct.setBounds(icon.getIconWidth() + 15, 30, 150, 20);
-      bAct.addMouseListener(new boardMouseListener());
+      bAct.addMouseListener(new boardMouseListener(this.gameState));
 
       bRehearse = new JButton("REHEARSE");
       bRehearse.setBackground(Color.white);
       bRehearse.setBounds(icon.getIconWidth() + 15, 60, 150, 20);
-      bRehearse.addMouseListener(new boardMouseListener());
+      bRehearse.addMouseListener(new boardMouseListener(gameState));
 
       bUpgrade = new JButton("UPGRADE");
       bUpgrade.setBackground(Color.white);
       bUpgrade.setBounds(icon.getIconWidth() + 15, 90, 150, 20);
-      bUpgrade.addMouseListener(new boardMouseListener());
+      bUpgrade.addMouseListener(new boardMouseListener(gameState));
 
       bTakeRole = new JButton("TAKE A ROLE");
       bTakeRole.setBackground(Color.white);
       bTakeRole.setBounds(icon.getIconWidth() + 15, 120, 150, 20);
-      bTakeRole.addMouseListener(new boardMouseListener());
+      bTakeRole.addMouseListener(new boardMouseListener(gameState));
 
       bYourStats = new JButton("YOUR STATS");
       bYourStats.setBackground(Color.white);
       bYourStats.setBounds(icon.getIconWidth() + 15, 150, 150, 20);
-      bYourStats.addMouseListener(new boardMouseListener());
+      bYourStats.addMouseListener(new boardMouseListener(gameState));
 
       bPlayerLocations = new JButton("DISPLAY PLAYERS");
       bPlayerLocations.setBackground(Color.white);
       bPlayerLocations.setBounds(icon.getIconWidth() + 15, 180, 150, 20);
-      bPlayerLocations.addMouseListener(new boardMouseListener());
+      bPlayerLocations.addMouseListener(new boardMouseListener(gameState));
 
       bEndTurn = new JButton("END TURN");
       bEndTurn.setBackground(Color.white);
       bEndTurn.setBounds(icon.getIconWidth() + 15, 210, 150, 20);
-      bEndTurn.addMouseListener(new boardMouseListener());
+      bEndTurn.addMouseListener(new boardMouseListener(gameState));
 
       bEndGame = new JButton("END GAME");
       bEndGame.setBackground(Color.white);
       bEndGame.setBounds(icon.getIconWidth() + 15, 240, 150, 20);
-      bEndGame.addMouseListener(new boardMouseListener());
+      bEndGame.addMouseListener(new boardMouseListener(gameState));
 
       //-------------------------------------
       // CREATING BUTTONS FOR PLAYERS MOVING
@@ -320,11 +322,19 @@ public class DeadwoodView extends JFrame implements ViewInterface {
 
    class boardMouseListener implements MouseListener {
 
+      private GameState gameState;
+
+      public boardMouseListener(GameState gameState) {
+         this.gameState = gameState;
+      }
+
       // Im not sure what to do with this yet
       public void mouseClicked(MouseEvent e) {
 
          if (e.getSource() == bAct) {
-            playerlabel.setVisible(true);
+            // playerlabel.setVisible(true);
+            textAction.append(gameState.getActivePlayer() + " has tried to act.");
+            textAction.append("\n");
             System.out.println("Acting is Selected\n");
          } else if (e.getSource() == bRehearse) {
             System.out.println("Rehearse is Selected\n");
@@ -545,16 +555,22 @@ public class DeadwoodView extends JFrame implements ViewInterface {
          System.out.println("Error = " + e);
       }
 
-      DeadwoodView boardView = new DeadwoodView(board);
-      DeadwoodController boardController = new DeadwoodController(board, boardView);
-      boardView.setVisible(true);
-      boardView.setSceneCardsBoard();
+      DeadwoodController boardController = new DeadwoodController(board);
+      DeadwoodView boardView = new DeadwoodView(board, boardController.getGameState());
 
       // Take input from the user about number of players
       int numPlayers = Integer.parseInt(JOptionPane.showInputDialog(boardView, "How many players?"));
-      boardController.setActivePlayers(numPlayers);
-
+      // boardController.setActivePlayers(numPlayers);
+      boardController.initializeActivePlayers(numPlayers);
+      // DeadwoodController boardController = new DeadwoodController(board, boardView);
+      boardView.setVisible(true);
+      boardView.setSceneCardsBoard();
+      // // Take input from the user about number of players
+      // int numPlayers = Integer.parseInt(JOptionPane.showInputDialog(boardView, "How many players?"));
+      // // boardController.setActivePlayers(numPlayers);
+      // boardController.initializeActivePlayers(numPlayers);
       boardView.setPlayerIcons(numPlayers);
+      // boardView.setPlayerIcons(numPlayers);
    }
 
 }

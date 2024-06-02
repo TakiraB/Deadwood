@@ -7,14 +7,16 @@ import javax.swing.JOptionPane;
 
 public class DeadwoodController {
     private Board board;
-    private DeadwoodView view;
+    // private DeadwoodView view;
     ArrayList<Player> playerList = new ArrayList<Player>();
     private GameState gameState;
     private GamePieceManager pieceManager;
 
-    public DeadwoodController(Board board, DeadwoodView view) {
+    // public DeadwoodController(Board board, DeadwoodView view) {
+    public DeadwoodController(Board board) {
         this.board = board;
-        this.view = view;
+        // this.view = view;
+        this.gameState = new GameState(null, playerList, 0, 0, board);
         this.playerList = new ArrayList<>();
 
     }
@@ -79,7 +81,7 @@ public class DeadwoodController {
             // Add player to list of active players
             playerList.add(tempPlayer);
         }
-        view.setPlayerIcons(playerCount);
+        // view.setPlayerIcons(playerCount);
     }
 
     // // creation of GameState with the first activePlayer being randomized
@@ -116,10 +118,14 @@ public class DeadwoodController {
         }
     }
 
+    public GameState getGameState() {
+        return gameState;
+    }
+
     // initialize the active players in the game
     public void initializeActivePlayers(int numPlayers) {
-        setGameState(numPlayers);
         setActivePlayers(numPlayers);
+        setGameState(numPlayers);
     }
 
     // move action listener
