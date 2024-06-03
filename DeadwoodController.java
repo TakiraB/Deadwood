@@ -81,28 +81,7 @@ public class DeadwoodController {
             // Add player to list of active players
             playerList.add(tempPlayer);
         }
-        // view.setPlayerIcons(playerCount);
     }
-
-    // // creation of GameState with the first activePlayer being randomized
-    // Random random = new Random();
-    // int firstPlayerInt = random.nextInt(playerCount);
-    // // Initialize the GameState
-    // GameState gameState;
-
-    // // Setting up the max number of days in the game based on the number of
-    // players
-    // // 3 if 2 players, and 4 for everything else
-    // if (playerCount < 3) {
-    // gameState = new GameState(playerList.get(firstPlayerInt), playerList, 1, 3,
-    // board);
-    // } else {
-    // gameState = new GameState(playerList.get(firstPlayerInt), playerList, 1, 4,
-    // board);
-    // }
-
-    // // Start the game
-    // gameState.startGame();
 
     // initialize the game state
     public void setGameState(int numPlayers) {
@@ -112,14 +91,16 @@ public class DeadwoodController {
         // Setting up the max number of days in the game based on the number of players
         // 3 if 2 players, and 4 for everything else
         if (numPlayers < 3) {
-            // gameState = new GameState(playerList.get(firstPlayerInt), playerList, 1, 3, board);
+            // gameState = new GameState(playerList.get(firstPlayerInt), playerList, 1, 3,
+            // board);
             gameState.setActivePlayer(playerList.get(firstPlayerInt));
             gameState.setPlayers(playerList);
             gameState.setCurrentDayCount(1);
             gameState.setMaxDayCount(3);
             gameState.setBoard(board);
         } else {
-            // gameState = new GameState(playerList.get(firstPlayerInt), playerList, 1, 4, board);
+            // gameState = new GameState(playerList.get(firstPlayerInt), playerList, 1, 4,
+            // board);
             gameState.setActivePlayer(playerList.get(firstPlayerInt));
             gameState.setPlayers(playerList);
             gameState.setCurrentDayCount(1);
@@ -145,7 +126,54 @@ public class DeadwoodController {
     // rehearse action listener
 
     // upgrade action listener
+    public ArrayList<Integer> availableUpgrades() {
+        Player currentPlayer = gameState.getActivePlayer();
+        Room tempCastingOffice = board.getBoardLayout().get("Casting Office");
+        CastingOffice castingOfficeUpgrades = (CastingOffice) tempCastingOffice;
+        ArrayList<Integer> canUpgrade = new ArrayList<>();
+        for (int i = 0; i < castingOfficeUpgrades.getUpgradeChoices().size(); i++) {
+            canUpgrade.add(0);
+        }
+        for (int i = 0; i < 5; i++) {
+            Upgrades currentUpgrade = castingOfficeUpgrades.getUpgradeChoices().get(i);
+            int rank = currentUpgrade.getUpgradeLevel();
+            int amountRequired = currentUpgrade.getUpgradeAmount();
+            int temp = i * 2;
+            System.out.println("current dollars " + currentPlayer.getCredits());
+            System.out.println("required dollars " + amountRequired);
+            System.out.println("current player rank " + currentPlayer.getRank());
+            System.out.println("upgrade rank " + rank);
+            if (currentPlayer.getDollars() >= amountRequired && currentPlayer.getRank() < rank) {
+                canUpgrade.set(temp, 1);
+            } else {
+                canUpgrade.set(temp, 0);
+            }
+            System.out.println(temp + " is set to " + canUpgrade.get(temp));
+            System.out.println("=================");
+        }
+        for (int i = 5; i < 10; i++) {
+            Upgrades currentUpgrade = castingOfficeUpgrades.getUpgradeChoices().get(i);
+            int rank = currentUpgrade.getUpgradeLevel();
+            int amountRequired = currentUpgrade.getUpgradeAmount();
+            int temp = ((i - 5) * 2) + 1;
+            System.out.println("current credits " + currentPlayer.getCredits());
+            System.out.println("required credit " + amountRequired);
+            System.out.println("current player rank " + currentPlayer.getRank());
+            System.out.println("upgrade rank " + rank);
+            if (currentPlayer.getCredits() >= amountRequired && currentPlayer.getRank() < rank) {
+                canUpgrade.set(temp, 1);
+            } else {
+                canUpgrade.set(temp, 0);
+            }
+            System.out.println(temp + " is set to " + canUpgrade.get(temp));
+            System.out.println("=================");
+        }
+        return canUpgrade;
+    }
 
+    public void upgradePlayerRank(int newRank) {
+        gameState.getActivePlayer().setPlayerRank(newRank);
+    }
     // taking role action listener
 
     // displaying stats action listener
