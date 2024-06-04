@@ -87,7 +87,6 @@ public class DeadwoodController {
             // Add player to list of active players
             playerList.add(tempPlayer);
         }
-        // view.setPlayerIcons(playerCount);
     }
 
     // initialize the game state
@@ -553,20 +552,93 @@ public class DeadwoodController {
     }
 
     // rehearse action listener
-    public void rehearseOption() {
-
+    public void playerRehearse() {
+        int currentChips = gameState.getActivePlayer().getPracticeChips();
+        gameState.getActivePlayer().setPracticeChips(currentChips + 1);
+        gameState.getActivePlayer().setHasActed(true);
     }
 
     // upgrade action listener
-    public void upgradeOption() {
-
+    public ArrayList<Integer> availableUpgrades() {
+        Player currentPlayer = gameState.getActivePlayer();
+        Room tempCastingOffice = board.getBoardLayout().get("Casting Office");
+        CastingOffice castingOfficeUpgrades = (CastingOffice) tempCastingOffice;
+        ArrayList<Integer> canUpgrade = new ArrayList<>();
+        for (int i = 0; i < castingOfficeUpgrades.getUpgradeChoices().size(); i++) {
+            canUpgrade.add(0);
+        }
+        for (int i = 0; i < 5; i++) {
+            Upgrades currentUpgrade = castingOfficeUpgrades.getUpgradeChoices().get(i);
+            int rank = currentUpgrade.getUpgradeLevel();
+            int amountRequired = currentUpgrade.getUpgradeAmount();
+            int temp = i * 2;
+            System.out.println("current dollars " + currentPlayer.getCredits());
+            System.out.println("required dollars " + amountRequired);
+            System.out.println("current player rank " + currentPlayer.getRank());
+            System.out.println("upgrade rank " + rank);
+            if (currentPlayer.getDollars() >= amountRequired && currentPlayer.getRank() < rank) {
+                canUpgrade.set(temp, 1);
+            } else {
+                canUpgrade.set(temp, 0);
+            }
+            System.out.println(temp + " is set to " + canUpgrade.get(temp));
+            System.out.println("=================");
+        }
+        for (int i = 5; i < 10; i++) {
+            Upgrades currentUpgrade = castingOfficeUpgrades.getUpgradeChoices().get(i);
+            int rank = currentUpgrade.getUpgradeLevel();
+            int amountRequired = currentUpgrade.getUpgradeAmount();
+            int temp = ((i - 5) * 2) + 1;
+            System.out.println("current credits " + currentPlayer.getCredits());
+            System.out.println("required credit " + amountRequired);
+            System.out.println("current player rank " + currentPlayer.getRank());
+            System.out.println("upgrade rank " + rank);
+            if (currentPlayer.getCredits() >= amountRequired && currentPlayer.getRank() < rank) {
+                canUpgrade.set(temp, 1);
+            } else {
+                canUpgrade.set(temp, 0);
+            }
+            System.out.println(temp + " is set to " + canUpgrade.get(temp));
+            System.out.println("=================");
+        }
+        return canUpgrade;
     }
+
+    public void upgradePlayerRank(int newRank) {
+        gameState.getActivePlayer().setPlayerRank(newRank);
+    }
+
 
     // taking role action listener
-    public void takingRoleOption() {
-
+    public List<Role> availableOnCardRoles() {
+        Player currentPlayer = gameState.getActivePlayer();
+        RoomWithScene currentRoom = (RoomWithScene) currentPlayer.getPlayerRoom();
+        List<Role> onCardRoles = currentRoom.getSceneCard().getRoles();
+        List<Role> availableRoles = new ArrayList<Role>();
+        for (Role role: onCardRoles) {
+            if (role.getRank() <= currentPlayer.getRank() && role.getPlayerOnRole() == null) {
+                availableRoles.add(role);
+            }
+        }
+        return availableRoles;
     }
 
+    public List<Role> availableOffCardRoles() {
+        Player currentPlayer = gameState.getActivePlayer();
+        RoomWithScene currentRoom = (RoomWithScene) currentPlayer.getPlayerRoom();
+        ArrayList<Role> offCardRoles = currentRoom.getOffCardRoles();
+        List<Role> availableRoles = new ArrayList<Role>();
+        for (Role role: offCardRoles) {
+            if (role.getRank() <= currentPlayer.getRank() && role.getPlayerOnRole() == null) {
+                availableRoles.add(role);
+            }
+        }
+        return availableRoles;
+    }
+
+    public void giveRoleToPlayer(Role role) {
+        gameState.getActivePlayer().setActiveRole(role);
+    }
     // displaying stats action listener
     public void displayStatsOption() {
 
