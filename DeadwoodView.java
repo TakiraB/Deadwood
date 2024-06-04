@@ -375,6 +375,8 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             textAction.append("\n");
             System.out.println("Acting is Selected\n");
          } else if (e.getSource() == bRehearse) {
+            controller.playerRehearse();
+            textAction.append(gameState.getActivePlayer().getName() + "has increased their practice chip count to: " + gameState.getActivePlayer().getPracticeChips());
             System.out.println("Rehearse is Selected\n");
          } else if (e.getSource() == bMove) {
             System.out.println("Move is Selected\n");

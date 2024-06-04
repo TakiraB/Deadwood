@@ -124,6 +124,11 @@ public class DeadwoodController {
     // act action listener
 
     // rehearse action listener
+    public void playerRehearse() {
+        int currentChips = gameState.getActivePlayer().getPracticeChips();
+        gameState.getActivePlayer().setPracticeChips(currentChips + 1);
+        gameState.getActivePlayer().setHasActed(true);
+    }
 
     // upgrade action listener
     public ArrayList<Integer> availableUpgrades() {
@@ -175,7 +180,7 @@ public class DeadwoodController {
         gameState.getActivePlayer().setPlayerRank(newRank);
     }
 
-    
+
     // taking role action listener
     public List<Role> availableOnCardRoles() {
         Player currentPlayer = gameState.getActivePlayer();
