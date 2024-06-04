@@ -379,7 +379,51 @@ public class DeadwoodView extends JFrame implements ViewInterface {
          } else if (e.getSource() == bMove) {
             System.out.println("Move is Selected\n");
          } else if (e.getSource() == bTakeRole) {
-            System.out.println("take a role is Selected\n");
+            gameState.getActivePlayer().setPlayerRoom(gameState.getBoard().getRoomFromBoard("Saloon"));
+            // find roles
+            // select the roles available to the player
+            List<Role> onCardRoles = controller.availableOnCardRoles();
+            List<Role> offCardRoles = controller.availableOffCardRoles();
+            // display the roles in a selectable manor
+            // give player role thats selected
+            JFrame frame = new JFrame("Available Upgrades");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(400, 300);
+            frame.setLayout(new GridLayout(0, 1));
+            JPanel onCardPanel = new JPanel();
+            onCardPanel.setLayout(new BoxLayout(onCardPanel, BoxLayout.Y_AXIS));
+            onCardPanel.setBorder(BorderFactory.createTitledBorder("On Card Roles"));
+            for (Role role: onCardRoles) {
+               JButton button = new JButton(role.getRank() + ": " + role.getRoleName());
+               button.addActionListener(new ActionListener() {
+                  public void actionPerformed(ActionEvent e) {
+                     controller.giveRoleToPlayer(role);
+                     textAction.append(gameState.getActivePlayer() + " has taken the role of " + gameState.getActivePlayer().getRole().getRoleName());
+                     frame.dispose();
+                  }
+               });
+               onCardPanel.add(button);
+            }
+            frame.add(onCardPanel);
+
+            JPanel offCardPanel = new JPanel();
+            offCardPanel.setLayout(new BoxLayout(offCardPanel, BoxLayout.Y_AXIS));
+            offCardPanel.setBorder(BorderFactory.createTitledBorder("Off Card Roles"));
+            for (Role role: offCardRoles) {
+               JButton button = new JButton(role.getRank() + ": " + role.getRoleName());
+               button.addActionListener(new ActionListener() {
+                  public void actionPerformed(ActionEvent e) {
+                     controller.giveRoleToPlayer(role);
+                     textAction.append(gameState.getActivePlayer().getName() + "has taken the role of " + gameState.getActivePlayer().getRole().getRoleName());
+                     frame.dispose();
+                  }
+               });
+               offCardPanel.add(button);
+            }
+            frame.add(offCardPanel);
+
+            frame.setVisible(true);
+            // TODO: Visually change the die to show the new role the player is in
          } else if (e.getSource() == bPlayerLocations) {
             System.out.println("player locations is Selected\n");
          } else if (e.getSource() == bEndTurn) {
@@ -388,7 +432,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
          } else if (e.getSource() == bEndGame) {
             System.out.println("end game is Selected\n");
          } else if (e.getSource() == bUpgrade) {
-
             JFrame frame = new JFrame("Available Upgrades");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(400, 300);
@@ -416,6 +459,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             }
             frame.add(panel);
             frame.setVisible(true);
+            // TODO: Visually change the die to show the new players rank
          }
       }
 
@@ -644,5 +688,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       boardView.setVisible(true);
       boardView.setSceneCardsBoard();
       boardView.setPlayerIcons(numPlayers);
+      boardController.setUpSceneCards();
    }
 }
