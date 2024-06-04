@@ -558,44 +558,57 @@ public class DeadwoodController {
     }
 
     // upgrade action listener
-    // returns array of 1 for if the player can upgrade to that rank using that currency
-    // 0 if the player cannot afford or is too high of rank for rank
-    // the list is rank 2: dollars, rank 2: credits, rank 3: dollars, rank 3: credits...
-    public ArrayList<Integer> availableUpgrades() {
+    public ArrayList<ArrayList<Object>> availableUpgrades() {
         Player currentPlayer = gameState.getActivePlayer();
         Room tempCastingOffice = board.getBoardLayout().get("Casting Office");
         CastingOffice castingOfficeUpgrades = (CastingOffice) tempCastingOffice;
+        // double ArrayList of objects
+        // the order is rank 2 dollar, rank 2 credit, rank 3 dollar, rank 3 credit... rank 6 dollar, rank 6 credit,
+        // first value in object: 0 or 1 if the player can upgrade to that rank
+        // second value in object: String, rank *rank* costs *amount* (dollars or credits)
         // initializing of arraylist
-        ArrayList<Integer> canUpgrade = new ArrayList<>();
+        ArrayList<ArrayList<Object>> rankInfoAndCost = new ArrayList<ArrayList<Object>>();
         for (int i = 0; i < castingOfficeUpgrades.getUpgradeChoices().size(); i++) {
-            canUpgrade.add(0);
+            ArrayList<Object> tempArray = new ArrayList<Object>();
+            tempArray.add(0);
+            tempArray.add("E");
+            rankInfoAndCost.add(tempArray);
         }
-        // checking rank prices using dollars
+
+        // Adds values to rankInfoAndCost for all the dollar upgrades
         for (int i = 0; i < 5; i++) {
             Upgrades currentUpgrade = castingOfficeUpgrades.getUpgradeChoices().get(i);
             int rank = currentUpgrade.getUpgradeLevel();
             int amountRequired = currentUpgrade.getUpgradeAmount();
             int temp = i * 2;
+            ArrayList<Object> tempArray = new ArrayList<Object>();
+            // checking to make sure player is not too high of a level or does not have enough credits
             if (currentPlayer.getDollars() >= amountRequired && currentPlayer.getRank() < rank) {
-                canUpgrade.set(temp, 1);
+                tempArray.add(1);
             } else {
-                canUpgrade.set(temp, 0);
+                tempArray.add(0);
             }
+            tempArray.add("Rank " + currentUpgrade.getUpgradeLevel() + " costs " + currentUpgrade.getUpgradeAmount() + " " + currentUpgrade.getCurrencyType() + "s");
+            rankInfoAndCost.set(temp, tempArray);
         }
-        // checking rank prices using credits
+        
+        // Adds values to rankInfoAndCost for all the credit upgrades
         for (int i = 5; i < 10; i++) {
             Upgrades currentUpgrade = castingOfficeUpgrades.getUpgradeChoices().get(i);
             int rank = currentUpgrade.getUpgradeLevel();
             int amountRequired = currentUpgrade.getUpgradeAmount();
             int temp = ((i - 5) * 2) + 1;
+            ArrayList<Object> tempArray = new ArrayList<Object>();
+            // checking to make sure player is not too high of a level or does not have enough credits
             if (currentPlayer.getCredits() >= amountRequired && currentPlayer.getRank() < rank) {
-                canUpgrade.set(temp, 1);
+                tempArray.add(1);
             } else {
-                canUpgrade.set(temp, 0);
+                tempArray.add(0);
             }
-
+            tempArray.add("Rank " + currentUpgrade.getUpgradeLevel() + " costs " + currentUpgrade.getUpgradeAmount() + " " + currentUpgrade.getCurrencyType() + "s");
+            rankInfoAndCost.set(temp, tempArray);
         }
-        return canUpgrade;
+        return rankInfoAndCost;
     }
 
     public void upgradePlayerRank(int newRank) {
