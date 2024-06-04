@@ -107,7 +107,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       bMove.setEnabled(true);
       bMove.setBackground(Color.white);
       bMove.setBounds(icon.getIconWidth() + 15, 30, 150, 20);
-      bMove.addMouseListener(new boardMouseListener(boardController.getGameState()));
+      bMove.addMouseListener(new boardMouseListener(boardController.getGameState(), boardController));
       bMove.addMouseListener(new validRoomListener());
       // bMove.addActionListener(new ActionListener(){
       //    @Override
@@ -120,57 +120,57 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       bAct = new JButton("ACT");
       bAct.setBackground(Color.white);
       bAct.setBounds(icon.getIconWidth() + 15, 60, 150, 20);
-      bAct.addMouseListener(new boardMouseListener(boardController.getGameState()));
-      bAct.addActionListener(new ActionListener(){
-         @Override
-         public void actionPerformed(ActionEvent e) {
-            boardController.actOption();
-         }
-      });
+      bAct.addMouseListener(new boardMouseListener(boardController.getGameState(), boardController));
+      // bAct.addActionListener(new ActionListener(){
+      //    @Override
+      //    public void actionPerformed(ActionEvent e) {
+      //       boardController.actOption();
+      //    }
+      // });
 
       bRehearse = new JButton("REHEARSE");
       bRehearse.setBackground(Color.white);
       bRehearse.setBounds(icon.getIconWidth() + 15, 90, 150, 20);
-      bRehearse.addMouseListener(new boardMouseListener(boardController.getGameState()));
-      bRehearse.addActionListener(new ActionListener(){
-         @Override
-         public void actionPerformed(ActionEvent e) {
-            boardController.rehearseOption();
-         }
-      });
+      bRehearse.addMouseListener(new boardMouseListener(boardController.getGameState(), boardController));
+      // bRehearse.addActionListener(new ActionListener(){
+      //    @Override
+      //    public void actionPerformed(ActionEvent e) {
+      //       boardController.rehearseOption();
+      //    }
+      // });
 
       bUpgrade = new JButton("UPGRADE");
       bUpgrade.setBackground(Color.white);
       bUpgrade.setBounds(icon.getIconWidth() + 15, 120, 150, 20);
-      bUpgrade.addMouseListener(new boardMouseListener(boardController.getGameState()));
-      bUpgrade.addActionListener(new ActionListener(){
-         @Override
-         public void actionPerformed(ActionEvent e) {
-            boardController.upgradeOption();
-         }
-      });
+      bUpgrade.addMouseListener(new boardMouseListener(boardController.getGameState(), boardController));
+      // bUpgrade.addActionListener(new ActionListener(){
+      //    @Override
+      //    public void actionPerformed(ActionEvent e) {
+      //       boardController.upgradeOption();
+      //    }
+      // });
 
       bTakeRole = new JButton("TAKE A ROLE");
       bTakeRole.setBackground(Color.white);
       bTakeRole.setBounds(icon.getIconWidth() + 15, 150, 150, 20);
-      bTakeRole.addMouseListener(new boardMouseListener(boardController.getGameState()));
-      bTakeRole.addActionListener(new ActionListener(){
-         @Override
-         public void actionPerformed(ActionEvent e) {
-            boardController.takingRoleOption();
-         }
-      });
+      bTakeRole.addMouseListener(new boardMouseListener(boardController.getGameState(), boardController));
+      // bTakeRole.addActionListener(new ActionListener(){
+      //    @Override
+      //    public void actionPerformed(ActionEvent e) {
+      //       boardController.takingRoleOption();
+      //    }
+      // });
 
       bEndTurn = new JButton("END TURN");
       bEndTurn.setBackground(Color.white);
       bEndTurn.setBounds(icon.getIconWidth() + 15, 180, 150, 20);
-      bEndTurn.addMouseListener(new boardMouseListener(boardController.getGameState()));
-      bEndTurn.addActionListener(new ActionListener(){
-         @Override
-         public void actionPerformed(ActionEvent e) {
-            boardController.endTurnOption();
-         }
-      });
+      bEndTurn.addMouseListener(new boardMouseListener(boardController.getGameState(), boardController));
+      // bEndTurn.addActionListener(new ActionListener(){
+      //    @Override
+      //    public void actionPerformed(ActionEvent e) {
+      //       boardController.endTurnOption();
+      //    }
+      // });
 
       // -------------------------------------
       // CREATING BUTTONS FOR PLAYERS MOVING
@@ -372,10 +372,10 @@ public class DeadwoodView extends JFrame implements ViewInterface {
 
          if (e.getSource() == bAct) {
             // playerlabel.setVisible(true);
-            textAction.append(gameState.getActivePlayer().getName() + " has tried to act.\n");
-            for (Room room : gameState.getBoard().getAdjacent(gameState.getActivePlayer().getPlayerRoom())) {
-               textAction.append(room.getName());
-            }
+            // textAction.append(gameState.getActivePlayer().getName() + " has tried to act.\n");
+            // for (Room room : gameState.getBoard().getAdjacent(gameState.getActivePlayer().getPlayerRoom())) {
+            //    textAction.append(room.getName());
+            // }
 
             // Move with a menu instead of clicking on location
             // JFrame frame = new JFrame("Popup Menu Example");
@@ -405,22 +405,20 @@ public class DeadwoodView extends JFrame implements ViewInterface {
 
             // popupMenu.show(e.getComponent(), e.getX(), e.getY());
 
-            textAction.append("\n");
+            // textAction.append("\n");
             System.out.println("Acting is Selected\n");
          } else if (e.getSource() == bRehearse) {
             controller.playerRehearse();
-            textAction.append(gameState.getActivePlayer().getName() + "has increased their practice chip count to: " + gameState.getActivePlayer().getPracticeChips());
+            textAction.append(gameState.getActivePlayer().getName() + "has increased their practice chip count to: " + gameState.getActivePlayer().getPracticeChips() + "\n");
             System.out.println("Rehearse is Selected\n");
          } else if (e.getSource() == bMove) {
             System.out.println("Move is Selected\n");
          } else if (e.getSource() == bTakeRole) {
             gameState.getActivePlayer().setPlayerRoom(gameState.getBoard().getRoomFromBoard("Saloon"));
-            // find roles
-            // select the roles available to the player
+            // find roles and select the roles available to the player
             List<Role> onCardRoles = controller.availableOnCardRoles();
             List<Role> offCardRoles = controller.availableOffCardRoles();
             // display the roles in a selectable manor
-            // give player role thats selected
             JFrame frame = new JFrame("Available Upgrades");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(400, 300);
@@ -432,6 +430,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
                JButton button = new JButton(role.getRank() + ": " + role.getRoleName());
                button.addActionListener(new ActionListener() {
                   public void actionPerformed(ActionEvent e) {
+                     // give player the role thats selected
                      controller.giveRoleToPlayer(role);
                      textAction.append(gameState.getActivePlayer() + " has taken the role of " + gameState.getActivePlayer().getRole().getRoleName());
                      frame.dispose();
@@ -448,6 +447,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
                JButton button = new JButton(role.getRank() + ": " + role.getRoleName());
                button.addActionListener(new ActionListener() {
                   public void actionPerformed(ActionEvent e) {
+                     // give player role thats selected
                      controller.giveRoleToPlayer(role);
                      textAction.append(gameState.getActivePlayer().getName() + "has taken the role of " + gameState.getActivePlayer().getRole().getRoleName());
                      frame.dispose();
@@ -467,12 +467,14 @@ public class DeadwoodView extends JFrame implements ViewInterface {
          } else if (e.getSource() == bEndGame) {
             System.out.println("end game is Selected\n");
          } else if (e.getSource() == bUpgrade) {
+            // create frame for all the available upgrades
             JFrame frame = new JFrame("Available Upgrades");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(400, 300);
             JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10)); // 5 rows, 2 columns, 10px gaps
             ArrayList<Integer> availableUpgrades = controller.availableUpgrades();
             for (int i = 0; i < 10; i++) {
+               // if player can get this upgrade, then display it regularly
                if (availableUpgrades.get(i) == 1) {
                   JButton button = new JButton("Option " + i);
                   int optionNumber = i;
@@ -485,7 +487,9 @@ public class DeadwoodView extends JFrame implements ViewInterface {
                      }
                   });
                   panel.add(button);
-               } else {
+               } 
+               // if the player cannot purchase the upgrade make it red and not clickable
+               else {
                   JButton button = new JButton("Option " + i);
                   button.setEnabled(false);
                   button.setBackground(Color.RED);
@@ -494,6 +498,8 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             }
             frame.add(panel);
             frame.setVisible(true);
+            // TODO: Correctly add the price and rank to be displayed in menu
+            // TODO: If player closes menu game closes, need to fix
             // TODO: Visually change the die to show the new players rank
          }
       }
@@ -505,7 +511,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       }
 
       public void mouseEntered(MouseEvent e) {
-
       }
 
       public void mouseExited(MouseEvent e) {

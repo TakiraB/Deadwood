@@ -536,7 +536,6 @@ public class DeadwoodController {
                         || activePlayer.getPlayerRoom().getAdjacentNeighbors()
                                 .contains(neighborName))) {
             activePlayer.move(destination);
-            // System.out.println("You have successfully moved to " + destination.getName());
             // TODO: call method for moving player icon
             // TODO: call method for resetting buttons
         } else {
@@ -559,47 +558,42 @@ public class DeadwoodController {
     }
 
     // upgrade action listener
+    // returns array of 1 for if the player can upgrade to that rank using that currency
+    // 0 if the player cannot afford or is too high of rank for rank
+    // the list is rank 2: dollars, rank 2: credits, rank 3: dollars, rank 3: credits...
     public ArrayList<Integer> availableUpgrades() {
         Player currentPlayer = gameState.getActivePlayer();
         Room tempCastingOffice = board.getBoardLayout().get("Casting Office");
         CastingOffice castingOfficeUpgrades = (CastingOffice) tempCastingOffice;
+        // initializing of arraylist
         ArrayList<Integer> canUpgrade = new ArrayList<>();
         for (int i = 0; i < castingOfficeUpgrades.getUpgradeChoices().size(); i++) {
             canUpgrade.add(0);
         }
+        // checking rank prices using dollars
         for (int i = 0; i < 5; i++) {
             Upgrades currentUpgrade = castingOfficeUpgrades.getUpgradeChoices().get(i);
             int rank = currentUpgrade.getUpgradeLevel();
             int amountRequired = currentUpgrade.getUpgradeAmount();
             int temp = i * 2;
-            System.out.println("current dollars " + currentPlayer.getCredits());
-            System.out.println("required dollars " + amountRequired);
-            System.out.println("current player rank " + currentPlayer.getRank());
-            System.out.println("upgrade rank " + rank);
             if (currentPlayer.getDollars() >= amountRequired && currentPlayer.getRank() < rank) {
                 canUpgrade.set(temp, 1);
             } else {
                 canUpgrade.set(temp, 0);
             }
-            System.out.println(temp + " is set to " + canUpgrade.get(temp));
-            System.out.println("=================");
         }
+        // checking rank prices using credits
         for (int i = 5; i < 10; i++) {
             Upgrades currentUpgrade = castingOfficeUpgrades.getUpgradeChoices().get(i);
             int rank = currentUpgrade.getUpgradeLevel();
             int amountRequired = currentUpgrade.getUpgradeAmount();
             int temp = ((i - 5) * 2) + 1;
-            System.out.println("current credits " + currentPlayer.getCredits());
-            System.out.println("required credit " + amountRequired);
-            System.out.println("current player rank " + currentPlayer.getRank());
-            System.out.println("upgrade rank " + rank);
             if (currentPlayer.getCredits() >= amountRequired && currentPlayer.getRank() < rank) {
                 canUpgrade.set(temp, 1);
             } else {
                 canUpgrade.set(temp, 0);
             }
-            System.out.println(temp + " is set to " + canUpgrade.get(temp));
-            System.out.println("=================");
+
         }
         return canUpgrade;
     }
@@ -655,4 +649,9 @@ public class DeadwoodController {
     }
     // need some kind of start game method
 
+
+
+    public ArrayList<Player> getPlayerList() {
+        return playerList;
+    }
 }
