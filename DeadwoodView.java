@@ -54,16 +54,20 @@ public class DeadwoodView extends JFrame implements ViewInterface {
    private Board board;
    private DeadwoodController boardController;
    private Map<String, JButton> roomButtons;
+   private Map<Player, JLabel> playerLabels;
 
    public DeadwoodView(Board board, DeadwoodController boardController) {
 
       // Set the title of the JFrame
       super("Deadwood");
 
+      System.out.println("DeadwoodView class loader: " + DeadwoodView.class.getClassLoader());
+
       this.board = board;
       this.boardController = boardController;
       this.boardController.setView(this);
       roomButtons = new HashMap<>();
+      playerLabels = new HashMap<>();
 
       // Set the exit option for the JFrame
       setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -102,13 +106,14 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       bMove.setBackground(Color.white);
       bMove.setBounds(icon.getIconWidth() + 15, 90, 150, 20);
       bMove.addMouseListener(new boardMouseListener(boardController.getGameState()));
-      bMove.addActionListener(new ActionListener(){
-         @Override
-         public void actionPerformed(ActionEvent e) {
-            System.out.println("Move button clicked");
-            boardController.moveOption();
-         }
-      });
+      bMove.addMouseListener(new validRoomListener());
+      // bMove.addActionListener(new ActionListener(){
+      //    @Override
+      //    public void actionPerformed(ActionEvent e) {
+      //       System.out.println("Move button clicked");
+      //       boardController.moveOption();
+      //    }
+      // });
 
       bAct = new JButton("ACT");
       bAct.setBackground(Color.white);
@@ -423,6 +428,28 @@ public class DeadwoodView extends JFrame implements ViewInterface {
 
    }
 
+   class validRoomListener extends MouseAdapter {
+
+      // when mouse enters button area, create a border around the area for
+      // readability
+      @Override
+      public void mouseClicked(MouseEvent e) {
+         System.out.println("Move button clicked");
+         boardController.moveOption();
+      }
+   }
+
+   // class newRoomListener extends MouseAdapter {
+
+   //    // when mouse enters button area, create a border around the area for
+   //    // readability
+   //    @Override
+   //    public void mouseClicked(MouseEvent e) {
+   //       System.out.println("New room selection clicked");
+   //       boardController.performMove(neighborName);
+   //    }
+   // }
+
    // ------------------------------------------
    // Setting face-down scene card images at every set at the start of the game,
    // uncovered when one person is in the room (not implemented yet)
@@ -448,128 +475,115 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       }
    }
 
+   // General display message that can be called from controller
    public void displayGameMessage(String gameMessage){
       JOptionPane.showMessageDialog(this, gameMessage);
    }
 
-   public void setPlayerIcons(int numPlayers) {
-
-      // Initialize all the player colored dice (white dice used for actual roles)
-      ImageIcon player1 = new ImageIcon("dice/dice/b1.png");
-      ImageIcon player2 = new ImageIcon("dice/dice/c1.png");
-      ImageIcon player3 = new ImageIcon("dice/dice/g1.png");
-      ImageIcon player4 = new ImageIcon("dice/dice/o1.png");
-      ImageIcon player5 = new ImageIcon("dice/dice/p1.png");
-      ImageIcon player6 = new ImageIcon("dice/dice/r1.png");
-      ImageIcon player7 = new ImageIcon("dice/dice/v1.png");
-      ImageIcon player8 = new ImageIcon("dice/dice/y1.png");
-
-      JLabel player1Label = new JLabel();
-      player1Label.setIcon(player1);
-      player1Label.setBounds(1005, 315, player1.getIconWidth(), player1.getIconHeight());
-      player1Label.setVisible(false);
-      bPane.add(player1Label, Integer.valueOf(3));
-
-      JLabel player2Label = new JLabel();
-      player2Label.setIcon(player2);
-      player2Label.setBounds(1050, 315, player2.getIconWidth(), player2.getIconHeight());
-      player2Label.setVisible(false);
-      bPane.add(player2Label, Integer.valueOf(3));
-
-      JLabel player3Label = new JLabel();
-      player3Label.setIcon(player3);
-      player3Label.setBounds(1095, 315, player3.getIconWidth(), player3.getIconHeight());
-      player3Label.setVisible(false);
-      bPane.add(player3Label, Integer.valueOf(3));
-
-      JLabel player4Label = new JLabel();
-      player4Label.setIcon(player4);
-      player4Label.setBounds(1140, 315, player3.getIconWidth(), player3.getIconHeight());
-      player4Label.setVisible(false);
-      bPane.add(player4Label, Integer.valueOf(3));
-
-      JLabel player5Label = new JLabel();
-      player5Label.setIcon(player5);
-      player5Label.setBounds(1005, 365, player3.getIconWidth(), player3.getIconHeight());
-      player5Label.setVisible(false);
-      bPane.add(player5Label, Integer.valueOf(3));
-
-      JLabel player6Label = new JLabel();
-      player6Label.setIcon(player6);
-      player6Label.setBounds(1050, 365, player3.getIconWidth(), player3.getIconHeight());
-      player6Label.setVisible(false);
-      bPane.add(player6Label, Integer.valueOf(3));
-
-      JLabel player7Label = new JLabel();
-      player7Label.setIcon(player7);
-      player7Label.setBounds(1095, 365, player3.getIconWidth(), player3.getIconHeight());
-      player7Label.setVisible(false);
-      bPane.add(player7Label, Integer.valueOf(3));
-
-      JLabel player8Label = new JLabel();
-      player8Label.setIcon(player8);
-      player8Label.setBounds(1140, 365, player3.getIconWidth(), player3.getIconHeight());
-      player8Label.setVisible(false);
-      bPane.add(player8Label, Integer.valueOf(3));
-
-      if (numPlayers == 2) {
-         player1Label.setVisible(true);
-         player2Label.setVisible(true);
-      } else if (numPlayers == 3) {
-         player1Label.setVisible(true);
-         player2Label.setVisible(true);
-         player3Label.setVisible(true);
-      }
-      else if (numPlayers == 4) {
-         player1Label.setVisible(true);
-         player2Label.setVisible(true);
-         player3Label.setVisible(true);
-         player4Label.setVisible(true);
-      }
-      else if (numPlayers == 5) {
-         player1Label.setVisible(true);
-         player2Label.setVisible(true);
-         player3Label.setVisible(true);
-         player4Label.setVisible(true);
-         player5Label.setVisible(true);
-      } else if (numPlayers == 6) {
-         player1Label.setVisible(true);
-         player2Label.setVisible(true);
-         player3Label.setVisible(true);
-         player4Label.setVisible(true);
-         player5Label.setVisible(true);
-         player6Label.setVisible(true);
-
-      } else if (numPlayers == 7) {
-         player1Label.setVisible(true);
-         player2Label.setVisible(true);
-         player3Label.setVisible(true);
-         player4Label.setVisible(true);
-         player5Label.setVisible(true);
-         player6Label.setVisible(true);
-         player7Label.setVisible(true);
-      } else {
-         player1Label.setVisible(true);
-         player2Label.setVisible(true);
-         player3Label.setVisible(true);
-         player4Label.setVisible(true);
-         player5Label.setVisible(true);
-         player6Label.setVisible(true);
-         player7Label.setVisible(true);
-         player8Label.setVisible(true);
-      }
+   // Update player room on the board
+   public void updatePlayerRoom(Player activePlayer){
+      // get the active players label (we need to change its bounds)
+      JLabel playerLabel = playerLabels.get(activePlayer);
+      // get the players current room
+      Room currentPlayerRoom = activePlayer.getPlayerRoom();
+      // Set bounds based on stored area objects and stored Icon object info
+      playerLabel.setBounds(currentPlayerRoom.getRoomArea().getXValue(), currentPlayerRoom.getRoomArea().getYValue(),
+      playerLabel.getIcon().getIconWidth(), playerLabel.getIcon().getIconHeight());
+      playerLabel.setVisible(true);
    }
 
+   // Setting the player icons based on starting rank and create labels for them
+   public void setPlayerIcons(ArrayList<Player> playerList) {
+      // Initialize all the player colored dice (white dice used for actual roles)
+      ArrayList<PlayerIcon> playerIconList = new ArrayList<>();
+
+      //Rank 1 icons
+      ImageIcon player1Rank1 = new ImageIcon("dice/dice/b1.png");
+      ImageIcon player2Rank1 =new ImageIcon("dice/dice/c1.png");
+      ImageIcon player3Rank1 =new ImageIcon("dice/dice/g1.png");
+      ImageIcon player4Rank1 =new ImageIcon("dice/dice/o1.png");
+      ImageIcon player5Rank1 =new ImageIcon("dice/dice/p1.png");
+      ImageIcon player6Rank1 =new ImageIcon("dice/dice/r1.png");
+      ImageIcon player7Rank1 =new ImageIcon("dice/dice/v1.png");
+      ImageIcon player8Rank1 =new ImageIcon("dice/dice/y1.png");
+
+      //Rank 2 icons
+      ImageIcon player1Rank2 = new ImageIcon("dice/dice/b2.png");
+      ImageIcon player2Rank2 =new ImageIcon("dice/dice/c2.png");
+      ImageIcon player3Rank2 =new ImageIcon("dice/dice/g2.png");
+      ImageIcon player4Rank2 =new ImageIcon("dice/dice/o2.png");
+      ImageIcon player5Rank2 =new ImageIcon("dice/dice/p2.png");
+      ImageIcon player6Rank2 =new ImageIcon("dice/dice/r2.png");
+      ImageIcon player7Rank2 =new ImageIcon("dice/dice/v2.png");
+      ImageIcon player8Rank2 =new ImageIcon("dice/dice/y2.png");
+
+   //If the number of players is equal to 7, give them all a rank 2 die
+     if(playerList.size() == 7){
+      playerIconList.add(new PlayerIcon(player1Rank2, 1005, 315));
+      playerIconList.add(new PlayerIcon(player2Rank2, 1050, 315));
+      playerIconList.add(new PlayerIcon(player3Rank2, 1095, 315));
+      playerIconList.add(new PlayerIcon(player4Rank2, 1140, 315));
+      playerIconList.add(new PlayerIcon(player5Rank2, 1005, 365));
+      playerIconList.add(new PlayerIcon(player6Rank2, 1050, 365));
+      playerIconList.add(new PlayerIcon(player7Rank2, 1095, 365));
+     }
+   //If number of players is equal to 8, give them all rank 2 die
+     else if(playerList.size() == 8){
+      playerIconList.add(new PlayerIcon(player1Rank2, 1005, 315));
+      playerIconList.add(new PlayerIcon(player2Rank2, 1050, 315));
+      playerIconList.add(new PlayerIcon(player3Rank2, 1095, 315));
+      playerIconList.add(new PlayerIcon(player4Rank2, 1140, 315));
+      playerIconList.add(new PlayerIcon(player5Rank2, 1005, 365));
+      playerIconList.add(new PlayerIcon(player6Rank2, 1050, 365));
+      playerIconList.add(new PlayerIcon(player7Rank2, 1095, 365));
+      playerIconList.add(new PlayerIcon(player8Rank2, 1140, 365));
+     }
+   //Otherwise make all the player icons even if we don't use them all with rank 1
+     else{
+      playerIconList.add(new PlayerIcon(player1Rank1, 1005, 315));
+      playerIconList.add(new PlayerIcon(player2Rank1, 1050, 315));
+      playerIconList.add(new PlayerIcon(player3Rank1, 1095, 315));
+      playerIconList.add(new PlayerIcon(player4Rank1, 1140, 315));
+      playerIconList.add(new PlayerIcon(player5Rank1, 1005, 365));
+      playerIconList.add(new PlayerIcon(player6Rank1, 1050, 365));
+      playerIconList.add(new PlayerIcon(player7Rank1, 1095, 365));
+      playerIconList.add(new PlayerIcon(player8Rank1, 1140, 365));
+     }
+
+   //Iterate through the players and get the player objects and assign them to appropriate JLabels
+   // Put them in the hashmap for when we need them
+     for(int i=0; i< playerList.size(); i++){
+      // Get the Players from the input and the initialized PlayerIcons in the ArrayList associated with them
+      Player newPlayer = playerList.get(i);
+      PlayerIcon newPlayerInfo = playerIconList.get(i);
+      // Create labels for all of the Player Icons, grab the bounds from the objects
+      JLabel playerLabel = new JLabel();
+      playerLabel.setIcon(newPlayerInfo.getPlayerIcon());
+      playerLabel.setBounds(newPlayerInfo.getXCord(), newPlayerInfo.getYCord(), newPlayerInfo.getPlayerIcon().getIconWidth(), newPlayerInfo.getPlayerIcon().getIconHeight());
+      playerLabel.setVisible(true);
+      // Add it to the frame and add the players to our HashMap
+      bPane.add(playerLabel, Integer.valueOf(3));
+      playerLabels.put(newPlayer, playerLabel);
+     }
+   }
+
+   // Showing valid rooms a player can move to once the "move" button is pressed
    public void showValidRooms(ArrayList<String> neighbors) {
-      System.out.println("Showing valid rooms: " + neighbors);
+      // System.out.println("Showing valid rooms: " + neighbors);
+
+      // Iterate through the Hashmap of neighbor strings and their associated buttons
       for(Map.Entry<String, JButton> neighborEntry : roomButtons.entrySet()) {
+         // Grab neighbor name string
          String neighborName = neighborEntry.getKey();
+         // Grab the associated JButton
          JButton neighborButton = neighborEntry.getValue();
+         // If the String and the button line up, then this is a valid move and change the border to green and enable it
          if(neighbors.contains(neighborName)){
             neighborButton.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
             neighborButton.setEnabled(true);
          }
          else{
+            // If not a valid neighbor to move to, disable the button
             neighborButton.setBorder(BorderFactory.createEmptyBorder());
             neighborButton.setEnabled(false);
          }
@@ -599,6 +613,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       boardController.initializeActivePlayers(numPlayers);
       boardView.setVisible(true);
       boardView.setSceneCardsBoard();
-      boardView.setPlayerIcons(numPlayers);
+      boardView.setPlayerIcons(boardController.getPlayerList());
    }
 }
