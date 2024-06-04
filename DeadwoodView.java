@@ -468,9 +468,8 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             System.out.println("player locations is Selected\n");
          } else if (e.getSource() == bEndTurn) {
             gameState.endTurn();
+            textAction.append("It is now " + gameState.getActivePlayer().getName() + "'s turn!\n");
             System.out.println("end turn is Selected\n");
-         } else if (e.getSource() == bEndGame) {
-            System.out.println("end game is Selected\n");
          } else if (e.getSource() == bUpgrade) {
             // create frame for all the available upgrades
             JFrame frame = new JFrame("Available Upgrades");
