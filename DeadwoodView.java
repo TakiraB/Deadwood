@@ -474,7 +474,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
          } else if (e.getSource() == bUpgrade) {
             // create frame for all the available upgrades
             JFrame frame = new JFrame("Available Upgrades");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.setSize(400, 300);
             JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10)); // 5 rows, 2 columns, 10px gaps
             ArrayList<ArrayList<Object>> availableUpgrades = controller.availableUpgrades();
@@ -500,7 +500,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             }
             frame.add(panel);
             frame.setVisible(true);
-            // TODO: If player closes menu game closes, need to fix
             // TODO: Visually change the die to show the new players rank
          }
       }
