@@ -8,6 +8,7 @@ public class RoomWithScene extends Room {
     private SceneCard sceneCard;
     private Scene currentScene;
     private Area sceneRoomArea;
+    private int playerCounter;
 
     // Now holds all the information for off-card roles associated with a Room with
     // a scene
@@ -17,6 +18,7 @@ public class RoomWithScene extends Room {
         this.takesForSuccess = new ArrayList<>();
         this.sceneCard = null;
         this.currentScene = new Scene(name, false, false, null);
+        this.playerCounter = 0;
     }
 
     // adds role to the room
@@ -107,5 +109,13 @@ public class RoomWithScene extends Room {
 
     public void setSceneRoomArea(Area roomArea){
         this.sceneRoomArea = roomArea;
+    }
+
+    public void incrementCounter(){
+        playerCounter++;
+    }
+
+    public int getCounter(){
+        return playerCounter;
     }
 }
