@@ -464,18 +464,16 @@ public class DeadwoodView extends JFrame implements ViewInterface {
 
             frame.setVisible(true);
             // TODO: Visually change the die to show the new role the player is in
-         } else if (e.getSource() == bPlayerLocations) {
-            System.out.println("player locations is Selected\n");
          } else if (e.getSource() == bEndTurn) {
             gameState.endTurn();
             textAction.append("It is now " + gameState.getActivePlayer().getName() + "'s turn!\n");
-            System.out.println("end turn is Selected\n");
          } else if (e.getSource() == bUpgrade) {
             // create frame for all the available upgrades
             JFrame frame = new JFrame("Available Upgrades");
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.setSize(400, 300);
-            JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10)); // 5 rows, 2 columns, 10px gaps
+            JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10));
+            frame.setLocationRelativeTo(null);
             ArrayList<ArrayList<Object>> availableUpgrades = controller.availableUpgrades();
             for (int i = 0; i < 10; i++) {
                if ((Integer) availableUpgrades.get(i).get(0) == 1) {
