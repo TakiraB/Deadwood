@@ -5,6 +5,7 @@ import java.util.*;
 public class CastingOffice extends Room {
     private ArrayList<Upgrades> upgradeChoices;
     private Area officeArea;
+    private int playerCounter;
 
     public CastingOffice(String name) {
         super(name);
@@ -36,5 +37,13 @@ public class CastingOffice extends Room {
 
     public void setOfficeArea(Area roomArea){
         this.officeArea = roomArea;
+    }
+
+    public void incrementCounter(){
+        playerCounter++;
+    }
+
+    public int getCounter(){
+        return playerCounter;
     }
 }

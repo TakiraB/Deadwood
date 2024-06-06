@@ -1,18 +1,10 @@
-/*
-   Deadwood GUI helper file
-   Author: Moushumi Sharmin
-*/
-
+// Credit to Moushumi Sharmin for the helper file
 // Imports for Swing components
 import java.awt.*;
 import javax.swing.*;
-import javax.imageio.ImageIO;
 import java.awt.event.*;
-import javax.swing.border.*;
 import java.util.ArrayList;
 import org.w3c.dom.Document;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,6 +49,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
    private DeadwoodController boardController;
    private Map<String, JButton> roomButtons;
    private Map<Player, JLabel> playerLabels;
+   private Map<Player, PlayerIcon> playerIcons;
 
    public DeadwoodView(Board board, DeadwoodController boardController) {
 
@@ -70,12 +63,12 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       this.boardController.setView(this);
       roomButtons = new HashMap<>();
       playerLabels = new HashMap<>();
+      playerIcons = new HashMap<>();
 
       // Set the exit option for the JFrame
       setDefaultCloseOperation(EXIT_ON_CLOSE);
 
       // Create the JLayeredPane to hold the display, cards, dice and buttons
-      // stacking order
       bPane = getLayeredPane();
 
       // Create the deadwood board
@@ -93,7 +86,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       // max window on open
       setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-
       // Create the Menu for action buttons
       mLabel = new JLabel("Player Actions");
       mLabel.setBounds(icon.getIconWidth() + 20, 0, 150, 20);
@@ -110,11 +102,11 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       bMove.addMouseListener(new boardMouseListener(boardController.getGameState(), boardController));
       bMove.addMouseListener(new validRoomListener());
       // bMove.addActionListener(new ActionListener(){
-      //    @Override
-      //    public void actionPerformed(ActionEvent e) {
-      //       System.out.println("Move button clicked");
-      //       boardController.moveOption();
-      //    }
+      // @Override
+      // public void actionPerformed(ActionEvent e) {
+      // System.out.println("Move button clicked");
+      // boardController.moveOption();
+      // }
       // });
 
       bAct = new JButton("ACT");
@@ -122,10 +114,10 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       bAct.setBounds(icon.getIconWidth() + 15, 60, 150, 20);
       bAct.addMouseListener(new boardMouseListener(boardController.getGameState(), boardController));
       // bAct.addActionListener(new ActionListener(){
-      //    @Override
-      //    public void actionPerformed(ActionEvent e) {
-      //       boardController.actOption();
-      //    }
+      // @Override
+      // public void actionPerformed(ActionEvent e) {
+      // boardController.actOption();
+      // }
       // });
 
       bRehearse = new JButton("REHEARSE");
@@ -133,10 +125,10 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       bRehearse.setBounds(icon.getIconWidth() + 15, 90, 150, 20);
       bRehearse.addMouseListener(new boardMouseListener(boardController.getGameState(), boardController));
       // bRehearse.addActionListener(new ActionListener(){
-      //    @Override
-      //    public void actionPerformed(ActionEvent e) {
-      //       boardController.rehearseOption();
-      //    }
+      // @Override
+      // public void actionPerformed(ActionEvent e) {
+      // boardController.rehearseOption();
+      // }
       // });
 
       bUpgrade = new JButton("UPGRADE");
@@ -144,10 +136,10 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       bUpgrade.setBounds(icon.getIconWidth() + 15, 120, 150, 20);
       bUpgrade.addMouseListener(new boardMouseListener(boardController.getGameState(), boardController));
       // bUpgrade.addActionListener(new ActionListener(){
-      //    @Override
-      //    public void actionPerformed(ActionEvent e) {
-      //       boardController.upgradeOption();
-      //    }
+      // @Override
+      // public void actionPerformed(ActionEvent e) {
+      // boardController.upgradeOption();
+      // }
       // });
 
       bTakeRole = new JButton("TAKE A ROLE");
@@ -155,10 +147,10 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       bTakeRole.setBounds(icon.getIconWidth() + 15, 150, 150, 20);
       bTakeRole.addMouseListener(new boardMouseListener(boardController.getGameState(), boardController));
       // bTakeRole.addActionListener(new ActionListener(){
-      //    @Override
-      //    public void actionPerformed(ActionEvent e) {
-      //       boardController.takingRoleOption();
-      //    }
+      // @Override
+      // public void actionPerformed(ActionEvent e) {
+      // boardController.takingRoleOption();
+      // }
       // });
 
       bEndTurn = new JButton("END TURN");
@@ -166,10 +158,10 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       bEndTurn.setBounds(icon.getIconWidth() + 15, 180, 150, 20);
       bEndTurn.addMouseListener(new boardMouseListener(boardController.getGameState(), boardController));
       // bEndTurn.addActionListener(new ActionListener(){
-      //    @Override
-      //    public void actionPerformed(ActionEvent e) {
-      //       boardController.endTurnOption();
-      //    }
+      // @Override
+      // public void actionPerformed(ActionEvent e) {
+      // boardController.endTurnOption();
+      // }
       // });
 
       // -------------------------------------
@@ -182,8 +174,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       trailerButton.setOpaque(false);
       trailerButton.setContentAreaFilled(false);
       trailerButton.setBorder(BorderFactory.createEmptyBorder());
-      trailerButton.addMouseListener(new borderMouseListener());
-      // roomButtons.put("Trailer", trailerButton);
 
       // Hotel button
       JButton hotelButton = new JButton();
@@ -191,8 +181,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       hotelButton.setOpaque(false);
       hotelButton.setContentAreaFilled(false);
       hotelButton.setBorder(BorderFactory.createEmptyBorder());
-      hotelButton.addMouseListener(new borderMouseListener());
-      // roomButtons.put("Hotel", hotelButton);
 
       // Church button
       JButton churchButton = new JButton();
@@ -200,8 +188,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       churchButton.setOpaque(false);
       churchButton.setContentAreaFilled(false);
       churchButton.setBorder(BorderFactory.createEmptyBorder());
-      churchButton.addMouseListener(new borderMouseListener());
-      // roomButtons.put("Church", churchButton);
 
       // Bank button
       JButton bankButton = new JButton();
@@ -209,8 +195,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       bankButton.setOpaque(false);
       bankButton.setContentAreaFilled(false);
       bankButton.setBorder(BorderFactory.createEmptyBorder());
-      bankButton.addMouseListener(new borderMouseListener());
-      // roomButtons.put("Bank", bankButton);
 
       // Saloon button
       JButton saloonButton = new JButton();
@@ -218,8 +202,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       saloonButton.setOpaque(false);
       saloonButton.setContentAreaFilled(false);
       saloonButton.setBorder(BorderFactory.createEmptyBorder());
-      saloonButton.addMouseListener(new borderMouseListener());
-      // roomButtons.put("Saloon", saloonButton);
 
       // Main Street button
       JButton mainStreetButton = new JButton();
@@ -227,8 +209,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       mainStreetButton.setOpaque(false);
       mainStreetButton.setContentAreaFilled(false);
       mainStreetButton.setBorder(BorderFactory.createEmptyBorder());
-      mainStreetButton.addMouseListener(new borderMouseListener());
-      // roomButtons.put("Main Street", mainStreetButton);
 
       // Jail button
       JButton jailButton = new JButton();
@@ -236,8 +216,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       jailButton.setOpaque(false);
       jailButton.setContentAreaFilled(false);
       jailButton.setBorder(BorderFactory.createEmptyBorder());
-      jailButton.addMouseListener(new borderMouseListener());
-      // roomButtons.put("Jail", jailButton);
 
       // General Store button
       JButton generalButton = new JButton();
@@ -245,8 +223,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       generalButton.setOpaque(false);
       generalButton.setContentAreaFilled(false);
       generalButton.setBorder(BorderFactory.createEmptyBorder());
-      generalButton.addMouseListener(new borderMouseListener());
-      // roomButtons.put("General Store", generalButton);
 
       // Ranch button
       JButton ranchButton = new JButton();
@@ -254,8 +230,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       ranchButton.setOpaque(false);
       ranchButton.setContentAreaFilled(false);
       ranchButton.setBorder(BorderFactory.createEmptyBorder());
-      ranchButton.addMouseListener(new borderMouseListener());
-      // roomButtons.put("Ranch", ranchButton);
 
       // Secret Hideout button
       JButton secretButton = new JButton();
@@ -263,8 +237,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       secretButton.setOpaque(false);
       secretButton.setContentAreaFilled(false);
       secretButton.setBorder(BorderFactory.createEmptyBorder());
-      secretButton.addMouseListener(new borderMouseListener());
-      // roomButtons.put("Secret Hideout", secretButton);
 
       // Casting Office button
       JButton castingButton = new JButton();
@@ -272,8 +244,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       castingButton.setOpaque(false);
       castingButton.setContentAreaFilled(false);
       castingButton.setBorder(BorderFactory.createEmptyBorder());
-      castingButton.addMouseListener(new borderMouseListener());
-      // roomButtons.put("Casting Office", castingButton);
 
       // Train Station button
       JButton trainButton = new JButton();
@@ -281,8 +251,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       trainButton.setOpaque(false);
       trainButton.setContentAreaFilled(false);
       trainButton.setBorder(BorderFactory.createEmptyBorder());
-      trainButton.addMouseListener(new borderMouseListener());
-      // roomButtons.put("Train Station", trainButton);
 
       // ------------------------------------------
       // ADDING BUTTONS TO FRAME ON VARIOUS LEVELS
@@ -293,10 +261,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       bPane.add(bRehearse, Integer.valueOf(2));
       bPane.add(bUpgrade, Integer.valueOf(2));
       bPane.add(bTakeRole, Integer.valueOf(2));
-      // bPane.add(bYourStats, Integer.valueOf(2));
-      // bPane.add(bPlayerLocations, Integer.valueOf(2));
       bPane.add(bEndTurn, Integer.valueOf(2));
-      // bPane.add(bEndGame, Integer.valueOf(2));
       bPane.add(trailerButton, Integer.valueOf(3));
       bPane.add(hotelButton, Integer.valueOf(3));
       bPane.add(churchButton, Integer.valueOf(3));
@@ -320,7 +285,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       roomButtons.put("General Store", generalButton);
       roomButtons.put("Ranch", ranchButton);
       roomButtons.put("Secret Hideout", secretButton);
-      roomButtons.put("Casting Office", castingButton);
+      roomButtons.put("Office", castingButton);
       roomButtons.put("Train Station", trainButton);
 
       // ------------------------------------------
@@ -334,9 +299,13 @@ public class DeadwoodView extends JFrame implements ViewInterface {
 
       // Set the current player text area (not modifiable by user)
       activePlayer = new JTextArea();
-      activePlayer.setBounds(icon.getIconWidth() + 15, 320, 200, 250);
+      activePlayer.setBounds(icon.getIconWidth() + 15, 320, 250, 250);
       activePlayer.setEditable(false);
       activePlayer.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+      Font font = activePlayer.getFont();
+      Font newFont = font.deriveFont(font.getStyle(), 17f);
+      activePlayer.setFont(newFont);
+      // activePlayer.setLineWrap(true);
       bPane.add(activePlayer, Integer.valueOf(2));
 
       // Create action log label
@@ -349,6 +318,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       textAction.setEditable(false);
       textAction.setBounds(icon.getIconWidth() + 15, 620, 200, 250);
       textAction.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+      textAction.setLineWrap(true);
       bPane.add(textAction, Integer.valueOf(2));
 
    }
@@ -370,11 +340,14 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       // Im not sure what to do with this yet
       public void mouseClicked(MouseEvent e) {
 
-         if (e.getSource() == bAct) {
+         if (e.getSource() == bMove) {
             // playerlabel.setVisible(true);
-            // textAction.append(gameState.getActivePlayer().getName() + " has tried to act.\n");
-            // for (Room room : gameState.getBoard().getAdjacent(gameState.getActivePlayer().getPlayerRoom())) {
-            //    textAction.append(room.getName());
+            // textAction.append(gameState.getActivePlayer().getName() + " has tried to
+            // act.\n");
+            // for (Room room :
+            // gameState.getBoard().getAdjacent(gameState.getActivePlayer().getPlayerRoom()))
+            // {
+            // textAction.append(room.getName());
             // }
 
             // Move with a menu instead of clicking on location
@@ -406,33 +379,81 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             // popupMenu.show(e.getComponent(), e.getX(), e.getY());
 
             // textAction.append("\n");
-            System.out.println("Acting is Selected\n");
+            System.out.println("Move is Selected\n");
          } else if (e.getSource() == bRehearse) {
             controller.playerRehearse();
             textAction.append(gameState.getActivePlayer().getName() + "has increased their practice chip count to: " + gameState.getActivePlayer().getPracticeChips() + "\n");
+            displayCurrentPlayer(gameState.getActivePlayer());
             System.out.println("Rehearse is Selected\n");
-         } else if (e.getSource() == bMove) {
-            System.out.println("Move is Selected\n");
+         } else if (e.getSource() == bAct) {
+            Player currentPlayer = gameState.getActivePlayer();
+            if (controller.playerAct()) {
+               textAction.append("You were successful!");
+               // TODO: implement takes appearing and turning true
+               // takes appears here
+               if (controller.inStarredRole()) {
+                  textAction.append(currentPlayer.getName() + " is rewarded with 2 credits!");
+                  controller.reward();
+               } else {
+                  textAction.append(currentPlayer.getName() + " is rewarded with a dollar and a credit!");
+                  controller.reward();
+               }
+               // move takeCompleted to be True here
+            } else {
+               textAction.append("You failed!");
+               if (controller.inStarredRole()) {
+                  textAction.append(currentPlayer.getName() + " is not given anything.");
+                  controller.fail();
+               } else {
+                  textAction.append(currentPlayer.getName() + " is given 1 dollar for trying.");
+                  controller.fail();
+               }
+            }
+
+            // TODO: check for wrapping of scene
+            controller.wrapSceneCheck();
+
+
+
+
+            // TODO: check for the ending of day
+
+
+
+
+
+
+
+
+            System.out.println("Acting is Selected\n");
          } else if (e.getSource() == bTakeRole) {
-            gameState.getActivePlayer().setPlayerRoom(gameState.getBoard().getRoomFromBoard("Saloon"));
+            JLabel playerLabel = playerLabels.get(gameState.getActivePlayer());
+            RoomWithScene currentRoom = (RoomWithScene) gameState.getActivePlayer().getPlayerRoom();
+            Area sceneArea = currentRoom.getSceneRoomArea();
             // find roles and select the roles available to the player
             List<Role> onCardRoles = controller.availableOnCardRoles();
             List<Role> offCardRoles = controller.availableOffCardRoles();
             // display the roles in a selectable manor
             JFrame frame = new JFrame("Available Upgrades");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.setSize(400, 300);
             frame.setLayout(new GridLayout(0, 1));
             JPanel onCardPanel = new JPanel();
             onCardPanel.setLayout(new BoxLayout(onCardPanel, BoxLayout.Y_AXIS));
             onCardPanel.setBorder(BorderFactory.createTitledBorder("On Card Roles"));
-            for (Role role: onCardRoles) {
+            for (Role role : onCardRoles) {
                JButton button = new JButton(role.getRank() + ": " + role.getRoleName());
                button.addActionListener(new ActionListener() {
                   public void actionPerformed(ActionEvent e) {
                      // give player the role thats selected
                      controller.giveRoleToPlayer(role);
-                     textAction.append(gameState.getActivePlayer() + " has taken the role of " + gameState.getActivePlayer().getRole().getRoleName());
+                     textAction.append(gameState.getActivePlayer() + " has taken the role of "
+                           + gameState.getActivePlayer().getActiveRole().getRoleName());
+                     Area roleArea = role.getRoleArea();
+                     int newX = sceneArea.getXValue() + roleArea.getXValue();
+                     int newY = sceneArea.getYValue() + roleArea.getYValue();
+                     playerLabel.setBounds(newX + 3, newY + 3, playerLabel.getIcon().getIconWidth(), playerLabel.getIcon().getIconHeight());
+                     role.setPlayerOnRole(gameState.getActivePlayer());
                      frame.dispose();
                   }
                });
@@ -443,54 +464,61 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             JPanel offCardPanel = new JPanel();
             offCardPanel.setLayout(new BoxLayout(offCardPanel, BoxLayout.Y_AXIS));
             offCardPanel.setBorder(BorderFactory.createTitledBorder("Off Card Roles"));
-            for (Role role: offCardRoles) {
+            for (Role role : offCardRoles) {
                JButton button = new JButton(role.getRank() + ": " + role.getRoleName());
                button.addActionListener(new ActionListener() {
                   public void actionPerformed(ActionEvent e) {
                      // give player role thats selected
                      controller.giveRoleToPlayer(role);
-                     textAction.append(gameState.getActivePlayer().getName() + "has taken the role of " + gameState.getActivePlayer().getRole().getRoleName());
+                     textAction.append(gameState.getActivePlayer().getName() + "has taken the role of "
+                           + gameState.getActivePlayer().getActiveRole().getRoleName());
+                     Area roleArea = role.getRoleArea();
+                     playerLabel.setBounds(roleArea.getXValue() + 3, roleArea.getYValue() + 3, playerLabel.getIcon().getIconWidth(), playerLabel.getIcon().getIconHeight());
+                     role.setPlayerOnRole(gameState.getActivePlayer());
                      frame.dispose();
                   }
                });
                offCardPanel.add(button);
             }
             frame.add(offCardPanel);
-
             frame.setVisible(true);
-            // TODO: Visually change the die to show the new role the player is in
-         } else if (e.getSource() == bPlayerLocations) {
-            System.out.println("player locations is Selected\n");
          } else if (e.getSource() == bEndTurn) {
             gameState.endTurn();
-            System.out.println("end turn is Selected\n");
-         } else if (e.getSource() == bEndGame) {
-            System.out.println("end game is Selected\n");
+            textAction.append("It is now " + gameState.getActivePlayer().getName() + "'s turn!\n");
          } else if (e.getSource() == bUpgrade) {
+            Player activePlayer = gameState.getActivePlayer();
+            JLabel playerLabel = playerLabels.get(activePlayer);
             // create frame for all the available upgrades
             JFrame frame = new JFrame("Available Upgrades");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.setSize(400, 300);
-            JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10)); // 5 rows, 2 columns, 10px gaps
-            ArrayList<Integer> availableUpgrades = controller.availableUpgrades();
+            JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10));
+            frame.setLocationRelativeTo(null);
+            ArrayList<ArrayList<Object>> availableUpgrades = controller.availableUpgrades();
             for (int i = 0; i < 10; i++) {
-               // if player can get this upgrade, then display it regularly
-               if (availableUpgrades.get(i) == 1) {
-                  JButton button = new JButton("Option " + i);
+               if ((Integer) availableUpgrades.get(i).get(0) == 1) {
+                  JButton button = new JButton((String) availableUpgrades.get(i).get(1));
                   int optionNumber = i;
                   button.addActionListener(new ActionListener() {
                      public void actionPerformed(ActionEvent e) {
-                        gameState.getActivePlayer().setPlayerRank((int) Math.floor(optionNumber / 2 + 2));
-                        textAction.append(gameState.getActivePlayer().getName() + " is now rank "
-                              + gameState.getActivePlayer().getRank());
+                        activePlayer.setPlayerRank((int) Math.floor(optionNumber / 2 + 2));
+                        textAction.append(activePlayer.getName() + " is now rank " + activePlayer.getRank());
+                        int index = -1;
+                        for (int i = 0; i < gameState.getPlayers().size(); i++) {
+                           Player player = gameState.getPlayers().get(i);
+                           if (activePlayer == player) {
+                              index = i;
+                           }
+                        }
+                        String[] colors = {"b","c","g","o","p","r","v","y"};
+                        ImageIcon newRankIcon = new ImageIcon("dice/dice/" + colors[index] + ((int) Math.floor(optionNumber / 2 + 2)) +".png");
+                        playerLabel.setIcon(newRankIcon);
                         frame.dispose();
                      }
                   });
                   panel.add(button);
-               } 
-               // if the player cannot purchase the upgrade make it red and not clickable
-               else {
-                  JButton button = new JButton("Option " + i);
+               } else {
+                  JButton button = new JButton((String) availableUpgrades.get(i).get(1));
                   button.setEnabled(false);
                   button.setBackground(Color.RED);
                   panel.add(button);
@@ -498,9 +526,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             }
             frame.add(panel);
             frame.setVisible(true);
-            // TODO: Correctly add the price and rank to be displayed in menu
-            // TODO: If player closes menu game closes, need to fix
-            // TODO: Visually change the die to show the new players rank
          }
       }
 
@@ -517,38 +542,9 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       }
    }
 
-   // MouseAdapter is used when not all functionalities of MouseListener are needed
-   // to be implemented
-   // I originally had the border stuff in MouseListener, but it was applying to
-   // all the buttons
-   // So, keeping the functionality separate will make it easier in case I want to
-   // apply other effects to the action buttons
-   class borderMouseListener extends MouseAdapter {
-
-      // when mouse enters button area, create a border around the area for
-      // readability
-      @Override
-      public void mouseEntered(MouseEvent e) {
-         // cast as JButton from object (e.getsource()) so we can apply the border
-         JButton dummyButton = (JButton) e.getSource();
-         dummyButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-      }
-
-      @Override
-      // once the mouse exits the button area, make the border invisible again
-      public void mouseExited(MouseEvent e) {
-         // cast as JButton from object (e.getsource()) so we can manipulate the border
-         // on mouse exiting
-         JButton dummyButton = (JButton) e.getSource();
-         dummyButton.setBorder(BorderFactory.createEmptyBorder());
-      }
-
-   }
-
+   // when mouse enters button area, create a border around the area for readability
    class validRoomListener extends MouseAdapter {
 
-      // when mouse enters button area, create a border around the area for
-      // readability
       @Override
       public void mouseClicked(MouseEvent e) {
          System.out.println("Move button clicked");
@@ -556,24 +552,21 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       }
    }
 
-   // class newRoomListener extends MouseAdapter {
+   // perform the actual move
+   class newRoomListener extends MouseAdapter {
+      private String neighborName;
 
-   //    // when mouse enters button area, create a border around the area for
-   //    // readability
-   //    @Override
-   //    public void mouseClicked(MouseEvent e) {
-   //       System.out.println("New room selection clicked");
-   //       boardController.performMove(neighborName);
-   //    }
-   // }
+      public newRoomListener(String neighborName){
+         this.neighborName = neighborName;
+      }
+      @Override
+      public void mouseClicked(MouseEvent e) {
+         boardController.performMove(neighborName);
+      }
+   }
 
-   // ------------------------------------------
-   // Setting face-down scene card images at every set at the start of the game,
-   // uncovered when one person is in the room (not implemented yet)
-   // ------------------------------------------
-
+// set the Scene Cards (facedown) at the beginning of the game
    public void setSceneCardsBoard() {
-      // ImageIcon sceneCardDown = new ImageIcon("images/CardBack-small.jpg");
       for (Room boardRoom : board.getBoardLayout().values()) {
          // get the area of each RoomWithScene
          if (boardRoom instanceof RoomWithScene) {
@@ -584,6 +577,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             JLabel cardBackImage = new JLabel();
             ImageIcon sceneCardDown = new ImageIcon("images/CardBack-small.jpg");
             cardBackImage.setIcon(sceneCardDown);
+            // setting the bounds using the stored area from XML
             cardBackImage.setBounds(sceneArea.getXValue(), sceneArea.getYValue(), sceneArea.getWidth(),
                   sceneArea.getHeight());
             bPane.add(cardBackImage, Integer.valueOf(2));
@@ -592,21 +586,66 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       }
    }
 
+   // Flip a scene card when someone enters a room and they are the first ones there
+   // Puts the appropriate scene to the room image on the board on top of the flipped one and set visible
+   public void flipSceneCard(RoomWithScene sceneRoom){
+      JLabel flippedCard = new JLabel();
+      ImageIcon flippedCardImage = new ImageIcon(sceneRoom.getSceneCard().getImage());
+      flippedCard.setIcon(flippedCardImage);
+      flippedCard.setBounds(sceneRoom.getSceneRoomArea().getXValue(), sceneRoom.getSceneRoomArea().getYValue(), 
+                           flippedCardImage.getIconWidth(), flippedCardImage.getIconHeight());
+      flippedCard.setVisible(true);
+      bPane.add(flippedCard, Integer.valueOf(3));              
+   }
+
    // General display message that can be called from controller
-   public void displayGameMessage(String gameMessage){
+   public void displayGameMessage(String gameMessage) {
       JOptionPane.showMessageDialog(this, gameMessage);
    }
 
    // Update player room on the board
-   public void updatePlayerRoom(Player activePlayer){
+   public void updatePlayerRoom(Player activePlayer) {
       // get the active players label (we need to change its bounds)
       JLabel playerLabel = playerLabels.get(activePlayer);
-      // get the players current room
+      // get the players current room and set it as a Room object
       Room currentPlayerRoom = activePlayer.getPlayerRoom();
-      // Set bounds based on stored area objects and stored Icon object info
-      playerLabel.setBounds(currentPlayerRoom.getRoomArea().getXValue(), currentPlayerRoom.getRoomArea().getYValue(),
-      playerLabel.getIcon().getIconWidth(), playerLabel.getIcon().getIconHeight());
+      
+      Area roomArea = null;
+      RoomWithScene sceneRoom = null;
+      int playerCounter = 0;
+
+      // I realized I stored the areas of each room from the parser into 3 different objects
+      // rooms with scenes are RoomWithScene objects, Trailer is Room object, Casting Office is CastingOffice object
+      // If the room is a RoomWithScene, call Scene Room specific area getter
+      if(currentPlayerRoom instanceof RoomWithScene){
+         sceneRoom = (RoomWithScene) currentPlayerRoom;
+         roomArea = sceneRoom.getSceneRoomArea();
+         playerCounter = sceneRoom.getCounter();
+         if(playerCounter == 1){
+            flipSceneCard(sceneRoom);
+         }
+      }
+      // if room is CastingOffice, call CastingOffice specific area getter
+      else if(currentPlayerRoom instanceof CastingOffice){
+         CastingOffice castingOfficeRoom = (CastingOffice) currentPlayerRoom;
+         roomArea = castingOfficeRoom.getOfficeArea();
+         playerCounter = castingOfficeRoom.getCounter();
+      }
+      // else it's just a room (Trailer), get the room area
+      else{
+         roomArea = currentPlayerRoom.getRoomArea();
+         playerCounter = currentPlayerRoom.getCounter();
+      }
+
+      int iconShift = 0;
+      if (playerCounter >=2){
+         iconShift = (playerCounter-1)*30;
+      }
+
+      // set the new bounds of the player on top of the room, and set the icon visible in that area
+      playerLabel.setBounds((roomArea.getXValue()-20)+iconShift, roomArea.getYValue(), playerLabel.getIcon().getIconWidth(), playerLabel.getIcon().getIconHeight());
       playerLabel.setVisible(true);
+
    }
 
    // Setting the player icons based on starting rank and create labels for them
@@ -614,17 +653,17 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       // Initialize all the player colored dice (white dice used for actual roles)
       ArrayList<PlayerIcon> playerIconList = new ArrayList<>();
 
-      //Rank 1 icons
+      // Rank 1 icons
       ImageIcon player1Rank1 = new ImageIcon("dice/dice/b1.png");
-      ImageIcon player2Rank1 =new ImageIcon("dice/dice/c1.png");
-      ImageIcon player3Rank1 =new ImageIcon("dice/dice/g1.png");
-      ImageIcon player4Rank1 =new ImageIcon("dice/dice/o1.png");
-      ImageIcon player5Rank1 =new ImageIcon("dice/dice/p1.png");
-      ImageIcon player6Rank1 =new ImageIcon("dice/dice/r1.png");
-      ImageIcon player7Rank1 =new ImageIcon("dice/dice/v1.png");
-      ImageIcon player8Rank1 =new ImageIcon("dice/dice/y1.png");
+      ImageIcon player2Rank1 = new ImageIcon("dice/dice/c1.png");
+      ImageIcon player3Rank1 = new ImageIcon("dice/dice/g1.png");
+      ImageIcon player4Rank1 = new ImageIcon("dice/dice/o1.png");
+      ImageIcon player5Rank1 = new ImageIcon("dice/dice/p1.png");
+      ImageIcon player6Rank1 = new ImageIcon("dice/dice/r1.png");
+      ImageIcon player7Rank1 = new ImageIcon("dice/dice/v1.png");
+      ImageIcon player8Rank1 = new ImageIcon("dice/dice/y1.png");
 
-      //Rank 2 icons
+      // Rank 2 icons
       ImageIcon player1Rank2 = new ImageIcon("dice/dice/b2.png");
       ImageIcon player2Rank2 =new ImageIcon("dice/dice/c2.png");
       ImageIcon player3Rank2 =new ImageIcon("dice/dice/g2.png");
@@ -681,29 +720,96 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       // Add it to the frame and add the players to our HashMap
       bPane.add(playerLabel, Integer.valueOf(3));
       playerLabels.put(newPlayer, playerLabel);
+      playerIcons.put(newPlayer, newPlayerInfo);
      }
+   }
+
+   // Retrieving the die color based on the letter in the image pathway for displaying on the board
+   public String getDieColor(Player currentPlayer){
+      String color = "Nothing";
+      PlayerIcon playerIcon = playerIcons.get(currentPlayer);
+      ImageIcon playerImage = playerIcon.getPlayerIcon();
+      // getDescription retrieves the path to the image "dice/dice/whatever1.png"
+      String iconImagePath = playerImage.getDescription();
+      if(iconImagePath.contains("b")){
+         color = "Blue";
+      }
+      else if(iconImagePath.contains("c")){
+         color = "Cyan";
+      }
+      else if(iconImagePath.contains("g")){
+         color = "Green";
+      }
+      else if(iconImagePath.contains("o")){
+         color = "Orange";
+      }
+      else if(iconImagePath.contains("p")){
+         color = "Pink";
+      }
+      else if(iconImagePath.contains("r")){
+         color = "Red";
+      }
+      else if(iconImagePath.contains("v")){
+         color = "Violet";
+      }
+      else{
+         color = "Yellow";
+      }
+      return color;
+   }
+
+   // display the current players stats in the activePlayer textarea on the board
+   // Displays all information pulled from Player object, and also their associated die color
+   public void displayCurrentPlayer(Player currentPlayer){
+      String name = currentPlayer.getName();
+      int rank = currentPlayer.getRank();
+      int dollars = currentPlayer.getDollars();
+      int credits = currentPlayer.getCredits();
+      int practiceChips = currentPlayer.getPracticeChips();
+      String currentRole = "";
+      if(currentPlayer.getActiveRole() == null){
+         currentRole = "None";
+      }
+      else{
+         currentRole = currentPlayer.getActiveRole().getRoleName();
+      }
+      // currentRole = currentPlayer.getActiveRole().getRoleName();
+      String color = getDieColor(currentPlayer);
+      String currentRoom = currentPlayer.getPlayerRoom().getName();
+      String playerStats = String.format(" Name: %s\n Rank: %d\n Dollars: %d\n Credits: %d\n Practice Chips: %d\n Active Role: %s\n Color: %s\n Current Room: %s",
+                                          name, rank, dollars, credits, practiceChips, currentRole, color, currentRoom);
+      activePlayer.setText(playerStats);
    }
 
    // Showing valid rooms a player can move to once the "move" button is pressed
    public void showValidRooms(ArrayList<String> neighbors) {
       // System.out.println("Showing valid rooms: " + neighbors);
-
+      resetRoomButtons();
       // Iterate through the Hashmap of neighbor strings and their associated buttons
-      for(Map.Entry<String, JButton> neighborEntry : roomButtons.entrySet()) {
+      for (Map.Entry<String, JButton> neighborEntry : roomButtons.entrySet()) {
          // Grab neighbor name string
          String neighborName = neighborEntry.getKey();
          // Grab the associated JButton
          JButton neighborButton = neighborEntry.getValue();
-         // If the String and the button line up, then this is a valid move and change the border to green and enable it
-         if(neighbors.contains(neighborName)){
+         // If the String and the button line up, then this is a valid move and change
+         // the border to green and enable it
+         if (neighbors.contains(neighborName)) {
             neighborButton.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
             neighborButton.setEnabled(true);
+            neighborButton.addMouseListener(new newRoomListener(neighborName));
          }
-         else{
-            // If not a valid neighbor to move to, disable the button
-            neighborButton.setBorder(BorderFactory.createEmptyBorder());
-            neighborButton.setEnabled(false);
-         }
+         // else{
+         //    // If not a valid neighbor to move to, disable the button
+         //    neighborButton.setBorder(BorderFactory.createEmptyBorder());
+         //    neighborButton.setEnabled(false);
+         // }
+      }
+   }
+
+   public void resetRoomButtons(){
+      for(JButton roomButton : roomButtons.values()){
+         roomButton.setEnabled(false);
+         roomButton.setBorder(BorderFactory.createEmptyBorder());
       }
    }
 
@@ -726,14 +832,16 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       DeadwoodView boardView = new DeadwoodView(board, boardController);
 
       // Take input from the user about number of players
-      Integer[] playerNumberOptions = {2, 3, 4, 5, 6, 7, 8};
+      Integer[] playerNumberOptions = { 2, 3, 4, 5, 6, 7, 8 };
       JComboBox<Integer> playerCountDropdown = new JComboBox<>(playerNumberOptions);
-      JOptionPane.showConfirmDialog(null, playerCountDropdown, "Select number of players", JOptionPane.OK_CANCEL_OPTION);
+      JOptionPane.showConfirmDialog(null, playerCountDropdown, "Select number of players",
+            JOptionPane.OK_CANCEL_OPTION);
       int numPlayers = (Integer) playerCountDropdown.getSelectedItem();
       boardController.initializeActivePlayers(numPlayers);
       boardView.setVisible(true);
       boardView.setSceneCardsBoard();
       boardView.setPlayerIcons(boardController.getPlayerList());
+      boardView.displayCurrentPlayer(boardController.getGameState().getActivePlayer());
       boardController.setUpSceneCards();
    }
 }
