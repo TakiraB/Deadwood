@@ -107,26 +107,56 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       bAct.setBackground(Color.white);
       bAct.setBounds(icon.getIconWidth() + 15, 60, 150, 20);
       bAct.addMouseListener(new boardMouseListener(boardController.getGameState(), boardController));
+      // bAct.addActionListener(new ActionListener(){
+      //    @Override
+      //    public void actionPerformed(ActionEvent e) {
+      //       boardController.actOption();
+      //    }
+      // });
 
       bRehearse = new JButton("REHEARSE");
       bRehearse.setBackground(Color.white);
       bRehearse.setBounds(icon.getIconWidth() + 15, 90, 150, 20);
       bRehearse.addMouseListener(new boardMouseListener(boardController.getGameState(), boardController));
+      // bRehearse.addActionListener(new ActionListener(){
+      //    @Override
+      //    public void actionPerformed(ActionEvent e) {
+      //       boardController.rehearseOption();
+      //    }
+      // });
 
       bUpgrade = new JButton("UPGRADE");
       bUpgrade.setBackground(Color.white);
       bUpgrade.setBounds(icon.getIconWidth() + 15, 120, 150, 20);
       bUpgrade.addMouseListener(new boardMouseListener(boardController.getGameState(), boardController));
+      // bUpgrade.addActionListener(new ActionListener(){
+      //    @Override
+      //    public void actionPerformed(ActionEvent e) {
+      //       boardController.upgradeOption();
+      //    }
+      // });
 
       bTakeRole = new JButton("TAKE A ROLE");
       bTakeRole.setBackground(Color.white);
       bTakeRole.setBounds(icon.getIconWidth() + 15, 150, 150, 20);
       bTakeRole.addMouseListener(new boardMouseListener(boardController.getGameState(), boardController));
+      // bTakeRole.addActionListener(new ActionListener(){
+      //    @Override
+      //    public void actionPerformed(ActionEvent e) {
+      //       boardController.takingRoleOption();
+      //    }
+      // });
 
       bEndTurn = new JButton("END TURN");
       bEndTurn.setBackground(Color.white);
       bEndTurn.setBounds(icon.getIconWidth() + 15, 180, 150, 20);
       bEndTurn.addMouseListener(new boardMouseListener(boardController.getGameState(), boardController));
+      // bEndTurn.addActionListener(new ActionListener(){
+      //    @Override
+      //    public void actionPerformed(ActionEvent e) {
+      //       boardController.endTurnOption();
+      //    }
+      // });
 
       // -------------------------------------
       // CREATING BUTTONS FOR PLAYERS MOVING

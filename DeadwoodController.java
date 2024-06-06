@@ -543,7 +543,6 @@ public class DeadwoodController {
 
             view.updatePlayerRoom(activePlayer);
             view.displayCurrentPlayer(activePlayer);
-
         } else {
                 view.displayGameMessage("This move is not valid, either it doesn't exist or not adjacent.");
         }
@@ -600,16 +599,47 @@ public class DeadwoodController {
             } else {
                 canUpgrade.set(temp, 0);
             }
-
         }
         return canUpgrade;
     }
 
     public void upgradePlayerRank(int newRank) {
         gameState.getActivePlayer().setPlayerRank(newRank);
-        view.displayCurrentPlayer(gameState.getActivePlayer());
     }
 
+
+    // taking role action listener
+    public List<Role> availableOnCardRoles() {
+        Player currentPlayer = gameState.getActivePlayer();
+        RoomWithScene currentRoom = (RoomWithScene) currentPlayer.getPlayerRoom();
+        List<Role> onCardRoles = currentRoom.getSceneCard().getRoles();
+        List<Role> availableRoles = new ArrayList<Role>();
+        for (Role role: onCardRoles) {
+            if (role.getRank() <= currentPlayer.getRank() && role.getPlayerOnRole() == null) {
+                availableRoles.add(role);
+            }
+        }
+        return availableRoles;
+    }
+
+    public List<Role> availableOffCardRoles() {
+        Player currentPlayer = gameState.getActivePlayer();
+        RoomWithScene currentRoom = (RoomWithScene) currentPlayer.getPlayerRoom();
+        ArrayList<Role> offCardRoles = currentRoom.getOffCardRoles();
+        List<Role> availableRoles = new ArrayList<Role>();
+        for (Role role: offCardRoles) {
+            if (role.getRank() <= currentPlayer.getRank() && role.getPlayerOnRole() == null) {
+                availableRoles.add(role);
+            }
+        }
+        return availableRoles;
+    }
+
+    public void giveRoleToPlayer(Role role) {
+        gameState.getActivePlayer().setActiveRole(role);
+    }
+    // displaying stats action listener
+    public void displayStatsOption() {
 
     // taking role action listener
     public List<Role> availableOnCardRoles() {
