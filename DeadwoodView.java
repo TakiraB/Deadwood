@@ -417,13 +417,15 @@ public class DeadwoodView extends JFrame implements ViewInterface {
          } else if (e.getSource() == bMove) {
             System.out.println("Move is Selected\n");
          } else if (e.getSource() == bTakeRole) {
-            gameState.getActivePlayer().setPlayerRoom(gameState.getBoard().getRoomFromBoard("Saloon"));
+            JLabel playerLabel = playerLabels.get(gameState.getActivePlayer());
+            RoomWithScene currentRoom = (RoomWithScene) gameState.getActivePlayer().getPlayerRoom();
+            Area sceneArea = currentRoom.getSceneRoomArea();
             // find roles and select the roles available to the player
             List<Role> onCardRoles = controller.availableOnCardRoles();
             List<Role> offCardRoles = controller.availableOffCardRoles();
             // display the roles in a selectable manor
             JFrame frame = new JFrame("Available Upgrades");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.setSize(400, 300);
             frame.setLayout(new GridLayout(0, 1));
             JPanel onCardPanel = new JPanel();
@@ -437,6 +439,11 @@ public class DeadwoodView extends JFrame implements ViewInterface {
                      controller.giveRoleToPlayer(role);
                      textAction.append(gameState.getActivePlayer() + " has taken the role of "
                            + gameState.getActivePlayer().getRole().getRoleName());
+                     Area roleArea = role.getRoleArea();
+                     int newX = sceneArea.getXValue() + roleArea.getXValue();
+                     int newY = sceneArea.getYValue() + roleArea.getYValue();
+                     playerLabel.setBounds(newX + 3, newY + 3, playerLabel.getIcon().getIconWidth(), playerLabel.getIcon().getIconHeight());
+                     role.setPlayerOnRole(gameState.getActivePlayer());
                      frame.dispose();
                   }
                });
@@ -455,19 +462,22 @@ public class DeadwoodView extends JFrame implements ViewInterface {
                      controller.giveRoleToPlayer(role);
                      textAction.append(gameState.getActivePlayer().getName() + "has taken the role of "
                            + gameState.getActivePlayer().getRole().getRoleName());
+                     Area roleArea = role.getRoleArea();
+                     playerLabel.setBounds(roleArea.getXValue() + 3, roleArea.getYValue() + 3, playerLabel.getIcon().getIconWidth(), playerLabel.getIcon().getIconHeight());
+                     role.setPlayerOnRole(gameState.getActivePlayer());
                      frame.dispose();
                   }
                });
                offCardPanel.add(button);
             }
             frame.add(offCardPanel);
-
             frame.setVisible(true);
-            // TODO: Visually change the die to show the new role the player is in
          } else if (e.getSource() == bEndTurn) {
             gameState.endTurn();
             textAction.append("It is now " + gameState.getActivePlayer().getName() + "'s turn!\n");
          } else if (e.getSource() == bUpgrade) {
+            Player activePlayer = gameState.getActivePlayer();
+            JLabel playerLabel = playerLabels.get(activePlayer);
             // create frame for all the available upgrades
             JFrame frame = new JFrame("Available Upgrades");
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -481,9 +491,18 @@ public class DeadwoodView extends JFrame implements ViewInterface {
                   int optionNumber = i;
                   button.addActionListener(new ActionListener() {
                      public void actionPerformed(ActionEvent e) {
-                        gameState.getActivePlayer().setPlayerRank((int) Math.floor(optionNumber / 2 + 2));
-                        textAction.append(gameState.getActivePlayer().getName() + " is now rank "
-                              + gameState.getActivePlayer().getRank());
+                        activePlayer.setPlayerRank((int) Math.floor(optionNumber / 2 + 2));
+                        textAction.append(activePlayer.getName() + " is now rank " + activePlayer.getRank());
+                        int index = -1;
+                        for (int i = 0; i < gameState.getPlayers().size(); i++) {
+                           Player player = gameState.getPlayers().get(i);
+                           if (activePlayer == player) {
+                              index = i;
+                           }
+                        }
+                        String[] colors = {"b","c","g","o","p","r","v","y"};
+                        ImageIcon newRankIcon = new ImageIcon("dice/dice/" + colors[index] + ((int) Math.floor(optionNumber / 2 + 2)) +".png");
+                        playerLabel.setIcon(newRankIcon);
                         frame.dispose();
                      }
                   });
@@ -497,7 +516,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             }
             frame.add(panel);
             frame.setVisible(true);
-            // TODO: Visually change the die to show the new players rank
          }
       }
 
