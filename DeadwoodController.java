@@ -502,14 +502,14 @@ public class DeadwoodController {
     public void moveOption(){
 
         Player activePlayer = gameState.getActivePlayer();
-        System.out.println("Move option triggered for player: " + activePlayer.getName());
+        // System.out.println("Move option triggered for player: " + activePlayer.getName());
 
         if (activePlayer.getRole() != null) {
             view.displayGameMessage("You are currently in a Role, you cannot move until your role is completed!");
             return;
         }
         // makes sure the player has not already moved this turn
-        else if (activePlayer.getHasMoved()) {
+        else if (activePlayer.getHasMoved() == true) {
             view.displayGameMessage("You have already moved, you will have to wait until your next turn!");
             return;
         }
@@ -520,13 +520,13 @@ public class DeadwoodController {
     public void performMove(String neighborName){
         Player activePlayer = gameState.getActivePlayer();
 
-        if(activePlayer.getHasMoved() == true){
+        if(activePlayer.getHasMoved()){
             view.displayGameMessage("You have already moved this turn.");
             return;
         }
         Room destination;
         // special case for casting office
-        if (neighborName.equals("Office")) {
+        if (neighborName.equals("Casting Office") || neighborName.equals("Office")) {
             destination = board.getRoomFromBoard("Casting Office");
         } else {
             destination = board.getRoomFromBoard(neighborName);
@@ -538,10 +538,12 @@ public class DeadwoodController {
                                 .contains(neighborName))) {
             activePlayer.move(destination);
             activePlayer.setHasMoved(true);
+
+            destination.incrementCounter();
+
             view.updatePlayerRoom(activePlayer);
-            // view.getDieColor(activePlayer);
             view.displayCurrentPlayer(activePlayer);
-            // TODO: call method for resetting buttons
+
         } else {
                 view.displayGameMessage("This move is not valid, either it doesn't exist or not adjacent.");
         }
@@ -642,9 +644,11 @@ public class DeadwoodController {
     }
 
     public void endTurnOption() {
-    for(Player activePlayer : playerList){
-        activePlayer.setHasMoved(false);
-    }
+    // for(Player activePlayer : playerList){
+    //     activePlayer.setHasMoved(false);
+    // }
+    Player activePlayer = gameState.getActivePlayer();
+    // activePlayer.setHasMoved(false);
     gameState.endTurn();
     view.displayCurrentPlayer(gameState.getActivePlayer());
     }
