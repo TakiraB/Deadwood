@@ -369,7 +369,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       // Im not sure what to do with this yet
       public void mouseClicked(MouseEvent e) {
 
-         if (e.getSource() == bAct) {
+         if (e.getSource() == bMove) {
             // playerlabel.setVisible(true);
             // textAction.append(gameState.getActivePlayer().getName() + " has tried to
             // act.\n");
@@ -408,14 +408,53 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             // popupMenu.show(e.getComponent(), e.getX(), e.getY());
 
             // textAction.append("\n");
-            System.out.println("Acting is Selected\n");
+            System.out.println("Move is Selected\n");
          } else if (e.getSource() == bRehearse) {
             controller.playerRehearse();
             textAction.append(gameState.getActivePlayer().getName() + "has increased their practice chip count to: "
                   + gameState.getActivePlayer().getPracticeChips() + "\n");
             System.out.println("Rehearse is Selected\n");
-         } else if (e.getSource() == bMove) {
-            System.out.println("Move is Selected\n");
+         } else if (e.getSource() == bAct) {
+            Player currentPlayer = gameState.getActivePlayer();
+            if (controller.playerAct()) {
+               textAction.append("You were successful!");
+               // TODO: implement takes appearing and turning true
+               // takes appears here
+               if (controller.inStarredRole()) {
+                  textAction.append(currentPlayer.getName() + " is rewarded with 2 credits!");
+                  controller.reward();
+               } else {
+                  textAction.append(currentPlayer.getName() + " is rewarded with a dollar and a credit!");
+                  controller.reward();
+               }
+               // move takeCompleted to be True here
+            } else {
+               textAction.append("You failed!");
+               if (controller.inStarredRole()) {
+                  textAction.append(currentPlayer.getName() + " is not given anything.");
+                  controller.fail();
+               } else {
+                  textAction.append(currentPlayer.getName() + " is given 1 dollar for trying.");
+                  controller.fail();
+               }
+            }
+
+            // TODO: check for wrapping of scene
+            controller.wrapSceneCheck();
+
+
+
+
+            // TODO: check for the ending of day
+
+
+
+
+
+
+
+
+            System.out.println("Acting is Selected\n");
          } else if (e.getSource() == bTakeRole) {
             JLabel playerLabel = playerLabels.get(gameState.getActivePlayer());
             RoomWithScene currentRoom = (RoomWithScene) gameState.getActivePlayer().getPlayerRoom();
@@ -438,7 +477,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
                      // give player the role thats selected
                      controller.giveRoleToPlayer(role);
                      textAction.append(gameState.getActivePlayer() + " has taken the role of "
-                           + gameState.getActivePlayer().getRole().getRoleName());
+                           + gameState.getActivePlayer().getActiveRole().getRoleName());
                      Area roleArea = role.getRoleArea();
                      int newX = sceneArea.getXValue() + roleArea.getXValue();
                      int newY = sceneArea.getYValue() + roleArea.getYValue();
@@ -461,7 +500,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
                      // give player role thats selected
                      controller.giveRoleToPlayer(role);
                      textAction.append(gameState.getActivePlayer().getName() + "has taken the role of "
-                           + gameState.getActivePlayer().getRole().getRoleName());
+                           + gameState.getActivePlayer().getActiveRole().getRoleName());
                      Area roleArea = role.getRoleArea();
                      playerLabel.setBounds(roleArea.getXValue() + 3, roleArea.getYValue() + 3, playerLabel.getIcon().getIconWidth(), playerLabel.getIcon().getIconHeight());
                      role.setPlayerOnRole(gameState.getActivePlayer());

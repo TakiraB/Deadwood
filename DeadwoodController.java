@@ -163,7 +163,7 @@ public class DeadwoodController {
                     // to choose from those options
                     case "move":
                         // player cannot move if in a role
-                        if (activePlayer.getRole() != null) {
+                        if (activePlayer.getActiveRole() != null) {
                             // System.out.println(
                             // "You are currently in a Role, you cannot move until you're role is
                             // completed!");
@@ -405,7 +405,7 @@ public class DeadwoodController {
                                             activePlayer.setActiveRole(role);
                                             role.setPlayerOnRole(activePlayer);
                                             didNotGetRole = false;
-                                            System.out.println("You got " + activePlayer.getRole().getRoleName());
+                                            System.out.println("You got " + activePlayer.getActiveRole().getRoleName());
                                             break;
                                         } else {
                                             // System.out.println(
@@ -421,7 +421,7 @@ public class DeadwoodController {
                                         activePlayer.setActiveRole(role);
                                         role.setPlayerOnRole(activePlayer);
                                         didNotGetRole = false;
-                                        System.out.println("You got " + activePlayer.getRole().getRoleName());
+                                        System.out.println("You got " + activePlayer.getActiveRole().getRoleName());
                                         break;
                                     }
                                 }
@@ -442,8 +442,8 @@ public class DeadwoodController {
                         System.out.println("Rank: " + activePlayer.getRank());
                         System.out.println("Dollars: " + activePlayer.getDollars());
                         System.out.println("Credits: " + activePlayer.getCredits());
-                        if (activePlayer.getRole() != null) {
-                            System.out.println("Active Role: " + activePlayer.getRole().getRoleName());
+                        if (activePlayer.getActiveRole() != null) {
+                            System.out.println("Active Role: " + activePlayer.getActiveRole().getRoleName());
                         } else {
                             System.out.println("Active Role: No Role");
                         }
@@ -504,7 +504,7 @@ public class DeadwoodController {
         Player activePlayer = gameState.getActivePlayer();
         System.out.println("Move option triggered for player: " + activePlayer.getName());
 
-        if (activePlayer.getRole() != null) {
+        if (activePlayer.getActiveRole() != null) {
             view.displayGameMessage("You are currently in a Role, you cannot move until your role is completed!");
             return;
         }
@@ -546,9 +546,63 @@ public class DeadwoodController {
     
 
     // act action listener
-    public void actOption() {
-
+    public boolean playerAct() {
+        Player player = gameState.getActivePlayer();
+        RoomWithScene room = (RoomWithScene) player.getPlayerRoom();
+        int budget = room.getSceneCard().getBudget();
+        int pChips = player.getPracticeChips();
+        Random random = new Random();
+        int rollValue = random.nextInt(6) + 1;
+        int total = rollValue + pChips;
+        view.textAction.append("You rolled a " + rollValue + " with " + pChips + "practice chips for a total of " + total);
+        player.setHasActed(true);
+        return total >= budget;
     }
+
+    public boolean inStarredRole() {
+        return gameState.getActivePlayer().getActiveRole().getStarredRole();
+    }
+
+    public void reward() {
+        Player currentPlayer = gameState.getActivePlayer();
+        if (inStarredRole()) {
+            int credits = currentPlayer.getCredits();
+            currentPlayer.setCredits(credits + 2);
+        } else {
+            int dollars = currentPlayer.getDollars();
+            int credits = currentPlayer.getCredits();
+            currentPlayer.setDollars(dollars + 1);
+            currentPlayer.setCredits(credits + 1);
+        }
+    }
+
+    public void fail() {
+        Player currentPlayer = gameState.getActivePlayer();
+        if (!inStarredRole()) {
+            int dollars = currentPlayer.getDollars();
+            currentPlayer.setDollars(dollars + 1);
+        } else {
+            // do nothing since on card players get nothing for failing during act
+        }
+    }
+
+    // TODO: add logic for wrapping scene
+    public boolean wrapSceneCheck() {
+        
+
+
+
+
+
+
+        return true;
+    }
+
+
+
+    // TODO: add logic for ending the day
+
+
 
     // rehearse action listener
     public void playerRehearse() {

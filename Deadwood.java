@@ -149,7 +149,7 @@ public class Deadwood {
                     // to choose from those options
                     case "move":
                         // player cannot move if in a role
-                        if (activePlayer.getRole() != null) {
+                        if (activePlayer.getActiveRole() != null) {
                             System.out.println(
                                     "You are currently in a Role, you cannot move until you're role is completed!");
                             break;
@@ -362,7 +362,7 @@ public class Deadwood {
                                             activePlayer.setActiveRole(role);
                                             role.setPlayerOnRole(activePlayer);
                                             didNotGetRole = false;
-                                            System.out.println("You got " + activePlayer.getRole().getRoleName());
+                                            System.out.println("You got " + activePlayer.getActiveRole().getRoleName());
                                             break;
                                         } else {
                                             System.out.println(
@@ -376,7 +376,7 @@ public class Deadwood {
                                         activePlayer.setActiveRole(role);
                                         role.setPlayerOnRole(activePlayer);
                                         didNotGetRole = false;
-                                        System.out.println("You got " + activePlayer.getRole().getRoleName());
+                                        System.out.println("You got " + activePlayer.getActiveRole().getRoleName());
                                         break;
                                     }
                                 }
@@ -396,8 +396,8 @@ public class Deadwood {
                         System.out.println("Rank: " + activePlayer.getRank());
                         System.out.println("Dollars: " + activePlayer.getDollars());
                         System.out.println("Credits: " + activePlayer.getCredits());
-                        if (activePlayer.getRole() != null) {
-                            System.out.println("Active Role: " + activePlayer.getRole().getRoleName());
+                        if (activePlayer.getActiveRole() != null) {
+                            System.out.println("Active Role: " + activePlayer.getActiveRole().getRoleName());
                         } else {
                             System.out.println("Active Role: No Role");
                         }

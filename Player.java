@@ -166,10 +166,6 @@ public class Player {
         return rank;
     }
 
-    public Role getRole() {
-        return activeRole;
-    }
-
     public int getDollars() {
         return dollars;
     }
