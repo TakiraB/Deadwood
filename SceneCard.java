@@ -72,7 +72,7 @@ public class SceneCard {
     }
 
     public String getImage() {
-        return imagePlaceholder;
+        return "cards/cards/" + imagePlaceholder;
     }
 
     public Area getSceneCardArea() {
