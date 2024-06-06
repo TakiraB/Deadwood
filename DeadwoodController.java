@@ -704,39 +704,6 @@ public class DeadwoodController {
 
     public void giveRoleToPlayer(Role role) {
         gameState.getActivePlayer().setActiveRole(role);
-    }
-    // displaying stats action listener
-    public void displayStatsOption() {
-
-    // taking role action listener
-    public List<Role> availableOnCardRoles() {
-        Player currentPlayer = gameState.getActivePlayer();
-        RoomWithScene currentRoom = (RoomWithScene) currentPlayer.getPlayerRoom();
-        List<Role> onCardRoles = currentRoom.getSceneCard().getRoles();
-        List<Role> availableRoles = new ArrayList<Role>();
-        for (Role role: onCardRoles) {
-            if (role.getRank() <= currentPlayer.getRank() && role.getPlayerOnRole() == null) {
-                availableRoles.add(role);
-            }
-        }
-        return availableRoles;
-    }
-
-    public List<Role> availableOffCardRoles() {
-        Player currentPlayer = gameState.getActivePlayer();
-        RoomWithScene currentRoom = (RoomWithScene) currentPlayer.getPlayerRoom();
-        ArrayList<Role> offCardRoles = currentRoom.getOffCardRoles();
-        List<Role> availableRoles = new ArrayList<Role>();
-        for (Role role: offCardRoles) {
-            if (role.getRank() <= currentPlayer.getRank() && role.getPlayerOnRole() == null) {
-                availableRoles.add(role);
-            }
-        }
-        return availableRoles;
-    }
-
-    public void giveRoleToPlayer(Role role) {
-        gameState.getActivePlayer().setActiveRole(role);
         view.displayCurrentPlayer(gameState.getActivePlayer());
     }
 
