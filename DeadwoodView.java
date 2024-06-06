@@ -249,7 +249,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       roomButtons.put("General Store", generalButton);
       roomButtons.put("Ranch", ranchButton);
       roomButtons.put("Secret Hideout", secretButton);
-      roomButtons.put("Casting Office", castingButton);
+      roomButtons.put("Office", castingButton);
       roomButtons.put("Train Station", trainButton);
 
       // ------------------------------------------
@@ -263,9 +263,13 @@ public class DeadwoodView extends JFrame implements ViewInterface {
 
       // Set the current player text area (not modifiable by user)
       activePlayer = new JTextArea();
-      activePlayer.setBounds(icon.getIconWidth() + 15, 320, 200, 250);
+      activePlayer.setBounds(icon.getIconWidth() + 15, 320, 250, 250);
       activePlayer.setEditable(false);
       activePlayer.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+      Font font = activePlayer.getFont();
+      Font newFont = font.deriveFont(font.getStyle(), 17f);
+      activePlayer.setFont(newFont);
+      // activePlayer.setLineWrap(true);
       bPane.add(activePlayer, Integer.valueOf(2));
 
       // Create action log label
@@ -278,6 +282,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       textAction.setEditable(false);
       textAction.setBounds(icon.getIconWidth() + 15, 620, 200, 250);
       textAction.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+      textAction.setLineWrap(true);
       bPane.add(textAction, Integer.valueOf(2));
 
    }
@@ -393,8 +398,11 @@ public class DeadwoodView extends JFrame implements ViewInterface {
          } else if (e.getSource() == bPlayerLocations) {
             System.out.println("player locations is Selected\n");
          } else if (e.getSource() == bEndTurn) {
-            gameState.endTurn();
+            // gameState.endTurn();
+            controller.endTurnOption();
             displayCurrentPlayer(gameState.getActivePlayer());
+            resetRoomButtons();
+            // gameState.getActivePlayer().setHasMoved(false);
             System.out.println("end turn is Selected\n");
          } else if (e.getSource() == bEndGame) {
             System.out.println("end game is Selected\n");
@@ -516,17 +524,19 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       JLabel playerLabel = playerLabels.get(activePlayer);
       // get the players current room and set it as a Room object
       Room currentPlayerRoom = activePlayer.getPlayerRoom();
-
+      
       Area roomArea = null;
+      RoomWithScene sceneRoom = null;
+      int playerCounter = 0;
 
       // I realized I stored the areas of each room from the parser into 3 different objects
       // rooms with scenes are RoomWithScene objects, Trailer is Room object, Casting Office is CastingOffice object
       // If the room is a RoomWithScene, call Scene Room specific area getter
       if(currentPlayerRoom instanceof RoomWithScene){
-         RoomWithScene sceneRoom = (RoomWithScene) currentPlayerRoom;
+         sceneRoom = (RoomWithScene) currentPlayerRoom;
          roomArea = sceneRoom.getSceneRoomArea();
-         sceneRoom.incrementCounter();
-         if(sceneRoom.getCounter() == 1){
+         playerCounter = sceneRoom.getCounter();
+         if(playerCounter == 1){
             flipSceneCard(sceneRoom);
          }
       }
@@ -534,14 +544,21 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       else if(currentPlayerRoom instanceof CastingOffice){
          CastingOffice castingOfficeRoom = (CastingOffice) currentPlayerRoom;
          roomArea = castingOfficeRoom.getOfficeArea();
+         playerCounter = castingOfficeRoom.getCounter();
       }
       // else it's just a room (Trailer), get the room area
       else{
          roomArea = currentPlayerRoom.getRoomArea();
+         playerCounter = currentPlayerRoom.getCounter();
+      }
+
+      int iconShift = 0;
+      if (playerCounter >=2){
+         iconShift = (playerCounter-1)*30;
       }
 
       // set the new bounds of the player on top of the room, and set the icon visible in that area
-      playerLabel.setBounds(roomArea.getXValue(), roomArea.getYValue(), playerLabel.getIcon().getIconWidth(), playerLabel.getIcon().getIconHeight());
+      playerLabel.setBounds((roomArea.getXValue()-20)+iconShift, roomArea.getYValue(), playerLabel.getIcon().getIconWidth(), playerLabel.getIcon().getIconHeight());
       playerLabel.setVisible(true);
 
    }
@@ -682,7 +699,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
    // Showing valid rooms a player can move to once the "move" button is pressed
    public void showValidRooms(ArrayList<String> neighbors) {
       // System.out.println("Showing valid rooms: " + neighbors);
-
+      resetRoomButtons();
       // Iterate through the Hashmap of neighbor strings and their associated buttons
       for(Map.Entry<String, JButton> neighborEntry : roomButtons.entrySet()) {
          // Grab neighbor name string
@@ -695,11 +712,18 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             neighborButton.setEnabled(true);
             neighborButton.addMouseListener(new newRoomListener(neighborName));
          }
-         else{
-            // If not a valid neighbor to move to, disable the button
-            neighborButton.setBorder(BorderFactory.createEmptyBorder());
-            neighborButton.setEnabled(false);
-         }
+         // else{
+         //    // If not a valid neighbor to move to, disable the button
+         //    neighborButton.setBorder(BorderFactory.createEmptyBorder());
+         //    neighborButton.setEnabled(false);
+         // }
+      }
+   }
+
+   public void resetRoomButtons(){
+      for(JButton roomButton : roomButtons.values()){
+         roomButton.setEnabled(false);
+         roomButton.setBorder(BorderFactory.createEmptyBorder());
       }
    }
 
