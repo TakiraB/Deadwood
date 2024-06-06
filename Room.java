@@ -4,18 +4,12 @@ public class Room {
     protected String name;
     private ArrayList<String> adjacentNeighbors;
     private Area roomArea;
+    private int playerCounter;
 
     public Room(String name) {
         this.name = name;
         this.adjacentNeighbors = new ArrayList<>();
     }
-
-    // // update the room
-    // public void updateRoom() {
-
-    // }
-
-    // getters and setters
 
     public String getName() {
         return name;
@@ -39,6 +33,14 @@ public class Room {
 
     public void setRoomArea(Area roomArea){
         this.roomArea = roomArea;
+    }
+
+    public void incrementCounter(){
+        playerCounter++;
+    }
+
+    public int getCounter(){
+        return playerCounter;
     }
 
 }
