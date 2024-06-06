@@ -120,7 +120,6 @@ public class DeadwoodController {
         setActivePlayers(numPlayers);
         setGameState(numPlayers);
     }
-
     // public void startGameLoop() {
     //     // Start the game
     //     gameState.startGame();
@@ -504,7 +503,7 @@ public class DeadwoodController {
         Player activePlayer = gameState.getActivePlayer();
         // System.out.println("Move option triggered for player: " + activePlayer.getName());
 
-        if (activePlayer.getRole() != null) {
+        if (activePlayer.getActiveRole() != null) {
             view.displayGameMessage("You are currently in a Role, you cannot move until your role is completed!");
             return;
         }
@@ -551,9 +550,63 @@ public class DeadwoodController {
     
 
     // act action listener
-    public void actOption() {
-
+    public boolean playerAct() {
+        Player player = gameState.getActivePlayer();
+        RoomWithScene room = (RoomWithScene) player.getPlayerRoom();
+        int budget = room.getSceneCard().getBudget();
+        int pChips = player.getPracticeChips();
+        Random random = new Random();
+        int rollValue = random.nextInt(6) + 1;
+        int total = rollValue + pChips;
+        view.textAction.append("You rolled a " + rollValue + " with " + pChips + "practice chips for a total of " + total);
+        player.setHasActed(true);
+        return total >= budget;
     }
+
+    public boolean inStarredRole() {
+        return gameState.getActivePlayer().getActiveRole().getStarredRole();
+    }
+
+    public void reward() {
+        Player currentPlayer = gameState.getActivePlayer();
+        if (inStarredRole()) {
+            int credits = currentPlayer.getCredits();
+            currentPlayer.setCredits(credits + 2);
+        } else {
+            int dollars = currentPlayer.getDollars();
+            int credits = currentPlayer.getCredits();
+            currentPlayer.setDollars(dollars + 1);
+            currentPlayer.setCredits(credits + 1);
+        }
+    }
+
+    public void fail() {
+        Player currentPlayer = gameState.getActivePlayer();
+        if (!inStarredRole()) {
+            int dollars = currentPlayer.getDollars();
+            currentPlayer.setDollars(dollars + 1);
+        } else {
+            // do nothing since on card players get nothing for failing during act
+        }
+    }
+
+    // TODO: add logic for wrapping scene
+    public boolean wrapSceneCheck() {
+        
+
+
+
+
+
+
+        return true;
+    }
+
+
+
+    // TODO: add logic for ending the day
+
+
 
     // rehearse action listener
     public void playerRehearse() {
@@ -564,43 +617,57 @@ public class DeadwoodController {
     }
 
     // upgrade action listener
-    // returns array of 1 for if the player can upgrade to that rank using that currency
-    // 0 if the player cannot afford or is too high of rank for rank
-    // the list is rank 2: dollars, rank 2: credits, rank 3: dollars, rank 3: credits...
-    public ArrayList<Integer> availableUpgrades() {
+    public ArrayList<ArrayList<Object>> availableUpgrades() {
         Player currentPlayer = gameState.getActivePlayer();
         Room tempCastingOffice = board.getBoardLayout().get("Casting Office");
         CastingOffice castingOfficeUpgrades = (CastingOffice) tempCastingOffice;
+        // double ArrayList of objects
+        // the order is rank 2 dollar, rank 2 credit, rank 3 dollar, rank 3 credit... rank 6 dollar, rank 6 credit,
+        // first value in object: 0 or 1 if the player can upgrade to that rank
+        // second value in object: String, rank *rank* costs *amount* (dollars or credits)
         // initializing of arraylist
-        ArrayList<Integer> canUpgrade = new ArrayList<>();
+        ArrayList<ArrayList<Object>> rankInfoAndCost = new ArrayList<ArrayList<Object>>();
         for (int i = 0; i < castingOfficeUpgrades.getUpgradeChoices().size(); i++) {
-            canUpgrade.add(0);
+            ArrayList<Object> tempArray = new ArrayList<Object>();
+            tempArray.add(0);
+            tempArray.add("E");
+            rankInfoAndCost.add(tempArray);
         }
-        // checking rank prices using dollars
+
+        // Adds values to rankInfoAndCost for all the dollar upgrades
         for (int i = 0; i < 5; i++) {
             Upgrades currentUpgrade = castingOfficeUpgrades.getUpgradeChoices().get(i);
             int rank = currentUpgrade.getUpgradeLevel();
             int amountRequired = currentUpgrade.getUpgradeAmount();
             int temp = i * 2;
+            ArrayList<Object> tempArray = new ArrayList<Object>();
+            // checking to make sure player is not too high of a level or does not have enough credits
             if (currentPlayer.getDollars() >= amountRequired && currentPlayer.getRank() < rank) {
-                canUpgrade.set(temp, 1);
+                tempArray.add(1);
             } else {
-                canUpgrade.set(temp, 0);
+                tempArray.add(0);
             }
+            tempArray.add("Rank " + currentUpgrade.getUpgradeLevel() + " costs " + currentUpgrade.getUpgradeAmount() + " " + currentUpgrade.getCurrencyType() + "s");
+            rankInfoAndCost.set(temp, tempArray);
         }
-        // checking rank prices using credits
+        
+        // Adds values to rankInfoAndCost for all the credit upgrades
         for (int i = 5; i < 10; i++) {
             Upgrades currentUpgrade = castingOfficeUpgrades.getUpgradeChoices().get(i);
             int rank = currentUpgrade.getUpgradeLevel();
             int amountRequired = currentUpgrade.getUpgradeAmount();
             int temp = ((i - 5) * 2) + 1;
+            ArrayList<Object> tempArray = new ArrayList<Object>();
+            // checking to make sure player is not too high of a level or does not have enough credits
             if (currentPlayer.getCredits() >= amountRequired && currentPlayer.getRank() < rank) {
-                canUpgrade.set(temp, 1);
+                tempArray.add(1);
             } else {
-                canUpgrade.set(temp, 0);
+                tempArray.add(0);
             }
+            tempArray.add("Rank " + currentUpgrade.getUpgradeLevel() + " costs " + currentUpgrade.getUpgradeAmount() + " " + currentUpgrade.getCurrencyType() + "s");
+            rankInfoAndCost.set(temp, tempArray);
         }
-        return canUpgrade;
+        return rankInfoAndCost;
     }
 
     public void upgradePlayerRank(int newRank) {
