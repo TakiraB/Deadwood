@@ -476,6 +476,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
          } else if (e.getSource() == bEndTurn) {
             gameState.endTurn();
             textAction.append("It is now " + gameState.getActivePlayer().getName() + "'s turn!\n");
+            displayCurrentPlayer(gameState.getActivePlayer());
             playerCheck(gameState);
          } else if (e.getSource() == bUpgrade) {
             Player activePlayer = gameState.getActivePlayer();
