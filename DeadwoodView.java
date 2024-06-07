@@ -326,13 +326,13 @@ public class DeadwoodView extends JFrame implements ViewInterface {
                   roomButton.removeMouseListener(mouseListener);
                }
             }
-            System.out.println("Move is Selected\n");
+            playerCheck(gameState);
          } else if (e.getSource() == bRehearse) {
             controller.playerRehearse();
             textAction.append(gameState.getActivePlayer().getName() + "has increased their practice chip count to: "
                   + gameState.getActivePlayer().getPracticeChips() + "\n");
             displayCurrentPlayer(gameState.getActivePlayer());
-            System.out.println("Rehearse is Selected\n");
+            playerCheck(gameState);
          } else if (e.getSource() == bAct) {
             Player currentPlayer = gameState.getActivePlayer();
             if (controller.playerAct()) {
@@ -367,7 +367,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
                controller.wrappedReward();
                // move players from roles to just on card
                ArrayList<Player> playersMoved = controller.wrappedPlayerMove();
-               for (Player player: playersMoved) {
+               for (Player player : playersMoved) {
                   updatePlayerRoom(player);
                   displayCurrentPlayer(player);
                }
@@ -381,7 +381,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
                // reset shot counters
                RoomWithScene room = (RoomWithScene) currentPlayer.getPlayerRoom();
                ArrayList<JLabel> takesIcons = takeIcons.get(room);
-               for (JLabel label: takesIcons) {
+               for (JLabel label : takesIcons) {
                   label.setBounds(10000, 10000, label.getWidth(), label.getHeight());
                }
             } else {
@@ -391,12 +391,12 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             Boolean endOfDay = controller.checkEndDay();
             if (endOfDay) {
                // visually move all players back to trailer park
-               for (Player player: gameState.getPlayers()) {
+               for (Player player : gameState.getPlayers()) {
                   player.setPlayerRoom(gameState.getBoard().getRoomFromBoard("Trailer"));
                   updatePlayerRoom(player);
                }
                // flip all scene cards back over
-               for (Room room: gameState.getBoard().getBoardLayout().values()) {
+               for (Room room : gameState.getBoard().getBoardLayout().values()) {
                   if (room instanceof RoomWithScene) {
                      RoomWithScene flipRoom = (RoomWithScene) room;
                      if (roomSceneCards.containsKey(flipRoom)) {
@@ -411,7 +411,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
                }
             }
 
-            System.out.println("Acting is Selected\n");
+            playerCheck(gameState);
          } else if (e.getSource() == bTakeRole) {
             JLabel playerLabel = playerLabels.get(gameState.getActivePlayer());
             RoomWithScene currentRoom = (RoomWithScene) gameState.getActivePlayer().getPlayerRoom();
@@ -441,6 +441,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
                      playerLabel.setBounds(newX + 3, newY + 3, playerLabel.getIcon().getIconWidth(),
                            playerLabel.getIcon().getIconHeight());
                      role.setPlayerOnRole(gameState.getActivePlayer());
+                     playerCheck(gameState);
                      frame.dispose();
                   }
                });
@@ -463,6 +464,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
                      playerLabel.setBounds(roleArea.getXValue() + 3, roleArea.getYValue() + 3,
                            playerLabel.getIcon().getIconWidth(), playerLabel.getIcon().getIconHeight());
                      role.setPlayerOnRole(gameState.getActivePlayer());
+                     playerCheck(gameState);
                      frame.dispose();
                   }
                });
@@ -470,10 +472,11 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             }
             frame.add(offCardPanel);
             frame.setVisible(true);
+            playerCheck(gameState);
          } else if (e.getSource() == bEndTurn) {
             gameState.endTurn();
             textAction.append("It is now " + gameState.getActivePlayer().getName() + "'s turn!\n");
-            displayCurrentPlayer(gameState.getActivePlayer());
+            playerCheck(gameState);
          } else if (e.getSource() == bUpgrade) {
             Player activePlayer = gameState.getActivePlayer();
             JLabel playerLabel = playerLabels.get(activePlayer);
@@ -516,7 +519,9 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             }
             frame.add(panel);
             frame.setVisible(true);
+            playerCheck(gameState);
          }
+         playerCheck(gameState);
       }
 
       public void mousePressed(MouseEvent e) {
@@ -532,6 +537,53 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       }
    }
 
+   // disables action buttons depending on active players ability to do those
+   // actions
+   public void playerCheck(GameState gameState) {
+      Player currentPlayer = gameState.getActivePlayer();
+      // bMove
+      if (!currentPlayer.getHasMoved() && currentPlayer.getActiveRole() == null) {
+         bMove.setEnabled(true);
+      } else {
+         bMove.setEnabled(false);
+      }
+      if (currentPlayer.getPlayerRoom() instanceof RoomWithScene) {
+         // bAct
+         if (!currentPlayer.getHasActed() && currentPlayer.getActiveRole() != null) {
+            System.out.println("Get to act");
+            bAct.setEnabled(true);
+         } else {
+            bAct.setEnabled(false);
+         }
+         // bRehearse
+         if (!currentPlayer.getHasActed() && currentPlayer.getActiveRole() != null && currentPlayer
+               .getPracticeChips() < ((RoomWithScene) currentPlayer.getPlayerRoom()).getSceneCard().getBudget()) {
+                  System.out.println("Get to rehearse");
+            bRehearse.setEnabled(true);
+         } else {
+            bRehearse.setEnabled(false);
+         }
+         // bTakeRole
+         if (currentPlayer.getActiveRole() == null) {
+            bTakeRole.setEnabled(true);
+         } else {
+            bTakeRole.setEnabled(false);
+         }
+      } else {
+         bAct.setEnabled(false);
+         bRehearse.setEnabled(false);
+         bTakeRole.setEnabled(false);
+      }
+      // bUpgrade
+      if (currentPlayer.getPlayerRoom() == gameState.getBoard().getRoomFromBoard("Casting")) {
+         bUpgrade.setEnabled(true);
+      } else {
+         bUpgrade.setEnabled(false);
+      }
+      // bEndTurn
+      bEndTurn.setEnabled(true);
+   }
+
    // when mouse enters button area, create a border around the area for
    // readability
    class validRoomListener extends MouseAdapter {
@@ -540,6 +592,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       public void mouseClicked(MouseEvent e) {
          System.out.println("Move button clicked");
          boardController.moveOption();
+         playerCheck(boardController.getGameState());
       }
    }
 
@@ -554,6 +607,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       @Override
       public void mouseClicked(MouseEvent e) {
          boardController.performMove(neighborName);
+         playerCheck(boardController.getGameState());
       }
    }
 
@@ -729,7 +783,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
    // Initialization of all takes for each room that are saved in takeIcons
    public void takesInitialization(GameState gameState) {
       Board board = gameState.getBoard();
-      for (Map.Entry<String, Room> room: board.getBoardLayout().entrySet()) {
+      for (Map.Entry<String, Room> room : board.getBoardLayout().entrySet()) {
          if (room.getValue() instanceof RoomWithScene) {
             RoomWithScene roomWithScene = (RoomWithScene) room.getValue();
             int numberOfTakes = roomWithScene.getTakesList().size();
@@ -884,5 +938,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       boardView.displayCurrentPlayer(boardController.getGameState().getActivePlayer());
       boardController.setUpSceneCards();
       boardView.takesInitialization(boardController.getGameState());
+      boardView.playerCheck(boardController.getGameState());
    }
 }

@@ -143,6 +143,7 @@ public class DeadwoodController {
         }
         ArrayList<String> neighbors = activePlayer.getPlayerRoom().getAdjacentNeighbors();
         view.showValidRooms(neighbors);
+        view.playerCheck(gameState);
     }
 
     public void performMove(String neighborName) {
