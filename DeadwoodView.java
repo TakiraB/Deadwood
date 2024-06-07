@@ -52,6 +52,8 @@ public class DeadwoodView extends JFrame implements ViewInterface {
    private Map<String, JButton> roomButtons;
    private Map<Player, JLabel> playerLabels;
    private Map<Player, PlayerIcon> playerIcons;
+   private Map<Room, ArrayList<JLabel>> takeIcons;
+   private Map<Room, JLabel> roomSceneCards;
 
    public DeadwoodView(Board board, DeadwoodController boardController) {
 
@@ -66,6 +68,8 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       roomButtons = new HashMap<>();
       playerLabels = new HashMap<>();
       playerIcons = new HashMap<>();
+      takeIcons = new HashMap<>();
+      roomSceneCards = new HashMap<>();
 
       // Set the exit option for the JFrame
       setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -333,31 +337,79 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             Player currentPlayer = gameState.getActivePlayer();
             if (controller.playerAct()) {
                textAction.append("You were successful!");
-               // TODO: implement takes appearing and turning true
-               // takes appears here
                if (controller.inStarredRole()) {
-                  textAction.append(currentPlayer.getName() + " is rewarded with 2 credits!");
+                  textAction.append(currentPlayer.getName() + " is rewarded with 2 credits!\n");
                   controller.reward();
                } else {
-                  textAction.append(currentPlayer.getName() + " is rewarded with a dollar and a credit!");
+                  textAction.append(currentPlayer.getName() + " is rewarded with a dollar and a credit!\n");
                   controller.reward();
                }
-               // move takeCompleted to be True here
+               int indexOfTake = controller.takesAppear();
+               ArrayList<JLabel> takeLabels = takeIcons.get(currentPlayer.getPlayerRoom());
+               JLabel label = takeLabels.get(indexOfTake);
+               RoomWithScene room = (RoomWithScene) currentPlayer.getPlayerRoom();
+               Area takeArea = room.getTakesList().get(indexOfTake).getTakeArea();
+               label.setBounds(takeArea.getXValue(), takeArea.getYValue(), label.getWidth(), label.getHeight());
             } else {
                textAction.append("You failed!");
                if (controller.inStarredRole()) {
-                  textAction.append(currentPlayer.getName() + " is not given anything.");
+                  textAction.append(currentPlayer.getName() + " is not given anything.\n");
                   controller.fail();
                } else {
-                  textAction.append(currentPlayer.getName() + " is given 1 dollar for trying.");
+                  textAction.append(currentPlayer.getName() + " is given 1 dollar for trying.\n");
                   controller.fail();
                }
             }
 
-            // TODO: check for wrapping of scene
-            controller.wrapSceneCheck();
+            Boolean wrapped = controller.wrapSceneCheck();
+            if (wrapped) {
+               // give rewards to players
+               controller.wrappedReward();
+               // move players from roles to just on card
+               ArrayList<Player> playersMoved = controller.wrappedPlayerMove();
+               for (Player player: playersMoved) {
+                  updatePlayerRoom(player);
+                  displayCurrentPlayer(player);
+               }
+               // flip card
+               JLabel sceneCard = roomSceneCards.get((RoomWithScene) currentPlayer.getPlayerRoom());
+               sceneCard.setVisible(false);
+               bPane.remove(sceneCard);
+               bPane.revalidate();
+               bPane.repaint();
+               roomSceneCards.remove((RoomWithScene) currentPlayer.getPlayerRoom());
+               // reset shot counters
+               RoomWithScene room = (RoomWithScene) currentPlayer.getPlayerRoom();
+               ArrayList<JLabel> takesIcons = takeIcons.get(room);
+               for (JLabel label: takesIcons) {
+                  label.setBounds(10000, 10000, label.getWidth(), label.getHeight());
+               }
+            } else {
+               // Do nothing if scene is not wrapping
+            }
 
-            // TODO: check for the ending of day
+            Boolean endOfDay = controller.checkEndDay();
+            if (endOfDay) {
+               // visually move all players back to trailer park
+               for (Player player: gameState.getPlayers()) {
+                  player.setPlayerRoom(gameState.getBoard().getRoomFromBoard("Trailer"));
+                  updatePlayerRoom(player);
+               }
+               // flip all scene cards back over
+               for (Room room: gameState.getBoard().getBoardLayout().values()) {
+                  if (room instanceof RoomWithScene) {
+                     RoomWithScene flipRoom = (RoomWithScene) room;
+                     if (roomSceneCards.containsKey(flipRoom)) {
+                        JLabel sceneCard = roomSceneCards.get(flipRoom);
+                        sceneCard.setVisible(false);
+                        bPane.remove(sceneCard);
+                        bPane.revalidate();
+                        bPane.repaint();
+                        roomSceneCards.remove((RoomWithScene) currentPlayer.getPlayerRoom());
+                     }
+                  }
+               }
+            }
 
             System.out.println("Acting is Selected\n");
          } else if (e.getSource() == bTakeRole) {
@@ -538,6 +590,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             flippedCardImage.getIconWidth(), flippedCardImage.getIconHeight());
       flippedCard.setVisible(true);
       bPane.add(flippedCard, Integer.valueOf(3));
+      roomSceneCards.put(sceneRoom, flippedCard);
    }
 
    // General display message that can be called from controller
@@ -565,7 +618,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
          sceneRoom = (RoomWithScene) currentPlayerRoom;
          roomArea = sceneRoom.getSceneRoomArea();
          playerCounter = sceneRoom.getCounter();
-         if (playerCounter == 1) {
+         if (playerCounter == 1 && !sceneRoom.getRoomScene().getSceneWrapped()) {
             flipSceneCard(sceneRoom);
          }
       }
@@ -670,6 +723,32 @@ public class DeadwoodView extends JFrame implements ViewInterface {
          bPane.add(playerLabel, Integer.valueOf(3));
          playerLabels.put(newPlayer, playerLabel);
          playerIcons.put(newPlayer, newPlayerInfo);
+      }
+   }
+
+   // Initialization of all takes for each room that are saved in takeIcons
+   public void takesInitialization(GameState gameState) {
+      Board board = gameState.getBoard();
+      for (Map.Entry<String, Room> room: board.getBoardLayout().entrySet()) {
+         if (room.getValue() instanceof RoomWithScene) {
+            RoomWithScene roomWithScene = (RoomWithScene) room.getValue();
+            int numberOfTakes = roomWithScene.getTakesList().size();
+            for (int i = 0; i < numberOfTakes; i++) {
+               JLabel takeIcon = new JLabel();
+               ImageIcon takeImage = new ImageIcon("images/shot.png");
+               takeIcon.setIcon(takeImage);
+               takeIcon.setBounds(10000, 10000, takeImage.getIconWidth(), takeImage.getIconHeight());
+               takeIcon.setVisible(true);
+               bPane.add(takeIcon, Integer.valueOf(3));
+               if (takeIcons.containsKey(roomWithScene)) {
+                  takeIcons.get(roomWithScene).add(takeIcon);
+               } else {
+                  ArrayList<JLabel> takesList = new ArrayList<>();
+                  takesList.add(takeIcon);
+                  takeIcons.put(roomWithScene, takesList);
+               }
+            }
+         }
       }
    }
 
@@ -804,5 +883,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       boardView.setPlayerIcons(boardController.getPlayerList());
       boardView.displayCurrentPlayer(boardController.getGameState().getActivePlayer());
       boardController.setUpSceneCards();
+      boardView.takesInitialization(boardController.getGameState());
    }
 }
