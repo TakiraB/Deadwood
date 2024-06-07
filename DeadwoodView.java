@@ -559,7 +559,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
          }
          // bRehearse
          if (!currentPlayer.getHasActed() && currentPlayer.getActiveRole() != null && currentPlayer
-               .getPracticeChips() < ((RoomWithScene) currentPlayer.getPlayerRoom()).getSceneCard().getBudget()) {
+               .getPracticeChips() < ((RoomWithScene) currentPlayer.getPlayerRoom()).getSceneCard().getBudget() - 1) {
             System.out.println("Get to rehearse");
             bRehearse.setEnabled(true);
          } else {
@@ -577,7 +577,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
          bTakeRole.setEnabled(false);
       }
       // bUpgrade
-      if (currentPlayer.getPlayerRoom() == gameState.getBoard().getRoomFromBoard("Casting")) {
+      if (currentPlayer.getPlayerRoom().equals(gameState.getBoard().getRoomFromBoard("Casting Office"))) {
          bUpgrade.setEnabled(true);
       } else {
          bUpgrade.setEnabled(false);
