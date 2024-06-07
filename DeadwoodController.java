@@ -282,7 +282,8 @@ public class DeadwoodController {
                 }
             }
         } else {
-            view.textAction.append("There is not a player acting on the scene card, so no reward is given for the scene wrapping.");
+            view.textAction.append(
+                    "There is not a player acting on the scene card, so no reward is given for the scene wrapping.");
         }
     }
 
@@ -290,15 +291,15 @@ public class DeadwoodController {
         RoomWithScene room = (RoomWithScene) gameState.getActivePlayer().getPlayerRoom();
         ArrayList<Player> playersMoved = new ArrayList<>();
         ArrayList<Role> offCardRoles = room.getOffCardRoles();
-        for (Role role: offCardRoles) {
-            if(role.getPlayerOnRole() != null) {
+        for (Role role : offCardRoles) {
+            if (role.getPlayerOnRole() != null) {
                 Player player = role.getPlayerOnRole();
                 player.setActiveRole(null);
                 playersMoved.add(player);
             }
         }
         List<Role> onCardRoles = room.getSceneCard().getRoles();
-        for (Role role: onCardRoles) {
+        for (Role role : onCardRoles) {
             if (role.getPlayerOnRole() != null) {
                 Player player = role.getPlayerOnRole();
                 player.setActiveRole(null);
@@ -310,7 +311,7 @@ public class DeadwoodController {
 
     public Boolean checkEndDay() {
         int wrappedRooms = 0;
-        for (Room room: board.getBoardLayout().values()) {
+        for (Room room : board.getBoardLayout().values()) {
             if (room instanceof RoomWithScene) {
                 RoomWithScene roomWithScene = (RoomWithScene) room;
                 if (roomWithScene.getRoomScene().getSceneWrapped()) {

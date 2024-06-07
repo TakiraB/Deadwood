@@ -475,6 +475,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             playerCheck(gameState);
          } else if (e.getSource() == bEndTurn) {
             gameState.endTurn();
+            textAction.setText("");
             textAction.append("It is now " + gameState.getActivePlayer().getName() + "'s turn!\n");
             displayCurrentPlayer(gameState.getActivePlayer());
             playerCheck(gameState);
@@ -559,7 +560,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
          // bRehearse
          if (!currentPlayer.getHasActed() && currentPlayer.getActiveRole() != null && currentPlayer
                .getPracticeChips() < ((RoomWithScene) currentPlayer.getPlayerRoom()).getSceneCard().getBudget()) {
-                  System.out.println("Get to rehearse");
+            System.out.println("Get to rehearse");
             bRehearse.setEnabled(true);
          } else {
             bRehearse.setEnabled(false);
@@ -929,11 +930,11 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       // Take input from the user about number of players
       Integer[] playerNumberOptions = { 2, 3, 4, 5, 6, 7, 8 };
       JComboBox<Integer> playerCountDropdown = new JComboBox<>(playerNumberOptions);
+      boardView.setVisible(true);
       JOptionPane.showConfirmDialog(null, playerCountDropdown, "Select number of players",
             JOptionPane.OK_CANCEL_OPTION);
       int numPlayers = (Integer) playerCountDropdown.getSelectedItem();
       boardController.initializeActivePlayers(numPlayers);
-      boardView.setVisible(true);
       boardView.setSceneCardsBoard();
       boardView.setPlayerIcons(boardController.getPlayerList());
       boardView.displayCurrentPlayer(boardController.getGameState().getActivePlayer());
