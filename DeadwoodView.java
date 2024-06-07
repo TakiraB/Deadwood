@@ -1,3 +1,4 @@
+
 // Credit to Moushumi Sharmin for the helper file
 // Imports for Swing components
 import java.awt.*;
@@ -316,15 +317,16 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       public void mouseClicked(MouseEvent e) {
 
          if (e.getSource() == bMove) {
-            for(JButton roomButton : roomButtons.values()){
-               for (MouseListener mouseListener : roomButton.getMouseListeners()){
+            for (JButton roomButton : roomButtons.values()) {
+               for (MouseListener mouseListener : roomButton.getMouseListeners()) {
                   roomButton.removeMouseListener(mouseListener);
                }
             }
             System.out.println("Move is Selected\n");
          } else if (e.getSource() == bRehearse) {
             controller.playerRehearse();
-            textAction.append(gameState.getActivePlayer().getName() + "has increased their practice chip count to: " + gameState.getActivePlayer().getPracticeChips() + "\n");
+            textAction.append(gameState.getActivePlayer().getName() + "has increased their practice chip count to: "
+                  + gameState.getActivePlayer().getPracticeChips() + "\n");
             displayCurrentPlayer(gameState.getActivePlayer());
             System.out.println("Rehearse is Selected\n");
          } else if (e.getSource() == bAct) {
@@ -357,7 +359,6 @@ public class DeadwoodView extends JFrame implements ViewInterface {
 
             // TODO: check for the ending of day
 
-
             System.out.println("Acting is Selected\n");
          } else if (e.getSource() == bTakeRole) {
             JLabel playerLabel = playerLabels.get(gameState.getActivePlayer());
@@ -385,7 +386,8 @@ public class DeadwoodView extends JFrame implements ViewInterface {
                      Area roleArea = role.getRoleArea();
                      int newX = sceneArea.getXValue() + roleArea.getXValue();
                      int newY = sceneArea.getYValue() + roleArea.getYValue();
-                     playerLabel.setBounds(newX + 3, newY + 3, playerLabel.getIcon().getIconWidth(), playerLabel.getIcon().getIconHeight());
+                     playerLabel.setBounds(newX + 3, newY + 3, playerLabel.getIcon().getIconWidth(),
+                           playerLabel.getIcon().getIconHeight());
                      role.setPlayerOnRole(gameState.getActivePlayer());
                      frame.dispose();
                   }
@@ -406,7 +408,8 @@ public class DeadwoodView extends JFrame implements ViewInterface {
                      textAction.append(gameState.getActivePlayer().getName() + "has taken the role of "
                            + gameState.getActivePlayer().getActiveRole().getRoleName());
                      Area roleArea = role.getRoleArea();
-                     playerLabel.setBounds(roleArea.getXValue() + 3, roleArea.getYValue() + 3, playerLabel.getIcon().getIconWidth(), playerLabel.getIcon().getIconHeight());
+                     playerLabel.setBounds(roleArea.getXValue() + 3, roleArea.getYValue() + 3,
+                           playerLabel.getIcon().getIconWidth(), playerLabel.getIcon().getIconHeight());
                      role.setPlayerOnRole(gameState.getActivePlayer());
                      frame.dispose();
                   }
@@ -444,8 +447,9 @@ public class DeadwoodView extends JFrame implements ViewInterface {
                               index = i;
                            }
                         }
-                        String[] colors = {"b","c","g","o","p","r","v","y"};
-                        ImageIcon newRankIcon = new ImageIcon("dice/dice/" + colors[index] + ((int) Math.floor(optionNumber / 2 + 2)) +".png");
+                        String[] colors = { "b", "c", "g", "o", "p", "r", "v", "y" };
+                        ImageIcon newRankIcon = new ImageIcon(
+                              "dice/dice/" + colors[index] + ((int) Math.floor(optionNumber / 2 + 2)) + ".png");
                         playerLabel.setIcon(newRankIcon);
                         frame.dispose();
                      }
@@ -476,7 +480,8 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       }
    }
 
-   // when mouse enters button area, create a border around the area for readability
+   // when mouse enters button area, create a border around the area for
+   // readability
    class validRoomListener extends MouseAdapter {
 
       @Override
@@ -490,16 +495,17 @@ public class DeadwoodView extends JFrame implements ViewInterface {
    class newRoomListener extends MouseAdapter {
       private String neighborName;
 
-      public newRoomListener(String neighborName){
+      public newRoomListener(String neighborName) {
          this.neighborName = neighborName;
       }
+
       @Override
       public void mouseClicked(MouseEvent e) {
          boardController.performMove(neighborName);
       }
    }
 
-// set the Scene Cards (facedown) at the beginning of the game
+   // set the Scene Cards (facedown) at the beginning of the game
    public void setSceneCardsBoard() {
       for (Room boardRoom : board.getBoardLayout().values()) {
          // get the area of each RoomWithScene
@@ -520,16 +526,18 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       }
    }
 
-   // Flip a scene card when someone enters a room and they are the first ones there
-   // Puts the appropriate scene to the room image on the board on top of the flipped one and set visible
-   public void flipSceneCard(RoomWithScene sceneRoom){
+   // Flip a scene card when someone enters a room and they are the first ones
+   // there
+   // Puts the appropriate scene to the room image on the board on top of the
+   // flipped one and set visible
+   public void flipSceneCard(RoomWithScene sceneRoom) {
       JLabel flippedCard = new JLabel();
       ImageIcon flippedCardImage = new ImageIcon(sceneRoom.getSceneCard().getImage());
       flippedCard.setIcon(flippedCardImage);
-      flippedCard.setBounds(sceneRoom.getSceneRoomArea().getXValue(), sceneRoom.getSceneRoomArea().getYValue(), 
-                           flippedCardImage.getIconWidth(), flippedCardImage.getIconHeight());
+      flippedCard.setBounds(sceneRoom.getSceneRoomArea().getXValue(), sceneRoom.getSceneRoomArea().getYValue(),
+            flippedCardImage.getIconWidth(), flippedCardImage.getIconHeight());
       flippedCard.setVisible(true);
-      bPane.add(flippedCard, Integer.valueOf(3));              
+      bPane.add(flippedCard, Integer.valueOf(3));
    }
 
    // General display message that can be called from controller
@@ -543,41 +551,45 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       JLabel playerLabel = playerLabels.get(activePlayer);
       // get the players current room and set it as a Room object
       Room currentPlayerRoom = activePlayer.getPlayerRoom();
-      
+
       Area roomArea = null;
       RoomWithScene sceneRoom = null;
       int playerCounter = 0;
 
-      // I realized I stored the areas of each room from the parser into 3 different objects
-      // rooms with scenes are RoomWithScene objects, Trailer is Room object, Casting Office is CastingOffice object
+      // I realized I stored the areas of each room from the parser into 3 different
+      // objects
+      // rooms with scenes are RoomWithScene objects, Trailer is Room object, Casting
+      // Office is CastingOffice object
       // If the room is a RoomWithScene, call Scene Room specific area getter
-      if(currentPlayerRoom instanceof RoomWithScene){
+      if (currentPlayerRoom instanceof RoomWithScene) {
          sceneRoom = (RoomWithScene) currentPlayerRoom;
          roomArea = sceneRoom.getSceneRoomArea();
          playerCounter = sceneRoom.getCounter();
-         if(playerCounter == 1){
+         if (playerCounter == 1) {
             flipSceneCard(sceneRoom);
          }
       }
       // if room is CastingOffice, call CastingOffice specific area getter
-      else if(currentPlayerRoom instanceof CastingOffice){
+      else if (currentPlayerRoom instanceof CastingOffice) {
          CastingOffice castingOfficeRoom = (CastingOffice) currentPlayerRoom;
          roomArea = castingOfficeRoom.getOfficeArea();
          playerCounter = castingOfficeRoom.getCounter();
       }
       // else it's just a room (Trailer), get the room area
-      else{
+      else {
          roomArea = currentPlayerRoom.getRoomArea();
          playerCounter = currentPlayerRoom.getCounter();
       }
 
       int iconShift = 0;
-      if (playerCounter >=2){
-         iconShift = (playerCounter-1)*30;
+      if (playerCounter >= 2) {
+         iconShift = (playerCounter - 1) * 30;
       }
 
-      // set the new bounds of the player on top of the room, and set the icon visible in that area
-      playerLabel.setBounds((roomArea.getXValue()-20)+iconShift, roomArea.getYValue(), playerLabel.getIcon().getIconWidth(), playerLabel.getIcon().getIconHeight());
+      // set the new bounds of the player on top of the room, and set the icon visible
+      // in that area
+      playerLabel.setBounds((roomArea.getXValue() - 20) + iconShift, roomArea.getYValue(),
+            playerLabel.getIcon().getIconWidth(), playerLabel.getIcon().getIconHeight());
       playerLabel.setVisible(true);
 
    }
@@ -599,135 +611,133 @@ public class DeadwoodView extends JFrame implements ViewInterface {
 
       // Rank 2 icons
       ImageIcon player1Rank2 = new ImageIcon("dice/dice/b2.png");
-      ImageIcon player2Rank2 =new ImageIcon("dice/dice/c2.png");
-      ImageIcon player3Rank2 =new ImageIcon("dice/dice/g2.png");
-      ImageIcon player4Rank2 =new ImageIcon("dice/dice/o2.png");
-      ImageIcon player5Rank2 =new ImageIcon("dice/dice/p2.png");
-      ImageIcon player6Rank2 =new ImageIcon("dice/dice/r2.png");
-      ImageIcon player7Rank2 =new ImageIcon("dice/dice/v2.png");
-      ImageIcon player8Rank2 =new ImageIcon("dice/dice/y2.png");
+      ImageIcon player2Rank2 = new ImageIcon("dice/dice/c2.png");
+      ImageIcon player3Rank2 = new ImageIcon("dice/dice/g2.png");
+      ImageIcon player4Rank2 = new ImageIcon("dice/dice/o2.png");
+      ImageIcon player5Rank2 = new ImageIcon("dice/dice/p2.png");
+      ImageIcon player6Rank2 = new ImageIcon("dice/dice/r2.png");
+      ImageIcon player7Rank2 = new ImageIcon("dice/dice/v2.png");
+      ImageIcon player8Rank2 = new ImageIcon("dice/dice/y2.png");
 
-   //If the number of players is equal to 7, give them all a rank 2 die
-     if(playerList.size() == 7){
-      playerIconList.add(new PlayerIcon(player1Rank2, 1005, 315));
-      playerIconList.add(new PlayerIcon(player2Rank2, 1050, 315));
-      playerIconList.add(new PlayerIcon(player3Rank2, 1095, 315));
-      playerIconList.add(new PlayerIcon(player4Rank2, 1140, 315));
-      playerIconList.add(new PlayerIcon(player5Rank2, 1005, 365));
-      playerIconList.add(new PlayerIcon(player6Rank2, 1050, 365));
-      playerIconList.add(new PlayerIcon(player7Rank2, 1095, 365));
-     }
-   //If number of players is equal to 8, give them all rank 2 die
-     else if(playerList.size() == 8){
-      playerIconList.add(new PlayerIcon(player1Rank2, 1005, 315));
-      playerIconList.add(new PlayerIcon(player2Rank2, 1050, 315));
-      playerIconList.add(new PlayerIcon(player3Rank2, 1095, 315));
-      playerIconList.add(new PlayerIcon(player4Rank2, 1140, 315));
-      playerIconList.add(new PlayerIcon(player5Rank2, 1005, 365));
-      playerIconList.add(new PlayerIcon(player6Rank2, 1050, 365));
-      playerIconList.add(new PlayerIcon(player7Rank2, 1095, 365));
-      playerIconList.add(new PlayerIcon(player8Rank2, 1140, 365));
-     }
-   //Otherwise make all the player icons even if we don't use them all with rank 1
-     else{
-      playerIconList.add(new PlayerIcon(player1Rank1, 1005, 315));
-      playerIconList.add(new PlayerIcon(player2Rank1, 1050, 315));
-      playerIconList.add(new PlayerIcon(player3Rank1, 1095, 315));
-      playerIconList.add(new PlayerIcon(player4Rank1, 1140, 315));
-      playerIconList.add(new PlayerIcon(player5Rank1, 1005, 365));
-      playerIconList.add(new PlayerIcon(player6Rank1, 1050, 365));
-      playerIconList.add(new PlayerIcon(player7Rank1, 1095, 365));
-      playerIconList.add(new PlayerIcon(player8Rank1, 1140, 365));
-     }
+      // If the number of players is equal to 7, give them all a rank 2 die
+      if (playerList.size() == 7) {
+         playerIconList.add(new PlayerIcon(player1Rank2, 1005, 315));
+         playerIconList.add(new PlayerIcon(player2Rank2, 1050, 315));
+         playerIconList.add(new PlayerIcon(player3Rank2, 1095, 315));
+         playerIconList.add(new PlayerIcon(player4Rank2, 1140, 315));
+         playerIconList.add(new PlayerIcon(player5Rank2, 1005, 365));
+         playerIconList.add(new PlayerIcon(player6Rank2, 1050, 365));
+         playerIconList.add(new PlayerIcon(player7Rank2, 1095, 365));
+      }
+      // If number of players is equal to 8, give them all rank 2 die
+      else if (playerList.size() == 8) {
+         playerIconList.add(new PlayerIcon(player1Rank2, 1005, 315));
+         playerIconList.add(new PlayerIcon(player2Rank2, 1050, 315));
+         playerIconList.add(new PlayerIcon(player3Rank2, 1095, 315));
+         playerIconList.add(new PlayerIcon(player4Rank2, 1140, 315));
+         playerIconList.add(new PlayerIcon(player5Rank2, 1005, 365));
+         playerIconList.add(new PlayerIcon(player6Rank2, 1050, 365));
+         playerIconList.add(new PlayerIcon(player7Rank2, 1095, 365));
+         playerIconList.add(new PlayerIcon(player8Rank2, 1140, 365));
+      }
+      // Otherwise make all the player icons even if we don't use them all with rank 1
+      else {
+         playerIconList.add(new PlayerIcon(player1Rank1, 1005, 315));
+         playerIconList.add(new PlayerIcon(player2Rank1, 1050, 315));
+         playerIconList.add(new PlayerIcon(player3Rank1, 1095, 315));
+         playerIconList.add(new PlayerIcon(player4Rank1, 1140, 315));
+         playerIconList.add(new PlayerIcon(player5Rank1, 1005, 365));
+         playerIconList.add(new PlayerIcon(player6Rank1, 1050, 365));
+         playerIconList.add(new PlayerIcon(player7Rank1, 1095, 365));
+         playerIconList.add(new PlayerIcon(player8Rank1, 1140, 365));
+      }
 
-   //Iterate through the players and get the player objects and assign them to appropriate JLabels
-   // Put them in the hashmap for when we need them
-     for(int i=0; i< playerList.size(); i++){
-      // Get the Players from the input and the initialized PlayerIcons in the ArrayList associated with them
-      Player newPlayer = playerList.get(i);
-      PlayerIcon newPlayerInfo = playerIconList.get(i);
-      // Create labels for all of the Player Icons, grab the bounds from the objects
-      JLabel playerLabel = new JLabel();
-      playerLabel.setIcon(newPlayerInfo.getPlayerIcon());
-      playerLabel.setBounds(newPlayerInfo.getXCord(), newPlayerInfo.getYCord(), newPlayerInfo.getPlayerIcon().getIconWidth(), newPlayerInfo.getPlayerIcon().getIconHeight());
-      playerLabel.setVisible(true);
-      // Add it to the frame and add the players to our HashMap
-      bPane.add(playerLabel, Integer.valueOf(3));
-      playerLabels.put(newPlayer, playerLabel);
-      playerIcons.put(newPlayer, newPlayerInfo);
-     }
+      // Iterate through the players and get the player objects and assign them to
+      // appropriate JLabels
+      // Put them in the hashmap for when we need them
+      for (int i = 0; i < playerList.size(); i++) {
+         // Get the Players from the input and the initialized PlayerIcons in the
+         // ArrayList associated with them
+         Player newPlayer = playerList.get(i);
+         PlayerIcon newPlayerInfo = playerIconList.get(i);
+         // Create labels for all of the Player Icons, grab the bounds from the objects
+         JLabel playerLabel = new JLabel();
+         playerLabel.setIcon(newPlayerInfo.getPlayerIcon());
+         playerLabel.setBounds(newPlayerInfo.getXCord(), newPlayerInfo.getYCord(),
+               newPlayerInfo.getPlayerIcon().getIconWidth(), newPlayerInfo.getPlayerIcon().getIconHeight());
+         playerLabel.setVisible(true);
+         // Add it to the frame and add the players to our HashMap
+         bPane.add(playerLabel, Integer.valueOf(3));
+         playerLabels.put(newPlayer, playerLabel);
+         playerIcons.put(newPlayer, newPlayerInfo);
+      }
    }
 
-   // Retrieving the die color based on the letter in the image pathway for displaying on the board
-   public String getDieColor(Player currentPlayer){
+   // Retrieving the die color based on the letter in the image pathway for
+   // displaying on the board
+   public String getDieColor(Player currentPlayer) {
       String color = "Nothing";
       PlayerIcon playerIcon = playerIcons.get(currentPlayer);
       ImageIcon playerImage = playerIcon.getPlayerIcon();
       // getDescription retrieves the path to the image "dice/dice/whatever1.png"
       String iconImagePath = playerImage.getDescription();
-      if(iconImagePath.contains("b")){
+      if (iconImagePath.contains("b")) {
          color = "Blue";
-      }
-      else if(iconImagePath.contains("c")){
+      } else if (iconImagePath.contains("c")) {
          color = "Cyan";
-      }
-      else if(iconImagePath.contains("g")){
+      } else if (iconImagePath.contains("g")) {
          color = "Green";
-      }
-      else if(iconImagePath.contains("o")){
+      } else if (iconImagePath.contains("o")) {
          color = "Orange";
-      }
-      else if(iconImagePath.contains("p")){
+      } else if (iconImagePath.contains("p")) {
          color = "Pink";
-      }
-      else if(iconImagePath.contains("r")){
+      } else if (iconImagePath.contains("r")) {
          color = "Red";
-      }
-      else if(iconImagePath.contains("v")){
+      } else if (iconImagePath.contains("v")) {
          color = "Violet";
-      }
-      else{
+      } else {
          color = "Yellow";
       }
       return color;
    }
 
    // display the current players stats in the activePlayer textarea on the board
-   // Displays all information pulled from Player object, and also their associated die color
-   public void displayCurrentPlayer(Player currentPlayer){
+   // Displays all information pulled from Player object, and also their associated
+   // die color
+   public void displayCurrentPlayer(Player currentPlayer) {
       String name = currentPlayer.getName();
       int rank = currentPlayer.getRank();
       int dollars = currentPlayer.getDollars();
       int credits = currentPlayer.getCredits();
       int practiceChips = currentPlayer.getPracticeChips();
       String currentRole = "";
-      if(currentPlayer.getActiveRole() == null){
+      if (currentPlayer.getActiveRole() == null) {
          currentRole = "None";
-      }
-      else{
+      } else {
          currentRole = currentPlayer.getActiveRole().getRoleName();
       }
       // currentRole = currentPlayer.getActiveRole().getRoleName();
       String color = getDieColor(currentPlayer);
       String currentRoom = currentPlayer.getPlayerRoom().getName();
-      String playerStats = String.format(" Name: %s\n Rank: %d\n Dollars: %d\n Credits: %d\n Practice Chips: %d\n Active Role: %s\n Color: %s\n Current Room: %s",
-                                          name, rank, dollars, credits, practiceChips, currentRole, color, currentRoom);
+      String playerStats = String.format(
+            " Name: %s\n Rank: %d\n Dollars: %d\n Credits: %d\n Practice Chips: %d\n Active Role: %s\n Color: %s\n Current Room: %s",
+            name, rank, dollars, credits, practiceChips, currentRole, color, currentRoom);
       activePlayer.setText(playerStats);
    }
 
-   public void displayCurrentScene(){
+   public void displayCurrentScene() {
       Player currentPlayer = boardController.getGameState().getActivePlayer();
       Room currentRoom = currentPlayer.getPlayerRoom();
-      if(currentRoom instanceof RoomWithScene){
+      if (currentRoom instanceof RoomWithScene) {
          RoomWithScene currentSceneRoom = (RoomWithScene) currentRoom;
          SceneCard activeSceneCard = currentSceneRoom.getSceneCard();
          String sceneName = activeSceneCard.getName();
          String sceneDescription = activeSceneCard.getDescription();
          int sceneBudget = activeSceneCard.getBudget();
-         String activeSceneInfo = String.format(" Scene Name: %s\n Description: %s\n Budget: %d million\n", sceneName, sceneDescription, sceneBudget);
+         String activeSceneInfo = String.format(" Scene Name: %s\n Description: %s\n Budget: %d million\n", sceneName,
+               sceneDescription, sceneBudget);
          sceneArea.setText(activeSceneInfo);
-      }
-      else{
+      } else {
          sceneArea.setText("No scene in the room");
       }
    }
@@ -750,15 +760,15 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             neighborButton.addMouseListener(new newRoomListener(neighborName));
          }
          // else{
-         //    // If not a valid neighbor to move to, disable the button
-         //    neighborButton.setBorder(BorderFactory.createEmptyBorder());
-         //    neighborButton.setEnabled(false);
+         // // If not a valid neighbor to move to, disable the button
+         // neighborButton.setBorder(BorderFactory.createEmptyBorder());
+         // neighborButton.setEnabled(false);
          // }
       }
    }
 
-   public void resetRoomButtons(){
-      for(JButton roomButton : roomButtons.values()){
+   public void resetRoomButtons() {
+      for (JButton roomButton : roomButtons.values()) {
          roomButton.setEnabled(false);
          roomButton.setBorder(BorderFactory.createEmptyBorder());
       }

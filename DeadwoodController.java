@@ -23,8 +23,8 @@ public class DeadwoodController {
 
     }
 
-    public void setView(DeadwoodView view){
-        this.view= view;
+    public void setView(DeadwoodView view) {
+        this.view = view;
     }
 
     // set up the board
@@ -123,10 +123,11 @@ public class DeadwoodController {
 
     // move action listener
     // Move case
-    public void moveOption(){
+    public void moveOption() {
 
         Player activePlayer = gameState.getActivePlayer();
-        // System.out.println("Move option triggered for player: " + activePlayer.getName());
+        // System.out.println("Move option triggered for player: " +
+        // activePlayer.getName());
 
         if (activePlayer.getActiveRole() != null) {
             view.displayGameMessage("You are currently in a Role, you cannot move until your role is completed!");
@@ -141,10 +142,10 @@ public class DeadwoodController {
         view.showValidRooms(neighbors);
     }
 
-    public void performMove(String neighborName){
+    public void performMove(String neighborName) {
         Player activePlayer = gameState.getActivePlayer();
 
-        if(activePlayer.getHasMoved()){
+        if (activePlayer.getHasMoved()) {
             view.displayGameMessage("You have already moved this turn.");
             return;
         }
@@ -167,11 +168,9 @@ public class DeadwoodController {
             view.displayCurrentPlayer(activePlayer);
             view.displayCurrentScene();
         } else {
-                view.displayGameMessage("This move is not valid, either it doesn't exist or not adjacent.");
+            view.displayGameMessage("This move is not valid, either it doesn't exist or not adjacent.");
         }
     }
-
-    
 
     // act action listener
     public boolean playerAct() {
@@ -182,7 +181,8 @@ public class DeadwoodController {
         Random random = new Random();
         int rollValue = random.nextInt(6) + 1;
         int total = rollValue + pChips;
-        view.textAction.append("You rolled a " + rollValue + " with " + pChips + "practice chips for a total of " + total);
+        view.textAction
+                .append("You rolled a " + rollValue + " with " + pChips + "practice chips for a total of " + total);
         player.setHasActed(true);
         return total >= budget;
     }
@@ -216,21 +216,11 @@ public class DeadwoodController {
 
     // TODO: add logic for wrapping scene
     public boolean wrapSceneCheck() {
-        
-
-
-
-
-
 
         return true;
     }
 
-
-
     // TODO: add logic for ending the day
-
-
 
     // rehearse action listener
     public void playerRehearse() {
@@ -246,9 +236,11 @@ public class DeadwoodController {
         Room tempCastingOffice = board.getBoardLayout().get("Casting Office");
         CastingOffice castingOfficeUpgrades = (CastingOffice) tempCastingOffice;
         // double ArrayList of objects
-        // the order is rank 2 dollar, rank 2 credit, rank 3 dollar, rank 3 credit... rank 6 dollar, rank 6 credit,
+        // the order is rank 2 dollar, rank 2 credit, rank 3 dollar, rank 3 credit...
+        // rank 6 dollar, rank 6 credit,
         // first value in object: 0 or 1 if the player can upgrade to that rank
-        // second value in object: String, rank *rank* costs *amount* (dollars or credits)
+        // second value in object: String, rank *rank* costs *amount* (dollars or
+        // credits)
         // initializing of arraylist
         ArrayList<ArrayList<Object>> rankInfoAndCost = new ArrayList<ArrayList<Object>>();
         for (int i = 0; i < castingOfficeUpgrades.getUpgradeChoices().size(); i++) {
@@ -265,16 +257,18 @@ public class DeadwoodController {
             int amountRequired = currentUpgrade.getUpgradeAmount();
             int temp = i * 2;
             ArrayList<Object> tempArray = new ArrayList<Object>();
-            // checking to make sure player is not too high of a level or does not have enough credits
+            // checking to make sure player is not too high of a level or does not have
+            // enough credits
             if (currentPlayer.getDollars() >= amountRequired && currentPlayer.getRank() < rank) {
                 tempArray.add(1);
             } else {
                 tempArray.add(0);
             }
-            tempArray.add("Rank " + currentUpgrade.getUpgradeLevel() + " costs " + currentUpgrade.getUpgradeAmount() + " " + currentUpgrade.getCurrencyType() + "s");
+            tempArray.add("Rank " + currentUpgrade.getUpgradeLevel() + " costs " + currentUpgrade.getUpgradeAmount()
+                    + " " + currentUpgrade.getCurrencyType() + "s");
             rankInfoAndCost.set(temp, tempArray);
         }
-        
+
         // Adds values to rankInfoAndCost for all the credit upgrades
         for (int i = 5; i < 10; i++) {
             Upgrades currentUpgrade = castingOfficeUpgrades.getUpgradeChoices().get(i);
@@ -282,13 +276,15 @@ public class DeadwoodController {
             int amountRequired = currentUpgrade.getUpgradeAmount();
             int temp = ((i - 5) * 2) + 1;
             ArrayList<Object> tempArray = new ArrayList<Object>();
-            // checking to make sure player is not too high of a level or does not have enough credits
+            // checking to make sure player is not too high of a level or does not have
+            // enough credits
             if (currentPlayer.getCredits() >= amountRequired && currentPlayer.getRank() < rank) {
                 tempArray.add(1);
             } else {
                 tempArray.add(0);
             }
-            tempArray.add("Rank " + currentUpgrade.getUpgradeLevel() + " costs " + currentUpgrade.getUpgradeAmount() + " " + currentUpgrade.getCurrencyType() + "s");
+            tempArray.add("Rank " + currentUpgrade.getUpgradeLevel() + " costs " + currentUpgrade.getUpgradeAmount()
+                    + " " + currentUpgrade.getCurrencyType() + "s");
             rankInfoAndCost.set(temp, tempArray);
         }
         return rankInfoAndCost;
@@ -298,14 +294,13 @@ public class DeadwoodController {
         gameState.getActivePlayer().setPlayerRank(newRank);
     }
 
-
     // taking role action listener
     public List<Role> availableOnCardRoles() {
         Player currentPlayer = gameState.getActivePlayer();
         RoomWithScene currentRoom = (RoomWithScene) currentPlayer.getPlayerRoom();
         List<Role> onCardRoles = currentRoom.getSceneCard().getRoles();
         List<Role> availableRoles = new ArrayList<Role>();
-        for (Role role: onCardRoles) {
+        for (Role role : onCardRoles) {
             if (role.getRank() <= currentPlayer.getRank() && role.getPlayerOnRole() == null) {
                 availableRoles.add(role);
             }
@@ -318,7 +313,7 @@ public class DeadwoodController {
         RoomWithScene currentRoom = (RoomWithScene) currentPlayer.getPlayerRoom();
         ArrayList<Role> offCardRoles = currentRoom.getOffCardRoles();
         List<Role> availableRoles = new ArrayList<Role>();
-        for (Role role: offCardRoles) {
+        for (Role role : offCardRoles) {
             if (role.getRank() <= currentPlayer.getRank() && role.getPlayerOnRole() == null) {
                 availableRoles.add(role);
             }
@@ -332,14 +327,12 @@ public class DeadwoodController {
     }
 
     public void endTurnOption() {
-    gameState.endTurn();
-    view.displayCurrentPlayer(gameState.getActivePlayer());
-    view.displayCurrentScene();
-    view.resetRoomButtons();
+        gameState.endTurn();
+        view.displayCurrentPlayer(gameState.getActivePlayer());
+        view.displayCurrentScene();
+        view.resetRoomButtons();
     }
     // need some kind of start game method
-
-
 
     public ArrayList<Player> getPlayerList() {
         return playerList;
