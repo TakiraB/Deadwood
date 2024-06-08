@@ -5,9 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import org.w3c.dom.Document;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -297,7 +295,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       // Create text area for action log
       textAction = new JTextArea();
       textAction.setEditable(false);
-      textAction.setBounds(icon.getIconWidth() + 15, 650, 250, 250);
+      textAction.setBounds(icon.getIconWidth() + 15, 650, 300, 250);
       textAction.setBorder(BorderFactory.createLineBorder(Color.BLACK));
       textAction.setLineWrap(true);
       bPane.add(textAction, Integer.valueOf(2));
@@ -328,7 +326,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             playerCheck(gameState);
          } else if (e.getSource() == bRehearse) { // listener for rehearse
             controller.playerRehearse();
-            textAction.append(gameState.getActivePlayer().getName() + "has increased their practice chip count to: "
+            textAction.append(gameState.getActivePlayer().getName() + " has increased their practice chip count to: "
                   + gameState.getActivePlayer().getPracticeChips() + "\n");
             displayCurrentPlayer(gameState.getActivePlayer());
             playerCheck(gameState);
@@ -436,7 +434,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
                      // give player the role thats selected
                      controller.giveRoleToPlayer(role);
                      textAction.append(gameState.getActivePlayer() + " has taken the role of "
-                           + gameState.getActivePlayer().getActiveRole().getRoleName());
+                           + gameState.getActivePlayer().getActiveRole().getRoleName() + "\n");
                      // setting the players die to the appropriate role location
                      Area roleArea = role.getRoleArea();
                      int newX = sceneArea.getXValue() + roleArea.getXValue();
@@ -463,8 +461,8 @@ public class DeadwoodView extends JFrame implements ViewInterface {
                   public void actionPerformed(ActionEvent e) {
                      // give player role thats selected
                      controller.giveRoleToPlayer(role);
-                     textAction.append(gameState.getActivePlayer().getName() + "has taken the role of "
-                           + gameState.getActivePlayer().getActiveRole().getRoleName());
+                     textAction.append(gameState.getActivePlayer().getName() + " has taken the role of "
+                           + gameState.getActivePlayer().getActiveRole().getRoleName() + "\n");
                      // moving the player icon to the role location
                      Area roleArea = role.getRoleArea();
                      playerLabel.setBounds(roleArea.getXValue() + 3, roleArea.getYValue() + 3,
@@ -511,7 +509,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
                   button.addActionListener(new ActionListener() {
                      public void actionPerformed(ActionEvent e) {
                         activePlayer.setPlayerRank((int) Math.floor(optionNumber / 2 + 2));
-                        textAction.append(activePlayer.getName() + " is now rank " + activePlayer.getRank());
+                        textAction.append(activePlayer.getName() + " is now rank " + activePlayer.getRank() + "\n");
                         int index = -1;
                         for (int i = 0; i < gameState.getPlayers().size(); i++) {
                            Player player = gameState.getPlayers().get(i);
@@ -928,39 +926,5 @@ public class DeadwoodView extends JFrame implements ViewInterface {
          roomButton.setEnabled(false);
          roomButton.setBorder(BorderFactory.createEmptyBorder());
       }
-   }
-
-   // ------------------------------------------
-   // MAIN FOR TESTING
-   // ------------------------------------------
-
-   public static void main(String[] args) {
-      Document doc = null;
-      parseBoard parsingBoard = new parseBoard();
-      Board board = new Board();
-      try {
-         doc = parsingBoard.getDocFromFile("board.xml");
-         board = parsingBoard.readBoardData(doc);
-      } catch (Exception e) {
-         System.out.println("Error = " + e);
-      }
-
-      DeadwoodController boardController = new DeadwoodController(board);
-      DeadwoodView boardView = new DeadwoodView(board, boardController);
-
-      // Take input from the user about number of players
-      Integer[] playerNumberOptions = { 2, 3, 4, 5, 6, 7, 8 };
-      JComboBox<Integer> playerCountDropdown = new JComboBox<>(playerNumberOptions);
-      boardView.setVisible(true);
-      JOptionPane.showConfirmDialog(null, playerCountDropdown, "Select number of players",
-            JOptionPane.OK_CANCEL_OPTION);
-      int numPlayers = (Integer) playerCountDropdown.getSelectedItem();
-      boardController.initializeActivePlayers(numPlayers);
-      boardView.setSceneCardsBoard();
-      boardView.setPlayerIcons(boardController.getPlayerList());
-      boardView.displayCurrentPlayer(boardController.getGameState().getActivePlayer());
-      boardController.setUpSceneCards();
-      boardView.takesInitialization(boardController.getGameState());
-      boardView.playerCheck(boardController.getGameState());
    }
 }

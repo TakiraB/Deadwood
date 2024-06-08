@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
@@ -33,17 +32,17 @@ public class DeadwoodController {
     }
 
     // set up the board
-    public void setUpBoard() {
-        Document doc = null;
-        parseBoard parsingBoard = new parseBoard();
-        Board board = new Board();
-        try {
-            doc = parsingBoard.getDocFromFile("board.xml");
-            board = parsingBoard.readBoardData(doc);
-        } catch (Exception e) {
-            System.out.println("Error = " + e);
-        }
-    }
+    // public void setUpBoard() {
+    //     Document doc = null;
+    //     parseBoard parsingBoard = new parseBoard();
+    //     Board board = new Board();
+    //     try {
+    //         doc = parsingBoard.getDocFromFile("board.xml");
+    //         board = parsingBoard.readBoardData(doc);
+    //     } catch (Exception e) {
+    //         System.out.println("Error = " + e);
+    //     }
+    // }
 
     // setup the scene cards for each room
     public void setUpSceneCards() {
@@ -63,7 +62,7 @@ public class DeadwoodController {
         // giving each RoomWithScene a sceneCard
         board.sceneCardDistribution(numbers, cards, 1);
 
-        GamePieceManager gamePieceManager = new GamePieceManager(6, cards);
+        // GamePieceManager gamePieceManager = new GamePieceManager(6, cards);
     }
 
     // Create Player objects based on the number of players
@@ -171,6 +170,7 @@ public class DeadwoodController {
             view.updatePlayerRoom(activePlayer);
             view.displayCurrentPlayer(activePlayer);
             view.displayCurrentScene();
+            view.resetRoomButtons();
         } else {
             view.displayGameMessage("This move is not valid, either it doesn't exist or not adjacent.");
         }
