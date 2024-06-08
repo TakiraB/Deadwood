@@ -177,6 +177,7 @@ public class DeadwoodController {
     }
 
     // act action listener
+    // returns whether or not the player acted successfully
     public boolean playerAct() {
         Player player = gameState.getActivePlayer();
         RoomWithScene room = (RoomWithScene) player.getPlayerRoom();
@@ -186,15 +187,17 @@ public class DeadwoodController {
         int rollValue = random.nextInt(6) + 1;
         int total = rollValue + pChips;
         view.textAction
-                .append("You rolled a " + rollValue + " with " + pChips + "practice chips for a total of " + total);
+                .append("You rolled a " + rollValue + " with " + pChips + " practice chips for a total of " + total);
         player.setHasActed(true);
         return total >= budget;
     }
 
+    // return if player is in a role on card
     public boolean inStarredRole() {
         return gameState.getActivePlayer().getActiveRole().getStarredRole();
     }
 
+    // rewards the player for successfully acting dependent on their role
     public void reward() {
         Player currentPlayer = gameState.getActivePlayer();
         if (inStarredRole()) {
@@ -208,6 +211,7 @@ public class DeadwoodController {
         }
     }
 
+    // set the next take of a room to be completed and returns the index of that take
     public int takesAppear() {
         RoomWithScene room = (RoomWithScene) gameState.getActivePlayer().getPlayerRoom();
         ArrayList<Takes> takesList = room.getTakesList();
@@ -220,6 +224,7 @@ public class DeadwoodController {
         return index;
     }
 
+    // gives rewards to players on failure of act dependent to their role
     public void fail() {
         Player currentPlayer = gameState.getActivePlayer();
         if (!inStarredRole()) {
@@ -230,6 +235,9 @@ public class DeadwoodController {
         }
     }
 
+    // checks if the scene that is currently being acted on should wrap
+    // if so does the necessary data changes
+    // returns if the scene wraps or not
     public boolean wrapSceneCheck() {
         RoomWithScene room = (RoomWithScene) gameState.getActivePlayer().getPlayerRoom();
         for (Takes take : room.getTakesList()) {
@@ -242,16 +250,19 @@ public class DeadwoodController {
         return true;
     }
 
+    // rewards players on the wrapping of the scene if there should be given rewards
     public void wrappedReward() {
         // check if player on card, if so give reward if not do nothing but explain why
         RoomWithScene room = (RoomWithScene) gameState.getActivePlayer().getPlayerRoom();
         List<Role> onCardRoles = room.getSceneCard().getRoles();
         ArrayList<Player> playerOnCard = new ArrayList<>();
+        // finds all the players in on card acting roles
         for (Role starredRole : onCardRoles) {
             if (starredRole.getPlayerOnRole() != null) {
                 playerOnCard.add(starredRole.getPlayerOnRole());
             }
         }
+        // if there is a player on card when the scene wraps, give out the bonuses
         if (playerOnCard.size() > 0) {
             // get and sort the rolls for the bonuses
             int budget = room.getSceneCard().getBudget();
@@ -263,7 +274,7 @@ public class DeadwoodController {
             }
             Collections.sort(rollResults, Comparator.reverseOrder());
 
-            // give the rewards to the correct players
+            // give the rewards to the players in on card roles
             int rewardReceiverIndex = 0;
             for (Integer reward : rollResults) {
                 if (rewardReceiverIndex > playerOnCard.size()) {
@@ -287,6 +298,8 @@ public class DeadwoodController {
         }
     }
 
+    // changes the data for all players to move them off their roles and back to the room
+    // returns all the players that their data was moved so the visual can be updated
     public ArrayList<Player> wrappedPlayerMove() {
         RoomWithScene room = (RoomWithScene) gameState.getActivePlayer().getPlayerRoom();
         ArrayList<Player> playersMoved = new ArrayList<>();
@@ -309,7 +322,10 @@ public class DeadwoodController {
         return playersMoved;
     }
 
+    // checking if the day needs to be ended
+    // return if the day has ended
     public Boolean checkEndDay() {
+        // finds all the wrapped rooms
         int wrappedRooms = 0;
         for (Room room : board.getBoardLayout().values()) {
             if (room instanceof RoomWithScene) {
@@ -319,7 +335,8 @@ public class DeadwoodController {
                 }
             }
         }
-        System.out.println(wrappedRooms);
+        // checks if the correct number of rooms is wrapped to end day
+        // moves all players back to the trailer and resets all other stats
         if (wrappedRooms == 9) {
             gameState.endDay(board, numbers, cards, gameState.getCurrentDayCount());
             for (Player player : playerList) {
@@ -343,6 +360,11 @@ public class DeadwoodController {
     }
 
     // upgrade action listener
+    // returns a double ArrayList of objects
+    // the order of the list is rank 2 dollar, rank 2 credit, rank 3 dollar, rank 3 credit...
+    // first value in object: 0 or 1 if the player can upgrade to that rank
+    // second value in object: String, rank *rank* costs *amount* (dollars or
+    // credits)
     public ArrayList<ArrayList<Object>> availableUpgrades() {
         Player currentPlayer = gameState.getActivePlayer();
         Room tempCastingOffice = board.getBoardLayout().get("Casting Office");
@@ -402,11 +424,13 @@ public class DeadwoodController {
         return rankInfoAndCost;
     }
 
+    // sets the rank of the active player to the given rank
     public void upgradePlayerRank(int newRank) {
         gameState.getActivePlayer().setPlayerRank(newRank);
     }
 
     // taking role action listener
+    // finds all on card roles that the active player can take
     public List<Role> availableOnCardRoles() {
         Player currentPlayer = gameState.getActivePlayer();
         RoomWithScene currentRoom = (RoomWithScene) currentPlayer.getPlayerRoom();
@@ -420,6 +444,7 @@ public class DeadwoodController {
         return availableRoles;
     }
 
+    // finds all off card roles that the active player can take
     public List<Role> availableOffCardRoles() {
         Player currentPlayer = gameState.getActivePlayer();
         RoomWithScene currentRoom = (RoomWithScene) currentPlayer.getPlayerRoom();
@@ -433,18 +458,19 @@ public class DeadwoodController {
         return availableRoles;
     }
 
+    // give the active player the given role and make sure that the view is updated
     public void giveRoleToPlayer(Role role) {
         gameState.getActivePlayer().setActiveRole(role);
         view.displayCurrentPlayer(gameState.getActivePlayer());
     }
 
+    // end turn action listener
     public void endTurnOption() {
         gameState.endTurn();
         view.displayCurrentPlayer(gameState.getActivePlayer());
         view.displayCurrentScene();
         view.resetRoomButtons();
     }
-    // need some kind of start game method
 
     public ArrayList<Player> getPlayerList() {
         return playerList;
