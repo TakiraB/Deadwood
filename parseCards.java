@@ -1,15 +1,4 @@
-// Parsing Cards
-// SCENECARD CLASS
-// Each Card has a:
-// Name
-// Associated image file
-// Budget (in millions)
-// Scene (and number)
-// ROLE CLASS
-// List of Parts, which has:
-// Rank
-// Associated area
-// Line for each part
+
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -70,7 +59,7 @@ public class parseCards {
                 // cardScene.getAttributes().getNamedItem("number").getNodeValue();
                 // String sceneDescription = cardScene.getTextContent().trim();
                 sceneNumber = Integer.parseInt(cardScene.getAttributes().getNamedItem("number").getNodeValue());
-                sceneDescription = cardScene.getTextContent().trim();
+                sceneDescription = cardScene.getTextContent().replace("\n", " ").replaceAll(" +", " ");
             }
 
             // Create an ArrayList of Role cards to hold Role specific information
@@ -90,10 +79,6 @@ public class parseCards {
                 Area newStarredRoleArea = null;
                 for (int a = 0; a < cardSceneAreaList.getLength(); a++) {
                     Element starredPartArea = (Element) cardSceneAreaList.item(a);
-                    // String x = starredPartArea.getAttribute("x");
-                    // String y = starredPartArea.getAttribute("y");
-                    // String h = starredPartArea.getAttribute("h");
-                    // String w = starredPartArea.getAttribute("w");
                     int x = Integer.parseInt(starredPartArea.getAttributes().getNamedItem("x").getNodeValue());
                     int y = Integer.parseInt(starredPartArea.getAttributes().getNamedItem("y").getNodeValue());
                     int h = Integer.parseInt(starredPartArea.getAttributes().getNamedItem("h").getNodeValue());
