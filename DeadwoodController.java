@@ -379,7 +379,7 @@ public class DeadwoodController {
             playerTotals.add(totalPoints);
             results.add(playerTotals);
         }
-        results.sort((o1, o2) -> Integer.compare((int) ((ArrayList<Object>) o2).get(1), (int) ((ArrayList<Object>) o1).get(1)));
+        results.sort((o1, o2) -> Integer.compare((int) ((ArrayList) o2).get(1), (int) ((ArrayList) o1).get(1)));
         return results;
     }
 
