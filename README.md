@@ -15,7 +15,7 @@ You play against your friends to succeed in as many sets across the board as you
 ## Setup
 
 1. Download or clone the repository containing the Java files.
-2. Ensure you have the necessary XML files (`board.xml` and `cards.xml`) in the project directory. They should be located within the directory with the rest of the files.
+2. Ensure you have the necessary XML files (`board.xml` and `cards.xml`) in the project directory. They should be located within the directory with the rest of the files. Ensure you also have the images folders.
 
 ## How to Compile and Play
 
@@ -30,7 +30,7 @@ To compile and run the game, follow these steps:
    ```
 4. Run the main game loop (Deadwood.java) by running this:
    ```
-   java Deadwood.java
+   java Deadwood
 
    ```
 5. Have fun!
