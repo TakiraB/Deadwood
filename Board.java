@@ -48,6 +48,9 @@ public class Board {
             if (room instanceof RoomWithScene) {
                 RoomWithScene currentRoomWithScene = (RoomWithScene) room;
                 currentRoomWithScene.setSceneCard(cards.get(numbers.get(temp)));
+                currentRoomWithScene.setActiveScene(false);
+                currentRoomWithScene.getRoomScene().setSceneWrapped(false);
+                currentRoomWithScene.setCounter(0);
                 temp++;
             }
         }

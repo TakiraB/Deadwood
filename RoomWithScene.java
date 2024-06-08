@@ -118,4 +118,8 @@ public class RoomWithScene extends Room {
     public int getCounter(){
         return playerCounter;
     }
+
+    public void setCounter(int value){
+        this.playerCounter = value;
+    }
 }

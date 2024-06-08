@@ -2,6 +2,7 @@ import org.w3c.dom.Document;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -245,6 +246,16 @@ public class DeadwoodController {
                 return false;
             }
         }
+        for (Role role: room.getOffCardRoles()) {
+            if (role.getPlayerOnRole() != null) {
+                role.getPlayerOnRole().setPracticeChips(0);
+            }
+        }
+        for (Role role: room.getSceneCard().getRoles()) {
+            if (role.getPlayerOnRole() != null) {
+                role.getPlayerOnRole().setPracticeChips(0);
+            }
+        }
         room.getRoomScene().setSceneCardActive(false);
         room.getRoomScene().setSceneWrapped(true);
         return true;
@@ -255,11 +266,18 @@ public class DeadwoodController {
         // check if player on card, if so give reward if not do nothing but explain why
         RoomWithScene room = (RoomWithScene) gameState.getActivePlayer().getPlayerRoom();
         List<Role> onCardRoles = room.getSceneCard().getRoles();
-        ArrayList<Player> playerOnCard = new ArrayList<>();
         // finds all the players in on card acting roles
+        ArrayList<Player> playerOnCard = new ArrayList<>();
         for (Role starredRole : onCardRoles) {
             if (starredRole.getPlayerOnRole() != null) {
                 playerOnCard.add(starredRole.getPlayerOnRole());
+            }
+        }
+        // finds all the player in off card acting roles
+        ArrayList<Player> playerOffCard = new ArrayList<>();
+        for (Role offCardRole : room.getOffCardRoles()) {
+            if (offCardRole.getPlayerOnRole() != null) {
+                playerOffCard.add(offCardRole.getPlayerOnRole());
             }
         }
         // if there is a player on card when the scene wraps, give out the bonuses
@@ -286,11 +304,8 @@ public class DeadwoodController {
             }
 
             // give rewards to the off card roles
-            for (Role offCardRole : room.getOffCardRoles()) {
-                Player offCardPlayer = offCardRole.getPlayerOnRole();
-                if (offCardPlayer != null) {
-                    offCardPlayer.setDollars(offCardPlayer.getDollars() + offCardRole.getRank());
-                }
+            for (Player player: playerOffCard) {
+                player.setDollars(player.getDollars() + player.getActiveRole().getRank());
             }
         } else {
             view.textAction.append(
@@ -338,17 +353,49 @@ public class DeadwoodController {
         // checks if the correct number of rooms is wrapped to end day
         // moves all players back to the trailer and resets all other stats
         if (wrappedRooms == 9) {
-            gameState.endDay(board, numbers, cards, gameState.getCurrentDayCount());
-            for (Player player : playerList) {
-                player.setActiveRole(null);
-                player.setHasActed(false);
-                player.setHasMoved(false);
-                player.setPlayerRoom(board.getRoomFromBoard("trailer"));
-                player.setPracticeChips(0);
-                return true;
-            }
+            return true;
         }
         return false;
+    }
+
+    // checking to see if the game should end
+    public Boolean checkEndGame() {
+        if (gameState.getCurrentDayCount() + 1 == gameState.getMaxDayCount()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // get the player and the players total points\
+    // return sorted arraylist of the total points compared
+    public ArrayList<Object> endGameResults() {
+        ArrayList<Object> results = new ArrayList<>();
+        for (Player player: playerList) {
+            ArrayList<Object> playerTotals = new ArrayList<>();
+            Integer totalPoints = 0;
+            totalPoints = player.getDollars() + player.getCredits() + (5 * player.getRank());
+            playerTotals.add(player);
+            playerTotals.add(totalPoints);
+            results.add(playerTotals);
+        }
+        results.sort((o1, o2) -> Integer.compare((int) ((ArrayList<Object>) o2).get(1), (int) ((ArrayList<Object>) o1).get(1)));
+        return results;
+    }
+
+    // moves all players to the trailer
+    public void moveAll2Trailer() {
+        for (Player player : playerList) {
+            player.setActiveRole(null);
+            player.setHasActed(false);
+            player.setHasMoved(false);
+            player.setPlayerRoom(board.getRoomFromBoard("trailer"));
+            player.setPracticeChips(0);
+        }
+    }
+
+    public void nextDayGamestate() {
+        gameState.endDay(board, numbers, cards, gameState.getCurrentDayCount());
     }
 
     // rehearse action listener

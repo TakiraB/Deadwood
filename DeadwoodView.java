@@ -332,7 +332,8 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             playerCheck(gameState);
          } else if (e.getSource() == bAct) { // listener for act
             Player currentPlayer = gameState.getActivePlayer();
-            // if statements to give the player the correct reward based on the results of the roll and the players current role
+            // if statements to give the player the correct reward based on the results of
+            // the roll and the players current role
             if (controller.playerAct()) {
                textAction.append("You were successful!");
                if (controller.inStarredRole()) {
@@ -386,28 +387,76 @@ public class DeadwoodView extends JFrame implements ViewInterface {
                }
             }
 
-            // checking if the day should end dependent on the number of scenes that are wrapped
+            // checking if the day should end dependent on the number of scenes that are
+            // wrapped
             Boolean endOfDay = controller.checkEndDay();
             if (endOfDay) {
-               // visually move all players back to trailer park
-               for (Player player : gameState.getPlayers()) {
-                  player.setPlayerRoom(gameState.getBoard().getRoomFromBoard("Trailer"));
-                  updatePlayerRoom(player);
-               }
-               // flip all scene cards back over
-               for (Room room : gameState.getBoard().getBoardLayout().values()) {
-                  if (room instanceof RoomWithScene) {
-                     RoomWithScene flipRoom = (RoomWithScene) room;
-                     if (roomSceneCards.containsKey(flipRoom)) {
-                        JLabel sceneCard = roomSceneCards.get(flipRoom);
-                        sceneCard.setVisible(false);
-                        bPane.remove(sceneCard);
-                        bPane.revalidate();
-                        bPane.repaint();
-                        roomSceneCards.remove((RoomWithScene) currentPlayer.getPlayerRoom());
+               // checking to see if the game should end instead of next day happening
+               if (controller.checkEndGame()) {
+                  // ArrayList of player and their total
+                  ArrayList<Object> results = controller.endGameResults();
+                  int rows = results.size();
+                  int columns = 5;
+                  String[] columnLabels = { "Name", "Dollars", "Credits", "Rank", "Total Points" };
+                  // Creates an object that stores all the players data to be displayed
+                  Object[][] cellData = new Object[rows][columns];
+                  for (int i = 0; i < rows; i++) {
+                     ArrayList tempObject = (ArrayList) results.get(i);
+                     Player player = (Player) tempObject.get(0);
+                     int total = (int) tempObject.get(1);
+                     cellData[i][0] = player.getName();
+                     cellData[i][1] = player.getDollars();
+                     cellData[i][2] = player.getCredits();
+                     cellData[i][3] = player.getRank();
+                     cellData[i][4] = total;
+                  }
+                  // displaying all the player data
+                  JTable table = new JTable(cellData, columnLabels);
+                  JScrollPane scrollPane = new JScrollPane(table);
+                  JPanel panel = new JPanel(new BorderLayout());
+                  panel.setBorder(BorderFactory.createTitledBorder("End of Game Results"));
+                  panel.add(scrollPane, BorderLayout.CENTER);
+                  // displaying the winner
+                  // Create and customize the JLabel
+                  ArrayList winnerObject = (ArrayList) results.get(0);
+                  Player winner = (Player) winnerObject.get(0);
+                  int total = (int) winnerObject.get(1);
+                  JLabel label = new JLabel(winner.getName() + " won with " + total + " total points!");
+                  label.setOpaque(true);
+                  label.setBackground(Color.GREEN);
+                  label.setHorizontalAlignment(SwingConstants.CENTER);
+                  // Add the JLabel to the panel
+                  panel.add(label, BorderLayout.SOUTH);
+                  // displaying the popup
+                  JFrame frame = new JFrame("End of Game Results");
+                  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                  frame.setSize(400, 300);
+                  frame.add(panel);
+                  frame.setVisible(true);
+               } else {
+                  controller.moveAll2Trailer();
+                  controller.nextDayGamestate();
+                  // visually move all players back to trailer park
+                  for (Player player : gameState.getPlayers()) {
+                     player.setPlayerRoom(gameState.getBoard().getRoomFromBoard("Trailer"));
+                     updatePlayerRoom(player);
+                  }
+                  // flip all scene cards back over
+                  for (Room room : gameState.getBoard().getBoardLayout().values()) {
+                     if (room instanceof RoomWithScene) {
+                        RoomWithScene flipRoom = (RoomWithScene) room;
+                        if (roomSceneCards.containsKey(flipRoom)) {
+                           JLabel sceneCard = roomSceneCards.get(flipRoom);
+                           sceneCard.setVisible(false);
+                           bPane.remove(sceneCard);
+                           bPane.revalidate();
+                           bPane.repaint();
+                           roomSceneCards.remove(currentPlayer.getPlayerRoom());
+                        }
                      }
                   }
                }
+
             }
             playerCheck(gameState);
          } else if (e.getSource() == bTakeRole) { // listener for taking a role
@@ -423,7 +472,8 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.setSize(400, 300);
             frame.setLayout(new GridLayout(0, 1));
-            // creating a panel to be placed on the frame for all roles that are on card roles
+            // creating a panel to be placed on the frame for all roles that are on card
+            // roles
             JPanel onCardPanel = new JPanel();
             onCardPanel.setLayout(new BoxLayout(onCardPanel, BoxLayout.Y_AXIS));
             onCardPanel.setBorder(BorderFactory.createTitledBorder("On Card Roles"));
@@ -493,7 +543,8 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             frame.setSize(400, 300);
             JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10));
             frame.setLocationRelativeTo(null);
-            // this ArrayList of ArrayList of objects contains all the values needed to display the available upgrades
+            // this ArrayList of ArrayList of objects contains all the values needed to
+            // display the available upgrades
             // the order is rank 2 dollar, rank 2 credit, rank 3 dollar, rank 3 credit...
             // rank 6 dollar, rank 6 credit,
             // first value in object: 0 or 1 if the player can upgrade to that rank
@@ -501,7 +552,8 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             // credits)
             ArrayList<ArrayList<Object>> availableUpgrades = controller.availableUpgrades();
             for (int i = 0; i < 10; i++) {
-               // setting up the buttons so all the options that a player can do are normal buttons
+               // setting up the buttons so all the options that a player can do are normal
+               // buttons
                // all the options a player cannot select are red
                if ((Integer) availableUpgrades.get(i).get(0) == 1) {
                   JButton button = new JButton((String) availableUpgrades.get(i).get(1));
@@ -517,7 +569,8 @@ public class DeadwoodView extends JFrame implements ViewInterface {
                               index = i;
                            }
                         }
-                        // This changes the visual dice face to be the correct color and new rank after upgrading
+                        // This changes the visual dice face to be the correct color and new rank after
+                        // upgrading
                         String[] colors = { "b", "c", "g", "o", "p", "r", "v", "y" };
                         ImageIcon newRankIcon = new ImageIcon(
                               "dice/dice/" + colors[index] + ((int) Math.floor(optionNumber / 2 + 2)) + ".png");
@@ -553,8 +606,10 @@ public class DeadwoodView extends JFrame implements ViewInterface {
       }
    }
 
-   // disables action buttons depending on active players ability to do those actions
-   // this prevents players from attempting to do things that they cannot do within the rules
+   // disables action buttons depending on active players ability to do those
+   // actions
+   // this prevents players from attempting to do things that they cannot do within
+   // the rules
    public void playerCheck(GameState gameState) {
       Player currentPlayer = gameState.getActivePlayer();
       // bMove
@@ -580,7 +635,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
             bRehearse.setEnabled(false);
          }
          // bTakeRole
-         if (currentPlayer.getActiveRole() == null) {
+         if (currentPlayer.getActiveRole() == null && !((RoomWithScene)currentPlayer.getPlayerRoom()).getRoomScene().getSceneWrapped()) {
             bTakeRole.setEnabled(true);
          } else {
             bTakeRole.setEnabled(false);
@@ -653,6 +708,7 @@ public class DeadwoodView extends JFrame implements ViewInterface {
    // Puts the appropriate scene to the room image on the board on top of the
    // flipped one and set visible
    public void flipSceneCard(RoomWithScene sceneRoom) {
+      System.out.println("in flip");
       JLabel flippedCard = new JLabel();
       ImageIcon flippedCardImage = new ImageIcon(sceneRoom.getSceneCard().getImage());
       flippedCard.setIcon(flippedCardImage);
@@ -797,8 +853,10 @@ public class DeadwoodView extends JFrame implements ViewInterface {
    }
 
    // Initialization of all takes for each room that are saved in takeIcons
-   // for all the takes that a room can have it creates a unique icon for each take and adds them to an array
-   // all the icons are defaulted to be placed at 10000, 10000 so they are off screen and wont appear until moved
+   // for all the takes that a room can have it creates a unique icon for each take
+   // and adds them to an array
+   // all the icons are defaulted to be placed at 10000, 10000 so they are off
+   // screen and wont appear until moved
    public void takesInitialization(GameState gameState) {
       Board board = gameState.getBoard();
       for (Map.Entry<String, Room> room : board.getBoardLayout().entrySet()) {
